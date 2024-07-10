@@ -1,5 +1,6 @@
 keycloak:
   url: http://localhost:8080
+  realm: master
   admin:
     realm: master
     grant-type: password

@@ -3,6 +3,7 @@ package rize.os.access.manager.keycloak;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.admin.client.resource.RealmResource;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,5 +26,11 @@ public class KeycloakConfiguration
                 .username(keycloakProperties.getAdmin().getUsername())
                 .password(keycloakProperties.getAdmin().getPassword())
                 .build();
+    }
+
+    @Bean
+    RealmResource realmResource(Keycloak keycloak, KeycloakProperties keycloakProperties)
+    {
+        return keycloak.realm(keycloakProperties.getRealm());
     }
 }

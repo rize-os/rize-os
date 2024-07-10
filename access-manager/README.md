@@ -11,8 +11,9 @@ The configuration for the Access-Manager can be provided as .yaml or .properties
 ### Keycloak Configuration
 | Parameter                      | Description                                                                                                                     | Default Value           |
 |--------------------------------|---------------------------------------------------------------------------------------------------------------------------------|-------------------------|
-| `keycloak.url`                 | The URL of the Keycloak server.                                                                                                 | `http://localhost:8080` |
-| `keycloak.admin.realm`         | The admin realm that is used for the API communication to Keycloak                                                              | `master`                |
+| `keycloak.url`                 | URL of the Keycloak server.                                                                                                     | `http://localhost:8080` |
+| `keycloak.realm`               | Main realm for storing data like organizations, users and clients.                                                              | `master`                |
+| `keycloak.admin.realm`         | Admin realm that is used for the API communication to Keycloak                                                                  | `master`                |
 | `keycloak.admin.grant-type`    | The grant type for authentication to Keycloak [`password`; `client_credentials`]                                                | `password`              |
 | `keycloak.admin.client-id`     | Client-ID that is used for the API communication to Keycloak                                                                    | `admin-cli`             |
 | `keycloak.admin.client-secret` | Client-Secret for authentication to Keycloak. Is only required when `keycloak.admin.grant-type` is set to `client_credentials`. | `-`                     |
