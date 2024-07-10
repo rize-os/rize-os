@@ -1,0 +1,35 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
+    container_name: ros-am-keycloak
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://ros-am-postgres:5432/keycloak
+      KC_DB_USERNAME: ${POSTGRES_USERNAME}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_LOG_LEVEL: debug
+      KC_METRICS_ENABLED: true
+      KC_HEALTH_ENABLED: true
+      KEYCLOAK_ADMIN: ${KEYCLOAK_USERNAME}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+    command: start-dev --features organization
+    depends_on:
+      - keycloak-db
+    ports:
+      - 8080:8080
+
+  keycloak-db:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: ros-am-postgres
+    environment:
+      POSTGRES_MULTIPLE_DATABASES: keycloak,access_manager
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./dev/postgres:/docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
