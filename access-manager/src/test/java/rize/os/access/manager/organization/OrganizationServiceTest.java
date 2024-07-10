@@ -135,4 +135,21 @@ class OrganizationServiceTest
                 .isInstanceOf(OrganizationCreateException.class)
                 .hasMessageContaining("409");
     }
+
+    @Test
+    void shouldFindAllOrganizations()
+    {
+        var organizationToCreate = Organization.builder()
+                .name("Test Organization 6")
+                .description("Description of the Test Organization 6")
+                .alias(Organization.nameToAlias("Test Organization 6"))
+                .build();
+
+        organizationService.createOrganization(organizationToCreate);
+        var organizations = organizationService.findAll();
+
+        assertThat(organizations).isNotNull();
+        assertThat(organizations).hasSizeGreaterThanOrEqualTo(1);
+        assertThat(organizations).anyMatch(organization -> organization.getName().equals(organizationToCreate.getName()));
+    }
 }

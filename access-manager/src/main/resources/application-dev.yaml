@@ -7,3 +7,7 @@ keycloak:
     client-id: admin-cli
     username: _keycloak-admin
     password: secret
+---
+logging:
+  level:
+    rize.os: TRACE

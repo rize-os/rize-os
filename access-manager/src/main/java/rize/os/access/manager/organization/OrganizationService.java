@@ -22,6 +22,22 @@ class OrganizationService
     private final RealmResource realmResource;
 
     /**
+     * Returns all organizations in the Keycloak realm.
+     * @return List of all organizations
+     */
+    @Nonnull
+    List<Organization> findAll()
+    {
+        log.debug("Loading all organizations from Keycloak");
+        var organizationRepresentations = realmResource.organizations().getAll();
+        var organizations = organizationRepresentations.stream().map(organizationMapper::toOrganization).toList();
+
+        log.debug("Found {} organizations", organizations.size());
+        if (log.isTraceEnabled()) organizations.forEach(organization -> log.trace("- {}", organization));
+        return organizations;
+    }
+
+    /**
      * Creates a new organization in the Keycloak realm. If the organization object does not have any domains, a default domain with the value of the alias is added.
      * @param organization Object of the organization to create
      * @return The created organization object
