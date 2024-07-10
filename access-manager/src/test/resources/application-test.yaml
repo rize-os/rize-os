@@ -1,4 +1,5 @@
 keycloak:
+  realm: rize-os
   admin:
     username: _keycloak-admin
     password: secret

@@ -12,12 +12,14 @@ import org.springframework.context.annotation.Configuration;
 public class KeycloakProperties
 {
     private String url;
+    private String realm;
     private KeycloakAdminProperties admin;
 
     @Override
     public String toString()
     {
         return "{" + "url='" + url + '\'' +
+                ", realm='" + realm + '\'' +
                 ", admin=" + admin + '}';
     }
 

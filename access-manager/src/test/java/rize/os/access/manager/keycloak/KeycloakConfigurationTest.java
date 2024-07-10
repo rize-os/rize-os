@@ -2,6 +2,7 @@ package rize.os.access.manager.keycloak;
 
 import org.junit.jupiter.api.Test;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.RealmRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +22,9 @@ class KeycloakConfigurationTest
     @Autowired
     private Keycloak keycloak;
 
+    @Autowired
+    private RealmResource realmResource;
+
     @DynamicPropertySource
     static void keycloakProperties(DynamicPropertyRegistry registry)
     {
@@ -39,5 +43,6 @@ class KeycloakConfigurationTest
     {
         RealmRepresentation realm = keycloak.realm("rize-os").toRepresentation();
         assertThat(realm.getRealm()).isEqualTo("rize-os");
+        assertThat(realmResource.toRepresentation().getRealm()).isEqualTo("rize-os");
     }
 }

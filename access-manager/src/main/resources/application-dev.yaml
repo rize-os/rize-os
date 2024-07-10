@@ -1,5 +1,6 @@
 keycloak:
   url: http://localhost:8080
+  realm: rize-os
   admin:
     realm: master
     grant-type: password
