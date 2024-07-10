@@ -1,2 +1,4 @@
-# rize-os
-rize.os is in open source framework with the goal to provide a platform for Java developers to easily create large and scalable enterprise applications
+# rize.os
+rize.os is in open source framework with the goal to provide a platform for Java developers to easily create large and scalable enterprise applications. The main features are multi-tenancy support and security (AuthN & AuthZ). rize.os is maily build with the Spring Framework modules (for backend) and Vaadin Framework (for frontend). It also relies on other open source services like Keycloak (for identity- and access-management) or RabbitMQ (for communication).
+
+The rize.os framework consists of executable applications (delivered as images) that can be configured to suit requirements and libraries that can be used in business applications for simplified development.
