@@ -16,7 +16,9 @@ services:
       KC_HEALTH_ENABLED: true
       KEYCLOAK_ADMIN: ${KEYCLOAK_USERNAME}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
-    command: start-dev --features organization
+    command: start-dev --features organization --import-realm
+    volumes:
+      - ./dev/keycloak/import:/opt/keycloak/data/import
     depends_on:
       - keycloak-db
     ports:

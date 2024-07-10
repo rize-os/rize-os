@@ -1,0 +1,9 @@
+{
+  "id": "1bab6989-ffd1-4043-b2b8-258395899ffa",
+  "realm": "rize-os",
+  "displayName": "rize.os",
+  "enabled": true,
+  "attributes": {
+    "organizationsEnabled": "true"
+  }
+}
