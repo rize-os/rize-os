@@ -1,0 +1,4 @@
+keycloak:
+  admin:
+    username: _keycloak-admin
+    password: secret
