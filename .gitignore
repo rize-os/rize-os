@@ -1,0 +1,13 @@
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### VS Code ###
+.vscode/
+
+**/target/
+**/node_modules/
+**/src/main/frontend/generated/
+**/src/main/bundles/
