@@ -1,0 +1,6 @@
+spring:
+  docker:
+    compose:
+      enabled: false
+      file: access-manager/docker-compose.yaml
+      lifecycle-management: start_only

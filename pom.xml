@@ -25,6 +25,10 @@
         <url>https://github.com/rize-os/rize-os</url>
     </scm>
 
+    <modules>
+        <module>access-manager</module>
+    </modules>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
