@@ -1,9 +1,20 @@
 package rize.os.access.manager;
 
-import org.springframework.boot.test.context.TestConfiguration;
+import dasniko.testcontainers.keycloak.KeycloakContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-@TestConfiguration(proxyBeanMethods = false)
-class TestcontainersConfiguration
+@Testcontainers
+public class TestcontainersConfiguration
 {
+    public static KeycloakContainer keycloak;
 
+    static
+    {
+        keycloak = new KeycloakContainer("quay.io/keycloak/keycloak:25.0.1")
+                .withFeaturesEnabled("organization")
+                .withRealmImportFile("/realm.json")
+                .withAdminUsername("_keycloak-admin")
+                .withAdminPassword("secret");
+        keycloak.start();
+    }
 }

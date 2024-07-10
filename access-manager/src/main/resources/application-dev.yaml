@@ -1,0 +1,8 @@
+keycloak:
+  url: http://localhost:8080
+  admin:
+    realm: master
+    grant-type: password
+    client-id: admin-cli
+    username: _keycloak-admin
+    password: secret

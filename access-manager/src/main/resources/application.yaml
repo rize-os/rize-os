@@ -1,6 +1,19 @@
+keycloak:
+  url: http://localhost:8080
+  admin:
+    realm: master
+    grant-type: password
+    client-id: admin-cli
+    client-secret: '-'
+    username: admin
+    password: '-'
+---
+server:
+  port: ${access-manager.port:9090}
+---
 spring:
   docker:
     compose:
-      enabled: false
+      enabled: true
       file: access-manager/docker-compose.yaml
       lifecycle-management: start_only
