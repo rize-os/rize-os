@@ -35,9 +35,6 @@ public class Organization
 
     static String nameToAlias(String name)
     {
-        if (name == null)
-            return null;
-
         return name.toLowerCase()
                 .replaceAll("[^a-z0-9]+", "-")
                 .replaceAll("^-|-$", "");
@@ -48,7 +45,7 @@ public class Organization
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    static class Domain
+    public static class Domain
     {
         private String name;
 
