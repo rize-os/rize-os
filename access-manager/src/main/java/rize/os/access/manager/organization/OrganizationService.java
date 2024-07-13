@@ -22,7 +22,7 @@ class OrganizationService
     private final RealmResource realmResource;
 
     /**
-     * Returns all organizations in the Keycloak realm.
+     * Returns all organizations from Keycloak.
      * @return List of all organizations
      */
     @Nonnull
@@ -31,10 +31,21 @@ class OrganizationService
         log.debug("Loading all organizations from Keycloak");
         var organizationRepresentations = realmResource.organizations().getAll();
         var organizations = organizationRepresentations.stream().map(organizationMapper::toOrganization).toList();
+        return loggedOrganizations(organizations);
+    }
 
-        log.debug("Found {} organizations", organizations.size());
-        if (log.isTraceEnabled()) organizations.forEach(organization -> log.trace("- {}", organization));
-        return organizations;
+    /**
+     * Returns a list of organizations from Keycloak that matches the given search term.
+     * @param search Search term to filter organizations
+     * @return List of organizations that matches the search term
+     */
+    @Nonnull
+    List<Organization> find(@Nonnull String search)
+    {
+        log.debug("Searching organizations in Keycloak with search term: {}", search);
+        var organizationRepresentations = realmResource.organizations().search(search, false, 0, Integer.MAX_VALUE);
+        var organizations = organizationRepresentations.stream().map(organizationMapper::toOrganization).toList();
+        return loggedOrganizations(organizations);
     }
 
     /**
@@ -78,5 +89,12 @@ class OrganizationService
         var violations = validator.validate(organization);
         if (!violations.isEmpty())
             throw new OrganizationConstraintException(organization, violations);
+    }
+
+    private List<Organization> loggedOrganizations(List<Organization> organizations)
+    {
+        log.debug("Found {} organizations", organizations.size());
+        if (log.isTraceEnabled()) organizations.forEach(organization -> log.trace("- {}", organization));
+        return organizations;
     }
 }

@@ -152,4 +152,30 @@ class OrganizationServiceTest
         assertThat(organizations).hasSizeGreaterThanOrEqualTo(1);
         assertThat(organizations).anyMatch(organization -> organization.getName().equals(organizationToCreate.getName()));
     }
+
+    @Test
+    void shouldFindOrganizationsBySearchTerm()
+    {
+        var organizationToCreate = Organization.builder()
+                .name("Test Organization 7")
+                .description("Description of the Test Organization 7")
+                .alias(Organization.nameToAlias("Test Organization 7"))
+                .build();
+
+        organizationService.createOrganization(organizationToCreate);
+        var organizations = organizationService.find("Organization 7");
+
+        assertThat(organizations).isNotNull();
+        assertThat(organizations).hasSizeGreaterThanOrEqualTo(1);
+        assertThat(organizations).anyMatch(organization -> organization.getName().equals(organizationToCreate.getName()));
+    }
+
+    @Test
+    void shouldFindNoOrganizationsBySearchTerm()
+    {
+        var organizations = organizationService.find("Organization XXXXXXXXX");
+
+        assertThat(organizations).isNotNull();
+        assertThat(organizations).isEmpty();
+    }
 }
