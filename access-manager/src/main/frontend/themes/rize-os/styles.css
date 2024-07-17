@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+vaadin-menu-bar-item::part(checkmark) {
+    width: 0;
+}
+
+vaadin-menu-bar-item {
+    padding: 0.3rem 0.6rem;
+}
