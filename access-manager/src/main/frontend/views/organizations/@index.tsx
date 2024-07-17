@@ -1,25 +1,66 @@
 import { useEffect, useState } from 'react';
 import { OrganizationEndpoint } from "Frontend/generated/endpoints";
+import {Icon, TextField} from "@vaadin/react-components";
 import OrganizationItem from "Frontend/components/organization-item";
+import Skeleton from "Frontend/components/skeleton";
 import Organization from "Frontend/generated/rize/os/access/manager/organization/Organization";
 
-export default function OrganizationView()
-{
+export default function OrganizationView() {
     const [organizations, setOrganizations] = useState<Organization[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [searching, setSearching] = useState<boolean>(false);
+    const [initialLoading, setInitialLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        OrganizationEndpoint.findAll().then(setOrganizations);
-    }, []);
+        const fetchOrganizations = async () => {
+            setSearching(searchTerm.length > 0);
+
+            if (searchTerm)
+                setOrganizations(await OrganizationEndpoint.find(searchTerm));
+            else
+                setOrganizations(await OrganizationEndpoint.findAll());
+
+            setInitialLoading(false);
+            setSearching(false);
+        };
+
+        const delayDebounceFn = setTimeout(fetchOrganizations, 500);
+
+        return () => {
+            clearTimeout(delayDebounceFn);
+        }
+    }, [searchTerm]);
 
     return (
-        <div className={"flex flex-col h-full"}>
-            <header className={"p-m box-border"}>
-                <h2>Your Organizations</h2>
+        <div className={"flex flex-col h-full"} key={"organizationView"}>
+            <header key={"header"} className={"flex p-6 pb-4 box-border backdrop-blur bg-white/80 sticky top-0 z-50"}>
+                <h2 className={"flex-grow text-2xl leading-10"}>Your Organizations</h2>
+                <TextField key={"searchField"}
+                           placeholder={"Search..."}
+                           clearButtonVisible
+                           value={searchTerm}
+                           onValueChanged={e => setSearchTerm(e.detail.value)}>
+                    { searching ? <Icon icon={"vaadin:spinner"} className={"animate-spin"} slot={"prefix"}/> : <Icon icon={"vaadin:search"} slot={"prefix"}/> }
+                </TextField>
             </header>
-            <main style={{flex: 1, "overflow-y": "auto"}}>
-                <div className={"grid gap-m px-m py-xs box-border"} style={{"grid-template-columns": "repeat(auto-fill, minmax(24rem, 1fr))"}}>
+
+            <main>
+                <div className={"grid gap-6 p-6 pt-2 box-border"}
+                     style={{gridTemplateColumns: "repeat(auto-fill, minmax(22rem, 1fr))"}}>
+
+                    {/* Skeletons */}
+                    {initialLoading && Array.from({length: 5}).map((_, i) => (
+                        <Skeleton key={i} className={"h-36 w-full"}/>
+                    ))}
+
+                    {/* No Organization Placeholder */}
+                    {!initialLoading && organizations.length === 0 && (
+                        <p className={"text-gray-500"}>No organizations found</p>
+                    )}
+
+                    {/* Organization-Items */}
                     {organizations.map((organization) => (
-                        <OrganizationItem key={organization.id} organization={organization} className={"box-border"} />
+                        <OrganizationItem key={organization.name} organization={organization}/>
                     ))}
                 </div>
             </main>
