@@ -7,9 +7,12 @@ import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.representations.idm.OrganizationRepresentation;
 import org.springframework.stereotype.Service;
 import rize.os.access.manager.organization.exceptions.OrganizationConstraintException;
 import rize.os.access.manager.organization.exceptions.OrganizationCreateException;
+import rize.os.access.manager.organization.exceptions.OrganizationNotFoundException;
+import rize.os.access.manager.organization.exceptions.OrganizationUpdateException;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,20 +61,30 @@ class OrganizationService
     @Nonnull
     Optional<Organization> findById(@Nonnull String id)
     {
-        log.debug("Searching organization in Keycloak with id: {}", id);
-
-        try
-        {
-            var organizationRepresentation = realmResource.organizations().get(id).toRepresentation();
-            var organization = organizationMapper.toOrganization(organizationRepresentation);
-            log.debug("Found organization: {}", organization);
-            return Optional.of(organization);
-        }
-        catch (NotFoundException e)
-        {
-            log.debug("Organization with id {} not found in Keycloak", id);
+        var organizationRepresentation = findRepresentationById(id);
+        if (organizationRepresentation.isEmpty())
             return Optional.empty();
-        }
+
+        var organization = organizationMapper.toOrganization(organizationRepresentation.get());
+        log.debug("Found organization: {}", organization);
+        return Optional.of(organization);
+    }
+
+    /**
+     * Returns the organization from Keycloak that matches the given alias.
+     * @param alias Alias of the organization to find
+     * @return The organization object if found, otherwise empty
+     */
+    @Nonnull
+    Optional<Organization> findByAlias(@Nonnull String alias)
+    {
+        var organizationRepresentation = findRepresentationByAlias(alias);
+        if (organizationRepresentation.isEmpty())
+            return Optional.empty();
+
+        var organization = organizationMapper.toOrganization(organizationRepresentation.get());
+        log.debug("Found organization: {}", organization);
+        return Optional.of(organization);
     }
 
     /**
@@ -103,6 +116,93 @@ class OrganizationService
         }
         catch (OrganizationCreateException e) { throw e; }
         catch (Exception e) { throw new OrganizationCreateException(organization, e); }
+    }
+
+    /**
+     * Updates the name of the organization in Keycloak that matches the given id.
+     * @param id ID of the organization to update
+     * @param name New name of the organization
+     * @return The updated organization object
+     */
+    @Nonnull
+    Organization updateName(@Nonnull String id, @Nonnull String name)
+    {
+        OrganizationRepresentation organizationRepresentation = findRepresentationById(id)
+                .orElseThrow(() -> new OrganizationNotFoundException(id));
+
+        log.info("Updating organization name with id [{}] to: {}", id, name);
+        organizationRepresentation.setName(name);
+
+        try (var response = realmResource.organizations().get(id).update(organizationRepresentation))
+        {
+            if (response.getStatus() != 204)
+                throw new OrganizationUpdateException(organizationMapper.toOrganization(organizationRepresentation), "name", response);
+        }
+        catch (OrganizationUpdateException e) { throw e; }
+        catch (Exception e) { throw new OrganizationUpdateException(organizationMapper.toOrganization(organizationRepresentation), "name", e); }
+
+        log.info("Updated organization alias of organization [{}] successfully: {}", organizationRepresentation.getId(), name);
+        return findById(id).orElseThrow(() -> new OrganizationNotFoundException(id));
+    }
+
+    /**
+     * Updates the alias of the organization in Keycloak that matches the given id.
+     * @param id ID of the organization to update
+     * @param alias New alias of the organization
+     * @return The updated organization object
+     */
+    @Nonnull
+    Organization updateAlias(@Nonnull String id, @Nonnull String alias)
+    {
+        OrganizationRepresentation organizationRepresentation = findRepresentationById(id)
+                .orElseThrow(() -> new OrganizationNotFoundException(id));
+
+        log.info("Updating organization alias with id [{}] to: {}", id, alias);
+        organizationRepresentation.setDescription(alias);
+
+        if (findRepresentationByAlias(alias).isPresent())
+            throw new OrganizationUpdateException(organizationMapper.toOrganization(organizationRepresentation), "alias", new Exception("Alias \"" + alias + "\" already exists"));
+
+        try (var response = realmResource.organizations().get(id).update(organizationRepresentation))
+        {
+            if (response.getStatus() != 204)
+                throw new OrganizationUpdateException(organizationMapper.toOrganization(organizationRepresentation), "alias", response);
+        }
+        catch (OrganizationUpdateException e) { throw e; }
+        catch (Exception e) { throw new OrganizationUpdateException(organizationMapper.toOrganization(organizationRepresentation), "alias", e); }
+
+        log.info("Updated organization alias of organization {} successfully: {}", organizationRepresentation.getName(), alias);
+        return findById(id).orElseThrow(() -> new OrganizationNotFoundException(id));
+    }
+
+    private Optional<OrganizationRepresentation> findRepresentationById(String id)
+    {
+        try
+        {
+            log.debug("Searching organization in Keycloak with id: {}", id);
+            return Optional.of(realmResource.organizations().get(id).toRepresentation());
+        }
+        catch (NotFoundException e)
+        {
+            log.warn("Organization with id {} not found in Keycloak", id);
+            return Optional.empty();
+        }
+    }
+
+    private Optional<OrganizationRepresentation> findRepresentationByAlias(String alias)
+    {
+         log.debug("Searching organization in Keycloak with alias: {}", alias);
+         var organizations = realmResource.organizations().search(alias, true, 0, 1);
+         var organizationWithSameAlias = organizations.stream().filter(organization -> organization.getDescription().equals(alias)).findFirst();
+
+         if (organizationWithSameAlias.isEmpty())
+         {
+             log.debug("Organization with alias {} not found in Keycloak", alias);
+             return Optional.empty();
+         }
+
+         log.debug("Found organization with alias {}: {}", alias, organizationWithSameAlias.get().getName());
+         return organizationWithSameAlias;
     }
 
     /**

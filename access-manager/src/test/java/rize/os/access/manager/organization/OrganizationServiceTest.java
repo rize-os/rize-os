@@ -10,6 +10,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import rize.os.access.manager.TestcontainersConfiguration;
 import rize.os.access.manager.organization.exceptions.OrganizationConstraintException;
 import rize.os.access.manager.organization.exceptions.OrganizationCreateException;
+import rize.os.access.manager.organization.exceptions.OrganizationUpdateException;
 
 import java.util.List;
 
@@ -128,6 +129,80 @@ class OrganizationServiceTest
     }
 
     @Test
+    void shouldUpdateName()
+    {
+        var organizationToCreate = Organization.builder()
+                .name("shouldUpdateName")
+                .alias("should-update-name")
+                .build();
+
+        var createdOrganization = organizationService.createOrganization(organizationToCreate);
+        var updatedOrganization = organizationService.updateName(createdOrganization.getId(), "Should Be Updated");
+
+        assertThat(updatedOrganization).isNotNull();
+        assertThat(updatedOrganization.getId()).isEqualTo(createdOrganization.getId());
+        assertThat(updatedOrganization.getName()).isEqualTo("Should Be Updated");
+    }
+
+    @Test
+    void shouldFailToUpdateWithExistingName()
+    {
+        var organizationToCreate1 = Organization.builder()
+                .name("shouldFailToUpdateWithExistingName1")
+                .alias("should-fail-to-update-existing-name-1")
+                .build();
+
+        var createdOrganization1 = organizationService.createOrganization(organizationToCreate1);
+
+        var organizationToCreate2 = Organization.builder()
+                .name("shouldFailToUpdateWithExistingName2")
+                .alias("should-fail-to-update-with-existing-name-2")
+                .build();
+
+        organizationService.createOrganization(organizationToCreate2);
+
+        assertThatThrownBy(() -> organizationService.updateName(createdOrganization1.getId(), "shouldFailToUpdateWithExistingName2"))
+                .isInstanceOf(OrganizationUpdateException.class);
+    }
+
+    @Test
+    void shouldUpdateAlias()
+    {
+        var organizationToCreate = Organization.builder()
+                .name("shouldUpdateAlias")
+                .alias("should-update-alias")
+                .build();
+
+        var createdOrganization = organizationService.createOrganization(organizationToCreate);
+        var updatedOrganization = organizationService.updateAlias(createdOrganization.getId(), "should-update-alias-2");
+
+        assertThat(updatedOrganization).isNotNull();
+        assertThat(updatedOrganization.getId()).isEqualTo(createdOrganization.getId());
+        assertThat(updatedOrganization.getAlias()).isEqualTo("should-update-alias-2");
+    }
+
+    @Test
+    void shouldFailToUpdateWithExistingAlias()
+    {
+        var organizationToCreate1 = Organization.builder()
+                .name("shouldFailToUpdateWithExistingAlias1")
+                .alias("should-fail-to-update-existing-alias-1")
+                .build();
+
+        var createdOrganization1 = organizationService.createOrganization(organizationToCreate1);
+
+        var organizationToCreate2 = Organization.builder()
+                .name("shouldFailToUpdateWithExistingAlias2")
+                .alias("should-fail-to-update-with-existing-alias-2")
+                .build();
+
+        organizationService.createOrganization(organizationToCreate2);
+
+        assertThatThrownBy(() -> organizationService.updateAlias(createdOrganization1.getId(), "should-fail-to-update-with-existing-alias-2"))
+                .isInstanceOf(OrganizationUpdateException.class);
+    }
+
+    @Test
     void shouldFindAllOrganizations()
     {
         var organizationToCreate = Organization.builder()
@@ -187,6 +262,26 @@ class OrganizationServiceTest
     void shouldNotFindOrganizationById()
     {
         var foundOrganization = organizationService.findById("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX");
+        assertThat(foundOrganization).isEmpty();
+    }
+
+    @Test
+    void shouldFindOrganizationByAlias()
+    {
+        var organizationToCreate = Organization.builder().name("shouldFindOrganizationByAlias").alias("should-find-organization-by-alias").build();
+
+        var createdOrganization = organizationService.createOrganization(organizationToCreate);
+        var foundOrganization = organizationService.findByAlias(createdOrganization.getAlias());
+
+        assertThat(foundOrganization).isPresent();
+        assertThat(foundOrganization.get().getId()).isEqualTo(createdOrganization.getId());
+        assertThat(foundOrganization.get().getAlias()).isEqualTo(createdOrganization.getAlias());
+    }
+
+    @Test
+    void shouldNotFindOrganizationByAlias()
+    {
+        var foundOrganization = organizationService.findByAlias("some-random-alias");
         assertThat(foundOrganization).isEmpty();
     }
 }
