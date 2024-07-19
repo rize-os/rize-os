@@ -14,8 +14,7 @@ class OrganizationMapper
         return Organization.builder()
                 .id(organizationRepresentation.getId())
                 .name(organizationRepresentation.getName())
-                .description(organizationRepresentation.getDescription())
-                .alias(Organization.nameToAlias(organizationRepresentation.getName())) // TODO Should be changed, after Keycloak supports alias
+                .alias(organizationRepresentation.getDescription()) // TODO Should be changed, after Keycloak supports alias
                 .domains(organizationRepresentation.getDomains().stream().map(this::toDomain).toList())
                 .enabled(organizationRepresentation.isEnabled())
                 .build();
@@ -27,7 +26,7 @@ class OrganizationMapper
         var organizationRepresentation = new OrganizationRepresentation();
         organizationRepresentation.setId(organization.getId());
         organizationRepresentation.setName(organization.getName());
-        organizationRepresentation.setDescription(organization.getDescription());
+        organizationRepresentation.setDescription(organization.getAlias());
         organizationRepresentation.setEnabled(organization.isEnabled());
         organization.getDomains().forEach(domain -> organizationRepresentation.addDomain(toDomainRepresentation(domain)));
         return organizationRepresentation;
