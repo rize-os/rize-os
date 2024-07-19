@@ -167,4 +167,26 @@ class OrganizationServiceTest
         assertThat(organizations).isNotNull();
         assertThat(organizations).isEmpty();
     }
+
+    @Test
+    void shouldFindOrganizationById()
+    {
+        var organizationToCreate = Organization.builder().name("Test Organization 8").alias(Organization.nameToAlias("Test Organization 8")).build();
+
+        var createdOrganization = organizationService.createOrganization(organizationToCreate);
+        assertThat(createdOrganization).isNotNull();
+        assertThat(createdOrganization.getId()).isNotNull();
+
+        var foundOrganization = organizationService.findById(createdOrganization.getId());
+        assertThat(foundOrganization).isPresent();
+        assertThat(foundOrganization.get().getId()).isEqualTo(createdOrganization.getId());
+        assertThat(foundOrganization.get().getName()).isEqualTo(createdOrganization.getName());
+    }
+
+    @Test
+    void shouldNotFindOrganizationById()
+    {
+        var foundOrganization = organizationService.findById("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX");
+        assertThat(foundOrganization).isEmpty();
+    }
 }
