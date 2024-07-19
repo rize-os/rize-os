@@ -16,14 +16,13 @@ public class Organization
     private String id;
 
     @NotBlank
+    @Size(min = 3, max = 32)
+    @Pattern(regexp = "^[a-zA-Z0-9][a-zA-Z0-9-_&+./ ]*[a-zA-Z0-9]$")
     private String name;
 
-    @NotNull
-    @Builder.Default
-    private String description = "";
-
     @NotBlank
-    @Pattern(regexp = "^[a-z0-9-]*$")
+    @Size(min = 3, max = 32)
+    @Pattern(regexp = "^[a-z0-9][a-z0-9-]*[a-z0-9]$")
     private String alias;
 
     @NotEmpty

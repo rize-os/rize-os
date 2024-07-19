@@ -46,8 +46,18 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
     }, [alias]);
 
     const validateName = async (): Promise<boolean> => {
-        if (name === "") {
-            setNameError("Name is required");
+        if (name !== undefined && name.length < 3) {
+            setNameError("Name must be at least 3 characters long");
+            return false;
+        }
+
+        if (name !== undefined && name.length > 32) {
+            setNameError("Name cannot be longer than 32 characters");
+            return false;
+        }
+
+        if (name !== undefined && !/^[a-zA-Z0-9][a-zA-Z0-9-_&+./ ]*[a-zA-Z0-9]$/.test(name)) {
+            setNameError("Name must start and end with a letter or number and be less than 32 characters long");
             return false;
         }
 
@@ -61,8 +71,18 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
     }
 
     const validateAlias = async (): Promise<boolean> => {
-        if (alias === "") {
-            setAliasError("Alias is required");
+        if (alias !== undefined && alias.length < 3) {
+            setAliasError("Alias must be at least 3 characters long");
+            return false;
+        }
+
+        if (alias !== undefined && alias.length > 32) {
+            setAliasError("Alias cannot be longer than 32 characters");
+            return false;
+        }
+
+        if (alias !== undefined && !/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(alias)) {
+            setAliasError("Alias must start and end with a letter or number");
             return false;
         }
 
@@ -141,13 +161,14 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
                     </div>
                 </section>
 
-                <section className={"flex flex-col"}>
+                <section className={"flex flex-col w-72"}>
                     <TextField id={"organization-name-text-field"}
                                value={name} key={"name"}
                                label={"Name"}
                                invalid={nameError.length > 0}
                                errorMessage={nameError}
                                onValueChanged={e => setName(e.detail.value)}
+                               allowedCharPattern={"[a-zA-Z0-9-_&+./ ]"}
                                className={"pt-0"}/>
 
                     <TextField id={"organization-alias-text-field"}
