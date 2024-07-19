@@ -51,8 +51,8 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
             return false;
         }
 
-        if (name !== undefined && name.length > 32) {
-            setNameError("Name cannot be longer than 32 characters");
+        if (name !== undefined && name.length > 64) {
+            setNameError("Name cannot be longer than 64 characters");
             return false;
         }
 
@@ -76,8 +76,8 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
             return false;
         }
 
-        if (alias !== undefined && alias.length > 32) {
-            setAliasError("Alias cannot be longer than 32 characters");
+        if (alias !== undefined && alias.length > 64) {
+            setAliasError("Alias cannot be longer than 64 characters");
             return false;
         }
 
