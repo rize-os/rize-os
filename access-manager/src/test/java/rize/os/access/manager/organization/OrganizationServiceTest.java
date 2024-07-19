@@ -35,7 +35,6 @@ class OrganizationServiceTest
     {
         var organizationToCreate = Organization.builder()
                 .name("Test Organization 1")
-                .description("Description of the Test Organization 1")
                 .alias(Organization.nameToAlias("Test Organization 1"))
                 .build();
 
@@ -43,7 +42,6 @@ class OrganizationServiceTest
 
         assertThat(createdOrganization.getId()).isNotNull();
         assertThat(createdOrganization.getName()).isEqualTo(organizationToCreate.getName());
-        assertThat(createdOrganization.getDescription()).isEqualTo(organizationToCreate.getDescription());
         assertThat(createdOrganization.getAlias()).isEqualTo(organizationToCreate.getAlias());
         assertThat(createdOrganization.isEnabled()).isTrue();
         assertThat(createdOrganization.getDomains()).hasSize(1);
@@ -63,7 +61,6 @@ class OrganizationServiceTest
 
         assertThat(createdOrganization.getId()).isNotNull();
         assertThat(createdOrganization.getName()).isEqualTo(organizationToCreate.getName());
-        assertThat(createdOrganization.getDescription()).isEqualTo(organizationToCreate.getDescription());
         assertThat(createdOrganization.getAlias()).isEqualTo(organizationToCreate.getAlias());
         assertThat(createdOrganization.isEnabled()).isTrue();
         assertThat(createdOrganization.getDomains()).hasSize(1);
@@ -76,7 +73,6 @@ class OrganizationServiceTest
     {
         var organizationToCreate1 = Organization.builder()
                 .name("Test Organization 3")
-                .description("Description of the Test Organization 3")
                 .alias("invalid_alias")
                 .build();
 
@@ -85,7 +81,6 @@ class OrganizationServiceTest
 
         var organizationToCreate2 = Organization.builder()
                 .name("Test Organization 3")
-                .description("Description of the Test Organization 3")
                 .alias("")
                 .build();
 
@@ -97,7 +92,6 @@ class OrganizationServiceTest
     void shouldFailToCreateOrganizationWithoutName()
     {
         var organizationToCreate1 = Organization.builder()
-                .description("Description of the Test Organization 4")
                 .alias(Organization.nameToAlias("Test Organization 4"))
                 .build();
 
@@ -106,7 +100,6 @@ class OrganizationServiceTest
 
         var organizationToCreate2 = Organization.builder()
                 .name("")
-                .description("Description of the Test Organization 4")
                 .alias(Organization.nameToAlias("Test Organization 4"))
                 .build();
 
@@ -119,7 +112,6 @@ class OrganizationServiceTest
     {
         var organizationToCreate1 = Organization.builder()
                 .name("Test Organization 5")
-                .description("Description of the Test Organization 5")
                 .alias(Organization.nameToAlias("Test Organization 5"))
                 .build();
 
@@ -127,7 +119,6 @@ class OrganizationServiceTest
 
         var organizationToCreate2 = Organization.builder()
                 .name("Test Organization 5")
-                .description("Description of the Test Organization 5")
                 .alias(Organization.nameToAlias("Test Organization 5"))
                 .build();
 
@@ -141,7 +132,6 @@ class OrganizationServiceTest
     {
         var organizationToCreate = Organization.builder()
                 .name("Test Organization 6")
-                .description("Description of the Test Organization 6")
                 .alias(Organization.nameToAlias("Test Organization 6"))
                 .build();
 
@@ -158,7 +148,6 @@ class OrganizationServiceTest
     {
         var organizationToCreate = Organization.builder()
                 .name("Test Organization 7")
-                .description("Description of the Test Organization 7")
                 .alias(Organization.nameToAlias("Test Organization 7"))
                 .build();
 
