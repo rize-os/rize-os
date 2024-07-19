@@ -1,8 +1,6 @@
 package rize.os.access.manager.organization;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -20,7 +18,9 @@ public class Organization
     @NotBlank
     private String name;
 
-    private String description;
+    @NotNull
+    @Builder.Default
+    private String description = "";
 
     @NotBlank
     @Pattern(regexp = "^[a-z0-9-]*$")

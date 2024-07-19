@@ -1,15 +1,38 @@
 import { useEffect, useState } from 'react';
 import { OrganizationEndpoint } from "Frontend/generated/endpoints";
-import {Icon, TextField} from "@vaadin/react-components";
+import { Icon, TextField, Button } from "@vaadin/react-components";
 import OrganizationItem from "Frontend/components/organization-item";
+import OrganizationDialog from "Frontend/dialogs/organization-dialog";
 import Skeleton from "Frontend/components/skeleton";
 import Organization from "Frontend/generated/rize/os/access/manager/organization/Organization";
 
 export default function OrganizationView() {
+    const [dialogMode, setDialogMode] = useState<"edit" | "create" | "closed" | undefined>("closed");
+    const [selectedOrganization, setSelectedOrganization] = useState<Organization | undefined>(undefined);
+
     const [organizations, setOrganizations] = useState<Organization[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [searching, setSearching] = useState<boolean>(false);
     const [initialLoading, setInitialLoading] = useState<boolean>(true);
+
+    const handleOrganizationEdit = (organization: Organization) => {
+        setDialogMode("edit");
+        setSelectedOrganization(organization);
+    }
+
+    const handleOrganizationCreate = () => {
+        setDialogMode("create");
+        setSelectedOrganization(undefined);
+    }
+
+    const handleOrganizationCreated = (organization: Organization) => {
+        setOrganizations([...organizations, organization]);
+    }
+
+    const handleOrganizationDialogClose = () => {
+        setDialogMode("closed");
+        setSelectedOrganization(undefined);
+    }
 
     useEffect(() => {
         const fetchOrganizations = async () => {
@@ -33,7 +56,7 @@ export default function OrganizationView() {
 
     return (
         <div className={"flex flex-col h-full"} key={"organizationView"}>
-            <header key={"header"} className={"flex p-6 pb-4 box-border backdrop-blur bg-white/80 sticky top-0 z-50"}>
+            <header key={"header"} className={"flex gap-4 p-6 pb-4 box-border backdrop-blur bg-white/80 sticky top-0 z-50"}>
                 <h2 className={"flex-grow text-2xl leading-10"}>Your Organizations</h2>
                 <TextField key={"searchField"}
                            placeholder={"Search..."}
@@ -42,6 +65,10 @@ export default function OrganizationView() {
                            onValueChanged={e => setSearchTerm(e.detail.value)}>
                     { searching ? <Icon icon={"vaadin:spinner"} className={"animate-spin"} slot={"prefix"}/> : <Icon icon={"vaadin:search"} slot={"prefix"}/> }
                 </TextField>
+                <Button theme={"primary"} onClick={handleOrganizationCreate}>
+                    <Icon icon={"vaadin:plus"} slot={"prefix"}/>
+                    <span>Create</span>
+                </Button>
             </header>
 
             <main>
@@ -60,10 +87,15 @@ export default function OrganizationView() {
 
                     {/* Organization-Items */}
                     {organizations.map((organization) => (
-                        <OrganizationItem key={organization.name} organization={organization}/>
+                        <OrganizationItem key={organization.id} organization={organization} onEdit={handleOrganizationEdit}/>
                     ))}
                 </div>
             </main>
+
+            <OrganizationDialog mode={dialogMode}
+                                organization={selectedOrganization}
+                                onClose={handleOrganizationDialogClose}
+                                onCreate={handleOrganizationCreated}/>
         </div>
     );
 }
