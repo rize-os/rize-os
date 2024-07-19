@@ -22,7 +22,7 @@ class OrganizationMapperTest
         var organizationRepresentation = new OrganizationRepresentation();
         organizationRepresentation.setId(UUID.randomUUID().toString());
         organizationRepresentation.setName("Name of the Test Organization");
-        organizationRepresentation.setDescription("Description of the Test Organization");
+        organizationRepresentation.setDescription("alias-of-organization");
         organizationRepresentation.setEnabled(true);
         organizationRepresentation.addDomain(domainRepresentation);
 
@@ -32,8 +32,7 @@ class OrganizationMapperTest
         // Then
         assertThat(organization.getId()).isEqualTo(organizationRepresentation.getId());
         assertThat(organization.getName()).isEqualTo(organizationRepresentation.getName());
-        assertThat(organization.getDescription()).isEqualTo(organizationRepresentation.getDescription());
-        assertThat(organization.getAlias()).isEqualTo("name-of-the-test-organization");
+        assertThat(organization.getAlias()).isEqualTo(organizationRepresentation.getDescription());
         assertThat(organization.isEnabled()).isEqualTo(organizationRepresentation.isEnabled());
         assertThat(organization.getDomains()).hasSize(1);
         assertThat(organization.getDomains().getFirst().getName()).isEqualTo(domainRepresentation.getName());
@@ -47,7 +46,7 @@ class OrganizationMapperTest
         Organization organization = Organization.builder()
                 .id(UUID.randomUUID().toString())
                 .name("Name of the Test Organization")
-                .description("Description of the Test Organization")
+                .alias("alias-of-organization")
                 .enabled(true)
                 .domains(List.of(new Organization.Domain("test-organization.com", true)))
                 .build();
@@ -58,7 +57,7 @@ class OrganizationMapperTest
         // Then
         assertThat(organizationRepresentation.getId()).isEqualTo(organization.getId());
         assertThat(organizationRepresentation.getName()).isEqualTo(organization.getName());
-        assertThat(organizationRepresentation.getDescription()).isEqualTo(organization.getDescription());
+        assertThat(organizationRepresentation.getDescription()).isEqualTo(organization.getAlias());
         assertThat(organizationRepresentation.isEnabled()).isEqualTo(organization.isEnabled());
         assertThat(organizationRepresentation.getDomains()).hasSize(1);
         assertThat(organizationRepresentation.getDomains().stream().findFirst().get().getName()).isEqualTo(organization.getDomains().getFirst().getName());
