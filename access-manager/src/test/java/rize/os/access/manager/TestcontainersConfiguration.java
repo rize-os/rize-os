@@ -10,7 +10,7 @@ public class TestcontainersConfiguration
 
     static
     {
-        keycloak = new KeycloakContainer("quay.io/keycloak/keycloak:25.0.1")
+        keycloak = new KeycloakContainer("quay.io/keycloak/keycloak:25.0.2")
                 .withFeaturesEnabled("organization")
                 .withRealmImportFile("/realm.json")
                 .withAdminUsername("_keycloak-admin")
