@@ -53,8 +53,7 @@ public class OrganizationEndpoint
      */
     public boolean aliasExists(@Nonnull String alias)
     {
-        return organizationService.findAll()
-                .stream().anyMatch(organization -> organization.getAlias().equalsIgnoreCase(alias));
+        return organizationService.findByAlias(alias).isPresent();
     }
 
     /**
