@@ -7,7 +7,8 @@ import Skeleton from "Frontend/components/skeleton";
 import Organization from "Frontend/generated/rize/os/access/manager/organization/Organization";
 
 export default function OrganizationView() {
-    const [dialogMode, setDialogMode] = useState<"edit" | "create" | "closed" | undefined>("closed");
+    const [dialogOpened, setDialogOpened] = useState<boolean>(false);
+    const [dialogMode, setDialogMode] = useState<"edit" | "create" | undefined>("create");
     const [selectedOrganization, setSelectedOrganization] = useState<Organization | undefined>(undefined);
 
     const [organizations, setOrganizations] = useState<Organization[]>([]);
@@ -17,21 +18,18 @@ export default function OrganizationView() {
 
     const handleOrganizationEdit = (organization: Organization) => {
         setDialogMode("edit");
+        setDialogOpened(true);
         setSelectedOrganization(organization);
     }
 
     const handleOrganizationCreate = () => {
         setDialogMode("create");
+        setDialogOpened(true);
         setSelectedOrganization(undefined);
     }
 
     const handleOrganizationCreated = (organization: Organization) => {
         setOrganizations([...organizations, organization]);
-    }
-
-    const handleOrganizationDialogClose = () => {
-        setDialogMode("closed");
-        setSelectedOrganization(undefined);
     }
 
     useEffect(() => {
@@ -93,9 +91,10 @@ export default function OrganizationView() {
             </main>
 
             <OrganizationDialog mode={dialogMode}
+                                opened={dialogOpened}
                                 organization={selectedOrganization}
-                                onClose={handleOrganizationDialogClose}
-                                onCreate={handleOrganizationCreated}/>
+                                onCreate={handleOrganizationCreated}
+                                onClose={() => setDialogOpened(false)}/>
         </div>
     );
 }

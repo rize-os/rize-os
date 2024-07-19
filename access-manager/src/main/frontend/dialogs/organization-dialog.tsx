@@ -5,8 +5,9 @@ import Apartment from "@mui/icons-material/Apartment";
 import {OrganizationEndpoint} from "Frontend/generated/endpoints";
 
 interface OrganizationDialogProps {
-    mode?: "edit" | "create" | "closed",
+    mode?: "edit" | "create"
     organization?: Organization,
+    opened?: boolean,
     onClose?: () => void,
     onCreate?: (organization: Organization) => void,
     onUpdate?: (organization: Organization) => void
@@ -22,13 +23,10 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
     const [opened, setOpened] = useState<boolean>(false);
 
     useEffect(() => {
-        setOpened(props.mode !== "closed");
-    }, [props.mode]);
-
-    useEffect(() => {
-        if (opened)
+        setOpened(props.opened?? true);
+        if(props.opened)
             focusTextField("organization-name-text-field");
-    }, [opened]);
+    }, [props.opened]);
 
     useEffect(() => {
         setName(props.organization?.name ?? undefined);
@@ -50,13 +48,11 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
     const validateName = async (): Promise<boolean> => {
         if (name === "") {
             setNameError("Name is required");
-            focusTextField("organization-name-text-field");
             return false;
         }
 
         if (name !== props.organization?.name && await OrganizationEndpoint.nameExists(name ?? "")) {
             setNameError("Name already exists");
-            focusTextField("organization-name-text-field");
             return false;
         }
 
@@ -67,13 +63,11 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
     const validateAlias = async (): Promise<boolean> => {
         if (alias === "") {
             setAliasError("Alias is required");
-            focusTextField("organization-alias-text-field");
             return false;
         }
 
         if (alias !== props.organization?.alias && await OrganizationEndpoint.aliasExists(alias ?? "")) {
             setAliasError("Alias already exists");
-            focusTextField("organization-alias-text-field");
             return false;
         }
 
@@ -82,18 +76,11 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
     }
 
     const focusTextField = (id: string) => {
-        document.getElementById(id)?.focus();
+        setTimeout(() => {
+            document.getElementById(id)?.focus();
+        }, 50);
     }
 
-    const handleNameBlur = () => {
-        if (name === undefined)
-            setName("");
-    }
-
-    const handleAliasBlur = () => {
-        if (alias === undefined)
-            setAlias("");
-    }
 
     const handleOpenedChanged = (e: DialogOpenedChangedEvent) => {
         if (!e.detail.value)
@@ -102,8 +89,8 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
 
     const handleSave = async () => {
         if (name === undefined || alias === undefined) {
-            handleAliasBlur();
-            handleNameBlur();
+            setName(name ?? "");
+            setAlias(alias ?? "");
             return;
         }
 
@@ -161,7 +148,6 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
                                invalid={nameError.length > 0}
                                errorMessage={nameError}
                                onValueChanged={e => setName(e.detail.value)}
-                               onBlur={handleNameBlur}
                                className={"pt-0"}/>
 
                     <TextField id={"organization-alias-text-field"}
@@ -170,7 +156,6 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
                                invalid={aliasError.length > 0}
                                errorMessage={aliasError}
                                onValueChanged={e => setAlias(e.detail.value)}
-                               onBlur={handleAliasBlur}
                                allowedCharPattern={"[a-z0-9-]"}/>
                 </section>
 
