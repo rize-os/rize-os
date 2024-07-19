@@ -3,6 +3,7 @@ package rize.os.access.manager.organization;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -11,6 +12,7 @@ import rize.os.access.manager.organization.exceptions.OrganizationConstraintExce
 import rize.os.access.manager.organization.exceptions.OrganizationCreateException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -46,6 +48,30 @@ class OrganizationService
         var organizationRepresentations = realmResource.organizations().search(search, false, 0, Integer.MAX_VALUE);
         var organizations = organizationRepresentations.stream().map(organizationMapper::toOrganization).toList();
         return loggedOrganizations(organizations);
+    }
+
+    /**
+     * Returns the organization from Keycloak that matches the given id.
+     * @param id ID of the organization to find
+     * @return The organization object if found, otherwise empty
+     */
+    @Nonnull
+    Optional<Organization> findById(@Nonnull String id)
+    {
+        log.debug("Searching organization in Keycloak with id: {}", id);
+
+        try
+        {
+            var organizationRepresentation = realmResource.organizations().get(id).toRepresentation();
+            var organization = organizationMapper.toOrganization(organizationRepresentation);
+            log.debug("Found organization: {}", organization);
+            return Optional.of(organization);
+        }
+        catch (NotFoundException e)
+        {
+            log.debug("Organization with id {} not found in Keycloak", id);
+            return Optional.empty();
+        }
     }
 
     /**
