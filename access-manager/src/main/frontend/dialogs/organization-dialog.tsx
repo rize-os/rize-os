@@ -1,4 +1,4 @@
-import { Dialog, Button, TextField, Icon, DialogOpenedChangedEvent } from "@vaadin/react-components";
+import { Notification, Dialog, Button, TextField, Icon, DialogOpenedChangedEvent } from "@vaadin/react-components";
 import  Organization from "Frontend/generated/rize/os/access/manager/organization/Organization";
 import React, {useEffect, useState} from "react";
 import Apartment from "@mui/icons-material/Apartment";
@@ -47,6 +47,10 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
         return () => clearTimeout(delayDebounceFn);
     }, [alias]);
 
+    const openErrorNotification = (message: string) => {
+        Notification.show(message, {theme: "error", position: "bottom-end", duration: 8000})
+    }
+
     const validateName = async (): Promise<boolean> => {
         if (name !== undefined && name.length < 3) {
             setNameError("Name must be at least 3 characters long");
@@ -63,8 +67,14 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
             return false;
         }
 
-        if (name !== props.organization?.name && await OrganizationEndpoint.nameExists(name ?? "")) {
-            setNameError("Name already exists");
+        try {
+            if (name !== props.organization?.name && await OrganizationEndpoint.nameExists(name ?? "")) {
+                setNameError("Name already exists");
+                return false;
+            }
+        }
+        catch (e) {
+            openErrorNotification("Unexpected error occurred while validating organization name");
             return false;
         }
 
@@ -88,8 +98,14 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
             return false;
         }
 
-        if (alias !== props.organization?.alias && await OrganizationEndpoint.aliasExists(alias ?? "")) {
-            setAliasError("Alias already exists");
+        try {
+            if (alias !== props.organization?.alias && await OrganizationEndpoint.aliasExists(alias ?? "")) {
+                setAliasError("Alias already exists");
+                return false;
+            }
+        }
+        catch (e) {
+            openErrorNotification("Unexpected error occurred while validating organization alias");
             return false;
         }
 
@@ -120,10 +136,18 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
             return;
 
         setIsSaving(true);
-        if (props.mode === "create")
-            await createOrganization();
-        else
-            await updateOrganization();
+
+        try {
+            if (props.mode === "create")
+                await createOrganization();
+            else
+                await updateOrganization();
+        }
+        catch (e) {
+            openErrorNotification("Unexpected error occurred while saving organization");
+            setIsSaving(false);
+            return;
+        }
 
         setIsSaving(false);
         setOpened(false)

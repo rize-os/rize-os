@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
 import { OrganizationEndpoint } from "Frontend/generated/endpoints";
-import { Icon, TextField, Button } from "@vaadin/react-components";
+import { Icon, TextField, Button, Notification, HorizontalLayout } from "@vaadin/react-components";
 import OrganizationItem from "Frontend/components/organization-item";
 import OrganizationDialog from "Frontend/dialogs/organization-dialog";
 import Skeleton from "Frontend/components/skeleton";
 import Organization from "Frontend/generated/rize/os/access/manager/organization/Organization";
 
 export default function OrganizationView() {
+
+
     const [dialogOpened, setDialogOpened] = useState<boolean>(false);
     const [dialogMode, setDialogMode] = useState<"edit" | "create" | undefined>("create");
     const [selectedOrganization, setSelectedOrganization] = useState<Organization | undefined>(undefined);
 
+    const [fetchError, setFetchError] = useState<string>("");
     const [organizations, setOrganizations] = useState<Organization[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [searching, setSearching] = useState<boolean>(false);
@@ -36,19 +39,29 @@ export default function OrganizationView() {
         setOrganizations(organizations.map(o => o.id === organization.id ? organization : o));
     }
 
-    useEffect(() => {
-        const fetchOrganizations = async () => {
-            setSearching(searchTerm.length > 0);
+    const handleRetry = async () => {
+        await fetchOrganizations();
+    }
 
+    const fetchOrganizations = async () => {
+        setSearching(searchTerm.length > 0);
+
+        try {
             if (searchTerm)
                 setOrganizations(await OrganizationEndpoint.find(searchTerm));
             else
                 setOrganizations(await OrganizationEndpoint.findAll());
 
-            setInitialLoading(false);
-            setSearching(false);
-        };
+            setFetchError("");
+        } catch (e) {
+            setFetchError("An error occurred while fetching organizations");
+        }
 
+        setInitialLoading(false);
+        setSearching(false);
+    };
+
+    useEffect(() => {
         const delayDebounceFn = setTimeout(fetchOrganizations, 500);
 
         return () => {
@@ -56,6 +69,7 @@ export default function OrganizationView() {
         }
     }, [searchTerm]);
 
+    // @ts-ignore
     return (
         <div className={"flex flex-col h-full"} key={"organizationView"}>
             <header key={"header"} className={"flex gap-4 p-6 pb-4 box-border backdrop-blur bg-white/80 sticky top-0 z-50"}>
@@ -100,6 +114,21 @@ export default function OrganizationView() {
                                 onCreate={handleOrganizationCreated}
                                 onUpdate={handleOrganizationUpdated}
                                 onClose={() => setDialogOpened(false)}/>
+
+            <Notification
+                theme="error"
+                position="bottom-end"
+                opened={fetchError !== ""}
+                duration={0}
+            >
+                <HorizontalLayout theme="spacing" style={{ alignItems: 'center' }}>
+                    <Icon icon="vaadin:warning" />
+                    <div>{fetchError}</div>
+                    <Button style={{ margin: '0 0 0 var(--lumo-space-l)' }} onClick={handleRetry}>
+                        Retry
+                    </Button>
+                </HorizontalLayout>
+            </Notification>
         </div>
     );
 }
