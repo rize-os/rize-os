@@ -1,5 +1,6 @@
 package rize.os.access.manager.user;
 
+import jakarta.annotation.Nonnull;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class UserService
      */
     List<User> findAll(int page, int size)
     {
-        return find(null, page, size);
+        return find("", page, size);
     }
 
     /**
@@ -46,19 +47,19 @@ public class UserService
 
     /**
      * Find users for organization in Keycloak realm
-     * @param organizationId organization id
+     * @param organizationId ID of the organization
      * @param page pagination offset
      * @param size number of users for page
      * @return List of users in the organization of the given page
      */
     List<User> findUsersForOrganization(String organizationId, int page, int size)
     {
-        return findUsersForOrganization(organizationId, null, page, size);
+        return findUsersForOrganization(organizationId, "", page, size);
     }
 
     /**
      * Find users for organization in Keycloak realm with search term
-     * @param organizationId organization id
+     * @param organizationId ID of the organization
      * @param search search term
      * @param page pagination offset
      * @param size number of users for page
@@ -67,10 +68,23 @@ public class UserService
     List<User> findUsersForOrganization(String organizationId, String search, int page, int size)
     {
         log.debug("Finding users for organization with id [{}] and search term: '{}' [page: {}, size: {}]", organizationId, search, page, size);
-        var userRepresentations = getOrganizationResource(organizationId).members().search(null, false, page, size);
+        var userRepresentations = getOrganizationResource(organizationId).members().search(search, false, page, size);
 
         var users = userRepresentations.stream().map(userMapper::toUser).toList();
         return loggedUsers(users);
+    }
+
+    /**
+     * Returns the number of users in the given organization
+     * @param organizationId ID of the organization
+     * @return Number of users in the organization
+     */
+    int getUserCountForOrganization(@Nonnull String organizationId)
+    {
+        log.debug("Determine the number of users in the organization [{}]", organizationId);
+        var count = realmResource.users().count(null, null, null, null, null, null, null, "kc.org:" + organizationId);
+        log.debug("Found {} users in the organization [{}]", count, organizationId);
+        return count;
     }
 
     private OrganizationResource getOrganizationResource(String organizationId)

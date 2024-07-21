@@ -73,7 +73,7 @@ export default function OrganizationView() {
     return (
         <div className={"flex flex-col h-full"} key={"organizationView"}>
             <header key={"header"} className={"flex gap-4 p-6 pb-4 box-border backdrop-blur bg-white/80 sticky top-0 z-50"}>
-                <h2 className={"flex-grow text-2xl leading-10"}>Your Organizations</h2>
+                <h2 className={"flex-grow text-2xl leading-10"}>Organizations</h2>
                 <TextField key={"searchField"}
                            placeholder={"Search..."}
                            clearButtonVisible
