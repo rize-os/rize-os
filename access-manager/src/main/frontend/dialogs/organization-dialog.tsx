@@ -29,8 +29,10 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
     }, [props.opened]);
 
     useEffect(() => {
-        setName(props.organization?.name ?? undefined);
-        setAlias(props.organization?.alias ?? undefined);
+        if (opened) {
+            setName(props.organization?.name ?? undefined);
+            setAlias(props.organization?.alias ?? undefined);
+        }
     }, [props.organization, opened]);
 
     useEffect(() => {
@@ -133,7 +135,17 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
     }
 
     const updateOrganization = async () => {
+        if (!props.organization)
+            return;
 
+        let updatedOrganization= props.organization;
+
+        if (updatedOrganization.name !== name)
+            updatedOrganization = await OrganizationEndpoint.updateName(updatedOrganization.id, name ?? "");
+        if (updatedOrganization.alias !== alias)
+            updatedOrganization = await OrganizationEndpoint.updateAlias(updatedOrganization.id, alias ?? "");
+
+        props.onUpdate?.(updatedOrganization);
     }
 
     return (

@@ -4,6 +4,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.Endpoint;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.select.CombiningEvaluator;
 
 import java.util.List;
 
@@ -67,5 +68,29 @@ public class OrganizationEndpoint
     {
         var organization = Organization.builder().name(name).alias(alias).build();
         return organizationService.createOrganization(organization);
+    }
+
+    /**
+     * Updates the name of the organization with the given id.
+     * @param id ID of the organization to update
+     * @param name New name of the organization
+     * @return The updated organization
+     */
+    @Nonnull
+    public Organization updateName(@Nonnull String id, @Nonnull String name)
+    {
+        return organizationService.updateName(id, name);
+    }
+
+    /**
+     * Updates the alias of the organization with the given id.
+     * @param id ID of the organization to update
+     * @param alias New alias of the organization
+     * @return The updated organization
+     */
+    @Nonnull
+    public Organization updateAlias(@Nonnull String id, @Nonnull String alias)
+    {
+        return organizationService.updateAlias(id, alias);
     }
 }

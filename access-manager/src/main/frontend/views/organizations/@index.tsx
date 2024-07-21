@@ -32,6 +32,10 @@ export default function OrganizationView() {
         setOrganizations([...organizations, organization]);
     }
 
+    const handleOrganizationUpdated = (organization: Organization) => {
+        setOrganizations(organizations.map(o => o.id === organization.id ? organization : o));
+    }
+
     useEffect(() => {
         const fetchOrganizations = async () => {
             setSearching(searchTerm.length > 0);
@@ -94,6 +98,7 @@ export default function OrganizationView() {
                                 opened={dialogOpened}
                                 organization={selectedOrganization}
                                 onCreate={handleOrganizationCreated}
+                                onUpdate={handleOrganizationUpdated}
                                 onClose={() => setDialogOpened(false)}/>
         </div>
     );
