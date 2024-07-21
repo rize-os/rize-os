@@ -1,9 +1,11 @@
+import { useNavigate } from 'react-router-dom';
+import {useEffect} from "react";
+
 export default function HomeView()
 {
-    return (
-        <div>
-            <h1>Access-Manager</h1>
-            <h3>rize.os</h3>
-        </div>
-    );
+    const navigate = useNavigate();
+    useEffect(() => {
+        navigate("/organizations");
+    }, []);
+    return (<></>);
 }

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+    --vaadin-tooltip-offset-top: 0.5rem;
+}
+
 vaadin-menu-bar-item::part(checkmark) {
     width: 0;
 }
@@ -9,3 +13,4 @@ vaadin-menu-bar-item::part(checkmark) {
 vaadin-menu-bar-item {
     padding: 0.3rem 0.6rem;
 }
+
