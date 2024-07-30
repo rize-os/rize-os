@@ -21,26 +21,26 @@ public class UserService
 
     /**
      * Find all users in Keycloak realm
-     * @param page pagination offset
+     * @param offset pagination offset
      * @param size number of users for page
      * @return List of users of the given page
      */
-    List<User> findAll(int page, int size)
+    List<User> findAll(int offset, int size)
     {
-        return find("", page, size);
+        return find("", offset, size);
     }
 
     /**
      * Find users in Keycloak realm with search term
      * @param search search term
-     * @param page pagination offset
+     * @param offset pagination offset
      * @param size number of users for page
      * @return List of users of the given page
      */
-    List<User> find(String search, int page, int size)
+    List<User> find(String search, int offset, int size)
     {
-        log.debug("Searching users in Keycloak with search term: '{}' [page: {}, size: {}]", search, page, size);
-        var userRepresentations = realmResource.users().search(search, false, page, size);
+        log.debug("Searching users in Keycloak with search term: '{}' [offset: {}, size: {}]", search, offset, size);
+        var userRepresentations = realmResource.users().search(search, false, offset, size);
         var users = userRepresentations.stream().map(userMapper::toUser).toList();
         return loggedUsers(users);
     }
@@ -48,27 +48,27 @@ public class UserService
     /**
      * Find users for organization in Keycloak realm
      * @param organizationId ID of the organization
-     * @param page pagination offset
+     * @param offset pagination offset
      * @param size number of users for page
      * @return List of users in the organization of the given page
      */
-    List<User> findUsersForOrganization(String organizationId, int page, int size)
+    List<User> findUsersForOrganization(String organizationId, int offset, int size)
     {
-        return findUsersForOrganization(organizationId, "", page, size);
+        return findUsersForOrganization(organizationId, "", offset, size);
     }
 
     /**
      * Find users for organization in Keycloak realm with search term
      * @param organizationId ID of the organization
      * @param search search term
-     * @param page pagination offset
+     * @param offset pagination offset
      * @param size number of users for page
      * @return List of users in the organization of the given page
      */
-    List<User> findUsersForOrganization(String organizationId, String search, int page, int size)
+    List<User> findUsersForOrganization(String organizationId, String search, int offset, int size)
     {
-        log.debug("Finding users for organization with id [{}] and search term: '{}' [page: {}, size: {}]", organizationId, search, page, size);
-        var userRepresentations = getOrganizationResource(organizationId).members().search(search, false, page, size);
+        log.debug("Finding users for organization with id [{}] and search term: '{}' [offset: {}, size: {}]", organizationId, search, offset, size);
+        var userRepresentations = getOrganizationResource(organizationId).members().search(search, false, offset, size);
 
         var users = userRepresentations.stream().map(userMapper::toUser).toList();
         return loggedUsers(users);
