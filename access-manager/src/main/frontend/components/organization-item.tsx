@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Avatar, MenuBar, Tooltip, MenuBarItemSelectedEvent } from '@vaadin/react-components';
 import { Apartment, MoreVert, Edit } from "@mui/icons-material";
 import { UserEndpoint } from "Frontend/generated/endpoints";
@@ -26,6 +27,8 @@ const menuBarItems = [
 ]
 
 const OrganizationItem: React.FC<OrganizationItemProps> = ({ organization, onEdit}) => {
+
+    const navigate = useNavigate();
 
     const [users, setUsers] = useState<User[]>([]);
     const [userCount, setUserCount] = useState<number>(0);
@@ -70,7 +73,10 @@ const OrganizationItem: React.FC<OrganizationItemProps> = ({ organization, onEdi
                         <span {...{theme: 'badge success pill'}}>Active Subscription</span> :
                         <></>}
                 </div>
-                    <div className={"flex"} id={"avatars-" + organization.id}>
+                    <div className={"flex cursor-pointer"}
+                         id={"avatars-" + organization.id}
+                         onClick={() => navigate('/users?organizationId=' + organization.id)}
+                    >
                         { users.map((user, index) => (
                             <Avatar key={index}
                                     name={`${user.firstName} ${user.lastName}`}

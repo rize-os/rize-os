@@ -15,9 +15,9 @@ public class UserEndpoint
 {
     private final UserService userService;
 
-    public List<User> findUsersForOrganization(@Nonnull String organizationId, int page, int pageSize)
+    public List<User> findUsersForOrganization(@Nonnull String organizationId, int offset, int pageSize)
     {
-        return userService.findUsersForOrganization(organizationId, page, pageSize);
+        return userService.findUsersForOrganization(organizationId, offset, pageSize);
     }
 
     public int getUserCountForOrganization(@Nonnull String organizationId)

@@ -15,6 +15,7 @@ export default function MainLayout() {
                 <header className="flex flex-col gap-m">
                     <SideNav onNavigate={({path}) => path && navigate(path)} location={location}>
                         <SideNavItem path="/organizations">Organizations</SideNavItem>
+                        <SideNavItem path="/users">Users</SideNavItem>
                     </SideNav>
                 </header>
             </div>
