@@ -13,6 +13,21 @@ server:
   port: ${access-manager.port:9090}
 ---
 spring:
+  datasource:
+    url: ${datasource.url}
+    username: ${datasource.username}
+    password: ${datasource.password}
+    driver-class-name: org.postgresql.Driver
+---
+spring:
+  modulith:
+    republish-outstanding-events-on-restart: true
+    events:
+      jdbc:
+        schema-initialization:
+          enabled: true
+---
+spring:
   docker:
     compose:
       enabled: true
