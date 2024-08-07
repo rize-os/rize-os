@@ -4,6 +4,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.Endpoint;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
+import rize.os.access.manager.organization.exceptions.OrganizationNotFoundException;
 
 import java.util.List;
 
@@ -78,7 +79,9 @@ public class OrganizationEndpoint
     @Nonnull
     public Organization updateName(@Nonnull String id, @Nonnull String name)
     {
-        return organizationService.updateName(id, name);
+        var organization = organizationService.findById(id).orElseThrow(() -> new OrganizationNotFoundException(id));
+        organization.setName(name);
+        return organizationService.updateOrganization(organization);
     }
 
     /**
@@ -90,6 +93,8 @@ public class OrganizationEndpoint
     @Nonnull
     public Organization updateAlias(@Nonnull String id, @Nonnull String alias)
     {
-        return organizationService.updateAlias(id, alias);
+        var organization = organizationService.findById(id).orElseThrow(() -> new OrganizationNotFoundException(id));
+        organization.setAliases(List.of(alias));
+        return organizationService.updateOrganization(organization);
     }
 }

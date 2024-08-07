@@ -1,60 +1,76 @@
 package rize.os.access.manager.organization;
 
+import jakarta.annotation.Nonnull;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Organization
 {
+    static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
+    static final String ALIASES_ATTRIBUTE = "aliases";
+    static final String IMAGE_ID_ATTRIBUTE = "imageId";
+
+    static final String NAME_PATTERN = "^[a-z0-9][a-z0-9-]{0,62}[a-z0-9]$";
+    static final String ALIAS_PATTERN = NAME_PATTERN;
+
+    private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
     private String id;
 
     @NotBlank
-    @Size(min = 3, max = 64)
-    @Pattern(regexp = "^[a-zA-Z0-9][a-zA-Z0-9-_&+./ ]*[a-zA-Z0-9]$")
+    @Pattern(regexp = NAME_PATTERN)
     private String name;
 
     @NotBlank
-    @Size(min = 3, max = 64)
-    @Pattern(regexp = "^[a-z0-9][a-z0-9-]*[a-z0-9]$")
-    private String alias;
+    private String displayName;
 
     @NotEmpty
-    @Builder.Default
-    private List<Domain> domains = new ArrayList<>();
+    @Singular
+    private List<@Pattern(regexp = ALIAS_PATTERN) String> aliases;
+
+    private UUID imageId;
 
     @Builder.Default
     private boolean enabled = true;
 
-    static String nameToAlias(String name)
+    /**
+     * Validates the values of the organization object. If the returned list of violations is empty, the values for the organization are valid.
+     * @return Violations of invalid values in the organization object
+     */
+    @Nonnull
+    Set<ConstraintViolation<Organization>> validate()
     {
-        return name.toLowerCase()
-                .replaceAll("[^a-z0-9]+", "-")
-                .replaceAll("^-|-$", "");
+        return validator.validate(this);
     }
 
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Domain
+    /**
+     * Returns a description of the organization object that contains the display name and all aliases.
+     * @return Description of the organization object
+     */
+    @Nonnull
+    String getDescription()
     {
-        private String name;
+        return displayName + " " + aliases;
+    }
 
-        @Builder.Default
-        private boolean verified = false;
-
-        @Override
-        public String toString()
-        {
-            return name;
-        }
+    @Override
+    public String toString()
+    {
+        return "Organization{" + "id='" + id + '\'' + ", " +
+                "name='" + name + '\'' + ", " +
+                "aliases=" + aliases + ", " +
+                "displayName='" + displayName + '\'' + ", " +
+                "enabled=" + enabled + '}';
     }
 }

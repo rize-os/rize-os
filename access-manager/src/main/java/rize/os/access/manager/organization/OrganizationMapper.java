@@ -1,52 +1,86 @@
 package rize.os.access.manager.organization;
 
 import jakarta.annotation.Nonnull;
-import org.keycloak.representations.idm.OrganizationDomainRepresentation;
 import org.keycloak.representations.idm.OrganizationRepresentation;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 @Component
 class OrganizationMapper
 {
+    /**
+     * Maps an organization representation from Keycloak to an organization object
+     * @param organizationRepresentation Organization representation from Keycloak
+     * @return Organization object
+     */
     @Nonnull
     Organization toOrganization(@Nonnull OrganizationRepresentation organizationRepresentation)
     {
+        var displayName = getDisplayName(organizationRepresentation);
+        var aliases = getAliases(organizationRepresentation);
+        var imageId = getImageId(organizationRepresentation).orElse(null);
+
         return Organization.builder()
                 .id(organizationRepresentation.getId())
                 .name(organizationRepresentation.getName())
-                .alias(organizationRepresentation.getDescription()) // TODO Should be changed, after Keycloak supports alias
-                .domains(organizationRepresentation.getDomains().stream().map(this::toDomain).toList())
+                .displayName(displayName)
+                .aliases(aliases)
+                .imageId(imageId)
                 .enabled(organizationRepresentation.isEnabled())
                 .build();
     }
 
+    /**
+     * Returns the display name of the organization representation from Keycloak
+     * @param organizationRepresentation Organization representation
+     * @return Display name of the organization; empty string if not present
+     */
     @Nonnull
-    OrganizationRepresentation toOrganizationRepresentation(@Nonnull Organization organization)
+    String getDisplayName(@Nonnull OrganizationRepresentation organizationRepresentation)
     {
-        var organizationRepresentation = new OrganizationRepresentation();
-        organizationRepresentation.setId(organization.getId());
-        organizationRepresentation.setName(organization.getName());
-        organizationRepresentation.setDescription(organization.getAlias());
-        organizationRepresentation.setEnabled(organization.isEnabled());
-        organization.getDomains().forEach(domain -> organizationRepresentation.addDomain(toDomainRepresentation(domain)));
-        return organizationRepresentation;
+        if (organizationRepresentation.getAttributes() == null || !organizationRepresentation.getAttributes().containsKey(Organization.DISPLAY_NAME_ATTRIBUTE))
+            return "";
+
+        return organizationRepresentation.getAttributes().get(Organization.DISPLAY_NAME_ATTRIBUTE).getFirst();
+    }
+
+    /**
+     * Returns the aliases of the organization representation from Keycloak
+     * @param organizationRepresentation Organization representation
+     * @return List of aliases of the organization; empty list if not present
+     */
+    @Nonnull
+    List<String> getAliases(@Nonnull OrganizationRepresentation organizationRepresentation)
+    {
+        if (organizationRepresentation.getAttributes() == null || !organizationRepresentation.getAttributes().containsKey(Organization.ALIASES_ATTRIBUTE))
+            return List.of();
+
+        return organizationRepresentation.getAttributes().get(Organization.ALIASES_ATTRIBUTE);
+    }
+
+    /**
+     * Returns the image ID of the organization representation from Keycloak
+     * @param organizationRepresentation Organization representation
+     * @return Image ID of the organization; empty optional if not present
+     */
+    @Nonnull
+    Optional<UUID> getImageId(@Nonnull OrganizationRepresentation organizationRepresentation)
+    {
+        if (organizationRepresentation.getAttributes() == null || !organizationRepresentation.getAttributes().containsKey(Organization.IMAGE_ID_ATTRIBUTE))
+            return Optional.empty();
+
+        return Optional.of(UUID.fromString(organizationRepresentation.getAttributes().get(Organization.IMAGE_ID_ATTRIBUTE).getFirst()));
     }
 
     @Nonnull
-    Organization.Domain toDomain(@Nonnull OrganizationDomainRepresentation domain)
+    Map<String, List<String>> getAttributesForOrganization(@Nonnull Organization organization)
     {
-        return Organization.Domain.builder()
-                .name(domain.getName())
-                .verified(domain.isVerified())
-                .build();
-    }
-
-    @Nonnull
-    OrganizationDomainRepresentation toDomainRepresentation(@Nonnull Organization.Domain domain)
-    {
-        OrganizationDomainRepresentation domainRepresentation = new OrganizationDomainRepresentation();
-        domainRepresentation.setName(domain.getName());
-        domainRepresentation.setVerified(domain.isVerified());
-        return domainRepresentation;
+        Map<String, List<String>> attributes = new HashMap<>();
+        attributes.put(Organization.DISPLAY_NAME_ATTRIBUTE, List.of(organization.getDisplayName()));
+        attributes.put(Organization.ALIASES_ATTRIBUTE, organization.getAliases());
+        if (organization.getImageId() != null)
+            attributes.put(Organization.IMAGE_ID_ATTRIBUTE, List.of(organization.getImageId().toString()));
+        return attributes;
     }
 }
