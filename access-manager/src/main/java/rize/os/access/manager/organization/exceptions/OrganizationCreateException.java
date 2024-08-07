@@ -28,4 +28,12 @@ public class OrganizationCreateException extends RuntimeException
         log.warn(getMessage());
         this.organization = organization;
     }
+
+    public OrganizationCreateException(Organization organization, String message)
+    {
+        super("Failed to create organization: " + message);
+
+        log.warn(getMessage());
+        this.organization = organization;
+    }
 }

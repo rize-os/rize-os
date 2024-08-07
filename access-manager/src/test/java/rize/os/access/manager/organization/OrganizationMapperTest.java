@@ -1,10 +1,11 @@
 package rize.os.access.manager.organization;
 
 import org.junit.jupiter.api.Test;
-import org.keycloak.representations.idm.OrganizationDomainRepresentation;
 import org.keycloak.representations.idm.OrganizationRepresentation;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,14 +18,14 @@ class OrganizationMapperTest
     void shouldMapOrganizationRepresentationToOrganization()
     {
         // Given
-        var domainRepresentation = new OrganizationDomainRepresentation("test-organization.com");
-        domainRepresentation.setVerified(true);
         var organizationRepresentation = new OrganizationRepresentation();
         organizationRepresentation.setId(UUID.randomUUID().toString());
-        organizationRepresentation.setName("Name of the Test Organization");
-        organizationRepresentation.setDescription("alias-of-organization");
+        organizationRepresentation.setName("test-organization-1");
+        organizationRepresentation.setAttributes(new HashMap<>());
+        organizationRepresentation.getAttributes().put("displayName", List.of("Test Organization 1"));
+        organizationRepresentation.getAttributes().put("aliases", List.of("test-1", "test-2"));
+        organizationRepresentation.getAttributes().put("imageId", List.of(UUID.randomUUID().toString()));
         organizationRepresentation.setEnabled(true);
-        organizationRepresentation.addDomain(domainRepresentation);
 
         // When
         Organization organization = organizationMapper.toOrganization(organizationRepresentation);
@@ -32,35 +33,80 @@ class OrganizationMapperTest
         // Then
         assertThat(organization.getId()).isEqualTo(organizationRepresentation.getId());
         assertThat(organization.getName()).isEqualTo(organizationRepresentation.getName());
-        assertThat(organization.getAlias()).isEqualTo(organizationRepresentation.getDescription());
+        assertThat(organization.getDisplayName()).isEqualTo(organizationRepresentation.getAttributes().get("displayName").getFirst());
+        assertThat(organization.getAliases()).hasSize(2);
+        assertThat(organization.getAliases()).contains("test-1", "test-2");
+        assertThat(organization.getImageId()).isEqualTo(UUID.fromString(organizationRepresentation.getAttributes().get("imageId").getFirst()));
         assertThat(organization.isEnabled()).isEqualTo(organizationRepresentation.isEnabled());
-        assertThat(organization.getDomains()).hasSize(1);
-        assertThat(organization.getDomains().getFirst().getName()).isEqualTo(domainRepresentation.getName());
-        assertThat(organization.getDomains().getFirst().isVerified()).isEqualTo(domainRepresentation.isVerified());
     }
 
     @Test
-    void shouldMapOrganizationToOrganizationRepresentation()
+    void shouldGetDisplayName()
     {
-        // Given
-        Organization organization = Organization.builder()
-                .id(UUID.randomUUID().toString())
-                .name("Name of the Test Organization")
-                .alias("alias-of-organization")
-                .enabled(true)
-                .domains(List.of(new Organization.Domain("test-organization.com", true)))
+        var organizationRepresentation = new OrganizationRepresentation();
+        organizationRepresentation.singleAttribute(Organization.DISPLAY_NAME_ATTRIBUTE, "Test Organization 1");
+
+        var displayName = organizationMapper.getDisplayName(organizationRepresentation);
+        assertThat(displayName).isEqualTo("Test Organization 1");
+    }
+
+    @Test
+    void shouldGetEmptyDisplayName()
+    {
+        var displayName = organizationMapper.getDisplayName(new OrganizationRepresentation());
+        assertThat(displayName).isEmpty();
+    }
+
+    @Test
+    void shouldGetAliases()
+    {
+        var organizationRepresentation = new OrganizationRepresentation();
+        organizationRepresentation.setAttributes(Map.of(Organization.ALIASES_ATTRIBUTE, List.of("test-1", "test-2")));
+
+        var aliases = organizationMapper.getAliases(organizationRepresentation);
+        assertThat(aliases).hasSize(2);
+        assertThat(aliases).contains("test-1", "test-2");
+    }
+
+    @Test
+    void shouldGetEmptyAliases()
+    {
+        var aliases = organizationMapper.getAliases(new OrganizationRepresentation());
+        assertThat(aliases).isEmpty();
+    }
+
+    @Test
+    void shouldGetImageId()
+    {
+        var organizationRepresentation = new OrganizationRepresentation();
+        organizationRepresentation.singleAttribute(Organization.IMAGE_ID_ATTRIBUTE, UUID.randomUUID().toString());
+
+        var imageId = organizationMapper.getImageId(organizationRepresentation);
+        assertThat(imageId).isPresent();
+        assertThat(imageId.get()).isEqualTo(UUID.fromString(organizationRepresentation.getAttributes().get(Organization.IMAGE_ID_ATTRIBUTE).getFirst()));
+    }
+
+    @Test
+    void shouldGetEmptyImageId()
+    {
+        var imageId = organizationMapper.getImageId(new OrganizationRepresentation());
+        assertThat(imageId).isEmpty();
+    }
+
+    @Test
+    void shouldGetAttributesForOrganization()
+    {
+        var organization = Organization.builder()
+                .displayName("Test Organization 1")
+                .alias("test-1")
+                .alias("test-2")
+                .imageId(UUID.randomUUID())
                 .build();
 
-        // When
-        OrganizationRepresentation organizationRepresentation = organizationMapper.toOrganizationRepresentation(organization);
+        var attributes = organizationMapper.getAttributesForOrganization(organization);
 
-        // Then
-        assertThat(organizationRepresentation.getId()).isEqualTo(organization.getId());
-        assertThat(organizationRepresentation.getName()).isEqualTo(organization.getName());
-        assertThat(organizationRepresentation.getDescription()).isEqualTo(organization.getAlias());
-        assertThat(organizationRepresentation.isEnabled()).isEqualTo(organization.isEnabled());
-        assertThat(organizationRepresentation.getDomains()).hasSize(1);
-        assertThat(organizationRepresentation.getDomains().stream().findFirst().get().getName()).isEqualTo(organization.getDomains().getFirst().getName());
-        assertThat(organizationRepresentation.getDomains().stream().findFirst().get().isVerified()).isEqualTo(organization.getDomains().getFirst().isVerified());
+        assertThat(attributes).containsEntry(Organization.DISPLAY_NAME_ATTRIBUTE, List.of("Test Organization 1"));
+        assertThat(attributes).containsEntry(Organization.ALIASES_ATTRIBUTE, List.of("test-1", "test-2"));
+        assertThat(attributes).containsEntry(Organization.IMAGE_ID_ATTRIBUTE, List.of(organization.getImageId().toString()));
     }
 }
