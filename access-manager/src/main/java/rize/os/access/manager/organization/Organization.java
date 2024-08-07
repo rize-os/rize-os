@@ -1,5 +1,6 @@
 package rize.os.access.manager.organization;
 
+import com.vaadin.hilla.Nullable;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -39,6 +40,7 @@ public class Organization
     @Singular
     private List<@Pattern(regexp = ALIAS_PATTERN) String> aliases;
 
+    @Nullable
     private UUID imageId;
 
     @Builder.Default

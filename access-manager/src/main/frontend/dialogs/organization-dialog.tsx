@@ -15,60 +15,59 @@ interface OrganizationDialogProps {
 
 const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
 
+    const nameRegex = /^[a-z0-9][a-z0-9-]{0,62}[a-z0-9]$/;
+
+    const [opened, setOpened] = useState<boolean>(false);
     const [isSaving, setIsSaving] = useState<boolean>(false);
+
+    const [displayName, setDisplayName] = useState<string | undefined>(undefined);
+    const [displayNameError, setDisplayNameError] = useState<string>("");
     const [name, setName] = useState<string | undefined>(undefined);
     const [nameError, setNameError] = useState<string>("");
-    const [alias, setAlias] = useState<string | undefined>(undefined);
-    const [aliasError, setAliasError] = useState<string>("");
-    const [opened, setOpened] = useState<boolean>(false);
+    const [nameEditedManually, setNameEditedManually] = useState<boolean>(false);
 
     useEffect(() => {
         setOpened(props.opened?? true);
-        if(props.opened)
-            focusTextField("organization-name-text-field");
     }, [props.opened]);
 
     useEffect(() => {
         if (opened) {
+            focusTextField("display-name-text-field");
+            setDisplayName(props.organization?.displayName ?? undefined);
             setName(props.organization?.name ?? undefined);
-            setAlias(props.organization?.alias ?? undefined);
+            setNameEditedManually(!!props.organization);
         }
     }, [props.organization, opened]);
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(validateName, 500);
-        setNameError("");
         return () => clearTimeout(delayDebounceFn);
     }, [name]);
 
     useEffect(() => {
-        const delayDebounceFn = setTimeout(validateAlias, 500);
-        setAliasError("");
+        if (!nameEditedManually && displayName)
+            generateName(displayName);
+
+        const delayDebounceFn = setTimeout(validateDisplayName, 500);
         return () => clearTimeout(delayDebounceFn);
-    }, [alias]);
+    }, [displayName]);
+
 
     const openErrorNotification = (message: string) => {
         Notification.show(message, {theme: "error", position: "bottom-end", duration: 8000})
     }
 
     const validateName = async (): Promise<boolean> => {
-        if (name !== undefined && name.length < 3) {
-            setNameError("Name must be at least 3 characters long");
+        if (name === undefined)
             return false;
-        }
 
-        if (name !== undefined && name.length > 64) {
-            setNameError("Name cannot be longer than 64 characters");
-            return false;
-        }
-
-        if (name !== undefined && !/^[a-zA-Z0-9][a-zA-Z0-9-_&+./ ]*[a-zA-Z0-9]$/.test(name)) {
-            setNameError("Name must start and end with a letter or number and be less than 32 characters long");
+        if (!nameRegex.test(name)) {
+            setNameError("Name must start and end with a letter or number and must be between 2 and 64 characters long");
             return false;
         }
 
         try {
-            if (name !== props.organization?.name && await OrganizationEndpoint.nameExists(name ?? "")) {
+            if (name !== props.organization?.name && await OrganizationEndpoint.nameExists(name)) {
                 setNameError("Name already exists");
                 return false;
             }
@@ -82,35 +81,25 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
         return true;
     }
 
-    const validateAlias = async (): Promise<boolean> => {
-        if (alias !== undefined && alias.length < 3) {
-            setAliasError("Alias must be at least 3 characters long");
+    const validateDisplayName = async (): Promise<boolean> => {
+        if (displayName === undefined)
+            return false;
+
+        if (displayName.length === 0) {
+            setDisplayNameError("Display name is required");
             return false;
         }
 
-        if (alias !== undefined && alias.length > 64) {
-            setAliasError("Alias cannot be longer than 64 characters");
-            return false;
-        }
-
-        if (alias !== undefined && !/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(alias)) {
-            setAliasError("Alias must start and end with a letter or number");
-            return false;
-        }
-
-        try {
-            if (alias !== props.organization?.alias && await OrganizationEndpoint.aliasExists(alias ?? "")) {
-                setAliasError("Alias already exists");
-                return false;
-            }
-        }
-        catch (e) {
-            openErrorNotification("Unexpected error occurred while validating organization alias");
-            return false;
-        }
-
-        setAliasError("");
+        setDisplayNameError("");
         return true;
+    }
+
+    const generateName = (displayName: string) => {
+        setName(displayName
+            .replace(/[^a-zA-Z0-9\s-_]/g, '')
+            .replace(/[\s_]+/g, '-')
+            .replace(/-+/g, '-')
+            .toLowerCase());
     }
 
     const focusTextField = (id: string) => {
@@ -119,20 +108,19 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
         }, 50);
     }
 
-
     const handleOpenedChanged = (e: DialogOpenedChangedEvent) => {
         if (!e.detail.value)
             props.onClose?.();
     };
 
     const handleSave = async () => {
-        if (name === undefined || alias === undefined) {
+        if (name === undefined || displayName === undefined) {
             setName(name ?? "");
-            setAlias(alias ?? "");
+            setDisplayName(displayName ?? "");
             return;
         }
 
-        if (!await validateName() || !await validateAlias())
+        if (!await validateName() || !await validateDisplayName())
             return;
 
         setIsSaving(true);
@@ -154,20 +142,22 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
     };
 
     const createOrganization = async () => {
-        const organization = await OrganizationEndpoint.create(!name? "" : name, !alias? "" : alias);
+        if (!name || !displayName)
+            return;
+
+        const organization = await OrganizationEndpoint.create(displayName, name);
         props.onCreate?.(organization);
     }
 
     const updateOrganization = async () => {
-        if (!props.organization)
+        if (!props.organization || !name || !displayName)
             return;
 
-        let updatedOrganization= props.organization;
-
-        if (updatedOrganization.name !== name)
-            updatedOrganization = await OrganizationEndpoint.updateName(updatedOrganization.id, name ?? "");
-        if (updatedOrganization.alias !== alias)
-            updatedOrganization = await OrganizationEndpoint.updateAlias(updatedOrganization.id, alias ?? "");
+        let organization= props.organization;
+        organization.name = name;
+        organization.displayName = displayName;
+        organization.aliases = [name];
+        let updatedOrganization = await OrganizationEndpoint.update(organization);
 
         props.onUpdate?.(updatedOrganization);
     }
@@ -198,21 +188,22 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props) => {
                 </section>
 
                 <section className={"flex flex-col w-72"}>
-                    <TextField id={"organization-name-text-field"}
-                               value={name} key={"name"}
+                    <TextField id={"display-name-text-field"}
+                               value={displayName}
+                               label={"Display Name"}
+                               invalid={displayNameError.length > 0}
+                               errorMessage={displayNameError}
+                               onValueChanged={e => setDisplayName(e.detail.value)}
+                               allowedCharPattern={"[a-zA-Z0-9-_&+./ ]"}
+                               className={"pt-0"}/>
+
+                    <TextField id={"name-text-field"}
+                               value={name}
                                label={"Name"}
                                invalid={nameError.length > 0}
                                errorMessage={nameError}
                                onValueChanged={e => setName(e.detail.value)}
-                               allowedCharPattern={"[a-zA-Z0-9-_&+./ ]"}
-                               className={"pt-0"}/>
-
-                    <TextField id={"organization-alias-text-field"}
-                               value={alias}
-                               label={"Alias"}
-                               invalid={aliasError.length > 0}
-                               errorMessage={aliasError}
-                               onValueChanged={e => setAlias(e.detail.value)}
+                               onFocus={() => setNameEditedManually(true)}
                                allowedCharPattern={"[a-z0-9-]"}/>
                 </section>
 

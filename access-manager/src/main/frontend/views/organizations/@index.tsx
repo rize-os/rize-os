@@ -9,7 +9,7 @@ import type Organization from "Frontend/generated/rize/os/access/manager/organiz
 export default function OrganizationView() {
 
     const [dialogOpened, setDialogOpened] = useState<boolean>(false);
-    const [dialogMode, setDialogMode] = useState<"edit" | "create" | undefined>("create");
+    const [dialogMode, setDialogMode] = useState<"edit" | "create">("create");
     const [selectedOrganization, setSelectedOrganization] = useState<Organization | undefined>(undefined);
 
     const [fetchError, setFetchError] = useState<string>("");
@@ -71,7 +71,7 @@ export default function OrganizationView() {
     // @ts-ignore
     return (
         <div className={"flex flex-col h-full"}>
-            <header className={"flex gap-4 p-6 pb-4 box-border backdrop-blur sticky top-0 z-50"}>
+            <header className={"flex gap-4 p-6 pb-4 box-border backdrop-blur bg-white/80 sticky top-0 border-b z-10"}>
                 <h2 className={"flex-grow text-2xl leading-10"}>Organizations</h2>
                 <TextField key={"searchField"}
                            placeholder={"Search..."}
