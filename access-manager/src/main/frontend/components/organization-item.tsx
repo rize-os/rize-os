@@ -57,8 +57,8 @@ const OrganizationItem: React.FC<OrganizationItemProps> = ({ organization, onEdi
                     </div>
                 </div>
                 <div className={"flex-grow flex flex-col"}>
-                    <span className={"text-xl text-gray-700 font-bold leading-6"}>{organization.name}</span>
-                    <span className={"text-sm text-gray-400 leading-5"}>{organization.alias}</span>
+                    <span className={"text-xl text-gray-700 font-bold leading-6"}>{organization.displayName}</span>
+                    <span className={"text-sm text-gray-400 leading-5"}>{organization.name}</span>
                 </div>
                 <div>
                     <MenuBar theme="icon" items={menuBarItems} onItemSelected={handleMenuItemSelected}/>
@@ -80,7 +80,7 @@ const OrganizationItem: React.FC<OrganizationItemProps> = ({ organization, onEdi
                         { users.map((user, index) => (
                             <Avatar key={index}
                                     name={`${user.firstName} ${user.lastName}`}
-                                    className={"bg-gray-200 border-2 border-white"} style={{zIndex: (10-index), margin: "-5px"}}/>
+                                    className={"bg-gray-200 border-2 border-white"} style={{zIndex: (3-index), margin: "-5px"}}/>
                         ))}
                         <Tooltip for={"avatars-" + organization.id}
                                  text={`${userCount} Members`} position={"bottom"}

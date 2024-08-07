@@ -4,7 +4,6 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.Endpoint;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
-import rize.os.access.manager.organization.exceptions.OrganizationNotFoundException;
 
 import java.util.List;
 
@@ -37,64 +36,36 @@ public class OrganizationEndpoint
     }
 
     /**
-     * Determines wether an organization with the given name already exists.
+     * Determines if an organization with the given name already exists.
      * @param name Name of the organization to check
      * @return {@code true} if an organization with the given name exists, {@code false} otherwise
      */
     public boolean nameExists(@Nonnull String name)
     {
-        return organizationService.find(name)
-                .stream().anyMatch(organization -> organization.getName().equalsIgnoreCase(name));
+        return organizationService.findByName(name).isPresent();
     }
 
     /**
-     * Determines wether an organization with the given alias already exists.
-     * @param alias Alias of the organization to check
-     * @return {@code true} if an organization with the given alias exists, {@code false} otherwise
-     */
-    public boolean aliasExists(@Nonnull String alias)
-    {
-        return organizationService.findByAlias(alias).isPresent();
-    }
-
-    /**
-     * Creates a new organization with the given name and alias.
+     * Creates a new organization with the given display name and name
+     * @param displayName Display name of the organization
      * @param name Name of the organization
-     * @param alias Alias of the organization
      * @return The created organization
      */
     @Nonnull
-    public Organization create(@Nonnull String name, @Nonnull String alias)
+    public Organization create(@Nonnull String displayName, @Nonnull String name)
     {
-        var organization = Organization.builder().name(name).alias(alias).build();
+        var organization = Organization.builder().displayName(displayName).name(name).build();
         return organizationService.createOrganization(organization);
     }
 
     /**
-     * Updates the name of the organization with the given id.
-     * @param id ID of the organization to update
-     * @param name New name of the organization
+     * Updates the given organization
+     * @param organization Organization to update
      * @return The updated organization
      */
     @Nonnull
-    public Organization updateName(@Nonnull String id, @Nonnull String name)
+    public Organization update(@Nonnull Organization organization)
     {
-        var organization = organizationService.findById(id).orElseThrow(() -> new OrganizationNotFoundException(id));
-        organization.setName(name);
-        return organizationService.updateOrganization(organization);
-    }
-
-    /**
-     * Updates the alias of the organization with the given id.
-     * @param id ID of the organization to update
-     * @param alias New alias of the organization
-     * @return The updated organization
-     */
-    @Nonnull
-    public Organization updateAlias(@Nonnull String id, @Nonnull String alias)
-    {
-        var organization = organizationService.findById(id).orElseThrow(() -> new OrganizationNotFoundException(id));
-        organization.setAliases(List.of(alias));
         return organizationService.updateOrganization(organization);
     }
 }

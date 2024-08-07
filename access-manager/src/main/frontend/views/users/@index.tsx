@@ -1,7 +1,7 @@
 import React, { useEffect, useState} from 'react';
 import { useParamsState } from "Frontend/hooks/use-params-state";
 import { useSearchParams } from "react-router-dom";
-import { Button, HorizontalLayout, Icon, Notification, TextField } from "@vaadin/react-components";
+import { Button, HorizontalLayout, Icon, Notification } from "@vaadin/react-components";
 import UserListItem from "Frontend/components/user-list-item";
 import { Apartment } from "@mui/icons-material";
 
@@ -133,7 +133,7 @@ export default function UserView() {
 
     return (
         <div className={"flex flex-col h-full"} id={"users-view"}>
-            <header className={"flex flex-col gap-4 p-6 pb-4 box-border backdrop-blur sticky top-0 z-50  border-b"}>
+            <header className={"flex flex-col gap-4 p-6 pb-4 box-border backdrop-blur bg-white/80 sticky top-0 border-b"}>
                 <div className={"flex gap-4"}>
                     <h2 className={"flex-grow text-2xl leading-10"}>Users</h2>
                     {/*}
@@ -164,7 +164,7 @@ export default function UserView() {
                             <div className={"grid bg-gray-300 rounded-md w-6 h-6 content-center justify-center"}>
                                 <Apartment className={"text-gray-500"} style={{transform: "scale(0.8)"}}/>
                             </div>
-                            <p>{organization.name}</p>
+                            <p>{organization.displayName}</p>
                         </div>
                     ))}
                 </div>

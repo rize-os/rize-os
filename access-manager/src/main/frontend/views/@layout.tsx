@@ -23,7 +23,7 @@ export default function MainLayout() {
             <DrawerToggle slot="navbar" aria-label="Menu toggle"></DrawerToggle>
 
             <Suspense fallback={<ProgressBar indeterminate={true} className="m-0" />}>
-                <Outlet />
+                <Outlet/>
             </Suspense>
         </AppLayout>
     );
