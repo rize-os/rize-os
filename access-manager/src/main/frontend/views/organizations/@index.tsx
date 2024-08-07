@@ -87,7 +87,7 @@ export default function OrganizationView() {
             </header>
 
             <main>
-                <div className={"grid gap-6 p-6 pt-2 box-border"}
+                <div className={"grid gap-6 p-6 box-border"}
                      style={{gridTemplateColumns: "repeat(auto-fill, minmax(22rem, 1fr))"}}>
 
                     {/* Skeletons */}

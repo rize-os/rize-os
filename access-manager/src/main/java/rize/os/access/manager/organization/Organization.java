@@ -8,6 +8,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Organization
+public class Organization implements Serializable
 {
     static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
     static final String ALIASES_ATTRIBUTE = "aliases";
