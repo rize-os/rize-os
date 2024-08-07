@@ -7,7 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.OrganizationDomainRepresentation;
 import org.keycloak.representations.idm.OrganizationRepresentation;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import rize.os.access.manager.organization.events.OrganizationCreatedEvent;
+import rize.os.access.manager.organization.events.OrganizationDeletedEvent;
+import rize.os.access.manager.organization.events.OrganizationModifiedEvent;
 import rize.os.access.manager.organization.exceptions.*;
 
 import java.util.List;
@@ -20,6 +25,7 @@ class OrganizationService
 {
     private final OrganizationMapper organizationMapper;
     private final RealmResource realmResource;
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * Returns all organizations from Keycloak.
@@ -104,6 +110,7 @@ class OrganizationService
      * @throws OrganizationCreateException If the organization could not be created in Keycloak
      */
     @Nonnull
+    @Transactional
     Organization createOrganization(@Nonnull Organization organization) throws OrganizationConstraintException, OrganizationCreateException
     {
         if ((organization.getAliases() == null || organization.getAliases().isEmpty()) && organization.getName() != null)
@@ -118,6 +125,7 @@ class OrganizationService
 
         var createdOrganization = organizationMapper.toOrganization(organizationRepresentation);
         log.info("Created organization successfully: {}", createdOrganization);
+        eventPublisher.publishEvent(new OrganizationCreatedEvent(createdOrganization));
         return createdOrganization;
     }
 
@@ -130,6 +138,7 @@ class OrganizationService
      * @throws OrganizationNotFoundException If the organization could not be found
      */
     @Nonnull
+    @Transactional
     Organization updateOrganization(@Nonnull Organization organization) throws OrganizationConstraintException, OrganizationUpdateException, OrganizationNotFoundException
     {
         log.info("Updating organization with ID [{}] to: {}", organization.getId(), organization);
@@ -144,6 +153,7 @@ class OrganizationService
 
         var updatedOrganization = findById(organization.getId()).orElseThrow(() -> new OrganizationNotFoundException(organization.getId()));
         log.info("Updated organization successfully: {}", updatedOrganization);
+        eventPublisher.publishEvent(new OrganizationModifiedEvent(updatedOrganization));
         return updatedOrganization;
     }
 
@@ -153,10 +163,12 @@ class OrganizationService
      * @throws OrganizationNotFoundException If the organization with the given ID could not be found
      * @throws OrganizationDeleteException If the organization could not be deleted in Keycloak
      */
+    @Transactional
     void deleteOrganization(@Nonnull String id) throws OrganizationNotFoundException, OrganizationDeleteException
     {
         var organization = findById(id).orElseThrow(() -> new OrganizationNotFoundException(id));
         deleteOrganization(organization);
+        eventPublisher.publishEvent(new OrganizationDeletedEvent(organization));
     }
 
 
@@ -166,7 +178,6 @@ class OrganizationService
 
         try (var response = realmResource.organizations().get(organization.getId()).delete())
         {
-            System.out.println(response.getStatus());
             if (response.getStatus() != 204)
                 throw new OrganizationDeleteException(organization, response);
         }
