@@ -52,6 +52,24 @@ public class ClientService
     }
 
     /**
+     * Returns all clients that belong to the organization with the given ID.
+     * @param organizationId ID of the organization
+     * @return List of clients
+     */
+    @Nonnull
+    List<Client> findByOrganizationId(@Nonnull String organizationId)
+    {
+        log.debug("Loading clients for organization with ID [{}]", organizationId);
+        var clients = realmResource.clients().findAll().stream()
+                .filter(client -> client.getAttributes().containsKey(Client.ORGANIZATION_ID_ATTRIBUTE))
+                .filter(client -> client.getAttributes().get(Client.ORGANIZATION_ID_ATTRIBUTE).equals(organizationId))
+                .map(clientMapper::toClient)
+                .toList();
+
+        return loggedClients(clients);
+    }
+
+    /**
      * Creates a new client in Keycloak.
      * @param client Object of the client to create
      * @return The created client object

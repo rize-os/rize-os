@@ -12,6 +12,7 @@ import rize.os.access.manager.client.exceptions.ClientConstraintException;
 import rize.os.access.manager.client.exceptions.ClientCreateException;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -53,6 +54,34 @@ class ClientServiceIT
 
         assertThat(foundClient).isNotEmpty();
         assertThat(foundClient.get()).isEqualTo(createdClient);
+    }
+
+    @Test
+    void shouldFindClientsByOrganizationId()
+    {
+        var organizationId = UUID.randomUUID().toString();
+        var clientToCreate = Client.builder()
+                .clientId("should-find-clients-by-organization-id")
+                .name("shouldFindClientsByOrganizationId")
+                .organizationId(organizationId)
+                .redirectUris(List.of("https://rize-os.dev"))
+                .build();
+        var createdClient = clientService.createClient(clientToCreate);
+
+        var foundClients = clientService.findByOrganizationId(organizationId);
+
+        assertThat(foundClients).isNotNull();
+        assertThat(foundClients).hasSize(1);
+        assertThat(foundClients.getFirst()).isEqualTo(createdClient);
+    }
+
+    @Test
+    void shouldNotFindClientsByOrganizationId()
+    {
+        var foundClients = clientService.findByOrganizationId(UUID.randomUUID().toString());
+
+        assertThat(foundClients).isNotNull();
+        assertThat(foundClients).isEmpty();
     }
 
     @Test

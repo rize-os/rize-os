@@ -15,5 +15,4 @@ datasource:
 ---
 logging:
   level:
-    rize.os: INFO
-    org.springframework.modulith: TRACE
+    rize.os: DEBUG
