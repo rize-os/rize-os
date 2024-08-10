@@ -6,8 +6,11 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -27,12 +30,16 @@ public class Client
     @NotBlank
     private String clientId;
 
-    private String secret;
+    @NotNull
+    @Builder.Default
+    private String name = "";
 
     @Nullable
     private String organizationId;
 
-    private List<String> redirectUris;
+    @NotEmpty
+    @Builder.Default
+    private List<String> redirectUris = new ArrayList<>();
 
     @Builder.Default
     private boolean enabled = true;
@@ -53,6 +60,7 @@ public class Client
     {
         return "Client{" + "id='" + id + '\'' +
                 ", clientId='" + clientId + '\'' +
+                ", name='" + name + '\'' +
                 ", organizationId='" + organizationId + '\'' +
                 ", enabled=" + enabled + '}';
     }
@@ -67,6 +75,7 @@ public class Client
         return enabled == client.enabled &&
                 Objects.equals(id, client.id) &&
                 Objects.equals(clientId, client.clientId) &&
+                Objects.equals(name, client.name) &&
                 Objects.equals(organizationId, client.organizationId) &&
                 Objects.equals(redirectUris, client.redirectUris);
     }
@@ -76,6 +85,7 @@ public class Client
     {
         int result = Objects.hashCode(id);
         result = 31 * result + Objects.hashCode(clientId);
+        result = 31 * result + Objects.hashCode(name);
         result = 31 * result + Objects.hashCode(organizationId);
         result = 31 * result + Objects.hashCode(redirectUris);
         result = 31 * result + Boolean.hashCode(enabled);
