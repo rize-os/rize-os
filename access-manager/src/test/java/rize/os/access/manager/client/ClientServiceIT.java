@@ -10,6 +10,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import rize.os.access.manager.TestcontainersConfiguration;
 import rize.os.access.manager.client.exceptions.ClientConstraintException;
 import rize.os.access.manager.client.exceptions.ClientCreateException;
+import rize.os.access.manager.client.exceptions.ClientNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -116,7 +117,6 @@ class ClientServiceIT
                 .name("shouldFailToCreateClientWithSameClientId")
                 .redirectUris(List.of("https://rize-os.dev"))
                 .build();
-
         clientService.createClient(clientToCreate1);
 
         var clientToCreate2 = Client.builder()
@@ -128,5 +128,32 @@ class ClientServiceIT
         assertThatThrownBy(() -> clientService.createClient(clientToCreate2))
                 .isInstanceOf(ClientCreateException.class)
                 .hasMessageContaining("Client with client-id \"" + clientToCreate2.getClientId() + "\" already exists");
+    }
+
+    @Test
+    void shouldDeleteClient()
+    {
+        var clientToCreate = Client.builder()
+                .clientId("should-delete-client")
+                .name("shouldDeleteClient")
+                .redirectUris(List.of("https://rize-os.dev"))
+                .build();
+        var createdClient = clientService.createClient(clientToCreate);
+
+        clientService.deleteClient(createdClient.getId());
+
+        var clients = clientService.findAll();
+
+        assertThat(clients).doesNotContain(createdClient);
+        assertThat(clients.stream().filter(client -> client.getId().equals(createdClient.getId()))).isEmpty();
+    }
+
+    @Test
+    void shouldFailToDeleteNonExistingClient()
+    {
+        var id = UUID.randomUUID().toString();
+        assertThatThrownBy(() -> clientService.deleteClient(id))
+                .isInstanceOf(ClientNotFoundException.class)
+                .hasMessage("Client not found with id: " + id);
     }
 }

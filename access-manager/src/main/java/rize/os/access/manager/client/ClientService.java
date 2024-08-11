@@ -6,10 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.ClientRepresentation;
 import org.springframework.stereotype.Service;
-import rize.os.access.manager.client.exceptions.ClientConstraintException;
-import rize.os.access.manager.client.exceptions.ClientCreateException;
-import rize.os.access.manager.client.exceptions.ClientUpdateException;
+import rize.os.access.manager.client.exceptions.*;
 import rize.os.access.manager.organization.exceptions.OrganizationCreateException;
+import rize.os.access.manager.organization.exceptions.OrganizationNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +32,21 @@ public class ClientService
         var clientRepresentations = realmResource.clients().findAll();
         var clients = clientRepresentations.stream().map(clientMapper::toClient).toList();
         return loggedClients(clients);
+    }
+
+    /**
+     * Returns the client from Keycloak for the given ID.
+     * @param id ID of the client (not client-id)
+     * @return Client object if found; empty otherwise
+     */
+    Optional<Client> findById(@Nonnull String id)
+    {
+        var clientRepresentation = findRepresentationById(id);
+        if (clientRepresentation.isEmpty())
+            return Optional.empty();
+
+        var client = clientMapper.toClient(clientRepresentation.get());
+        return loggedClient(client);
     }
 
     /**
@@ -89,6 +103,42 @@ public class ClientService
         var createdClient = clientMapper.toClient(clientRepresentation);
         log.info("Created client successfully: {}", createdClient);
         return createdClient;
+    }
+
+    /**
+     * Deletes the client in Keycloak that matches the given ID.
+     * @param id ID of the client to delete
+     * @throws OrganizationNotFoundException If the client with the given ID is not found
+     * @throws ClientDeleteException If the client could not be deleted in Keycloak
+     */
+    void deleteClient(@Nonnull String id) throws ClientNotFoundException, ClientDeleteException
+    {
+        var client = findById(id).orElseThrow(() -> new ClientNotFoundException(id));
+        log.info("Deleting client: {}", client);
+
+        try
+        {
+            realmResource.clients().get(id).remove();
+            log.info("Deleted client successfully: {}", client);
+        }
+        catch (Exception e)
+        {
+            throw new ClientDeleteException(client, e);
+        }
+    }
+
+    private Optional<ClientRepresentation> findRepresentationById(String id)
+    {
+        try
+        {
+            log.debug("Searching for client with ID [{}] in Keycloak", id);
+            return Optional.of(realmResource.clients().get(id).toRepresentation());
+        }
+        catch (Exception e)
+        {
+            log.debug("Client with ID [{}] not found", id);
+            return Optional.empty();
+        }
     }
 
     private Optional<ClientRepresentation> findRepresentationByClientId(String clientId)
