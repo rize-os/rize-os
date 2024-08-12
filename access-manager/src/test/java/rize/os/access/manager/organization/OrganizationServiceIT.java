@@ -28,9 +28,9 @@ class OrganizationServiceIT
     private OrganizationService organizationService;
 
     @DynamicPropertySource
-    static void keycloakProperties(DynamicPropertyRegistry registry)
+    static void containerProperties(DynamicPropertyRegistry registry)
     {
-        registry.add("keycloak.url", TestcontainersConfiguration.keycloak::getAuthServerUrl);
+        TestcontainersConfiguration.updateContainerProperties(registry);
     }
 
     @Test

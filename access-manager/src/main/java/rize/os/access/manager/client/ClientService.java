@@ -7,8 +7,6 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.ClientRepresentation;
 import org.springframework.stereotype.Service;
 import rize.os.access.manager.client.exceptions.*;
-import rize.os.access.manager.organization.exceptions.OrganizationCreateException;
-import rize.os.access.manager.organization.exceptions.OrganizationNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -106,9 +104,33 @@ public class ClientService
     }
 
     /**
+     * Updates the given client in Keycloak.
+     * @param client Object of the client to update
+     * @return Object of the updated client
+     * @throws ClientNotFoundException If the ID of the given client was not found in Keycloak
+     * @throws ClientConstraintException If the client object has invalid values
+     * @throws ClientUpdateException If the client could not be updated in Keycloak
+     */
+    @Nonnull
+    Client updateClient(@Nonnull Client client) throws ClientNotFoundException, ClientConstraintException, ClientUpdateException
+    {
+        log.info("Updating client '{}' to: {}", client.getClientId(), client);
+        var clientRepresentation = findRepresentationById(client.getId()).orElseThrow(() -> new ClientNotFoundException(client.getId()));
+
+        validateClient(client);
+        clientRepresentation.setName(client.getName());
+        clientRepresentation.setRedirectUris(client.getRedirectUris());
+        updateClientRepresentation(clientRepresentation);
+
+        var updatedClient = findById(client.getId()).orElseThrow(() -> new ClientNotFoundException(client.getId()));
+        log.info("Updated client successfully: {}", updatedClient);
+        return updatedClient;
+    }
+
+    /**
      * Deletes the client in Keycloak that matches the given ID.
      * @param id ID of the client to delete
-     * @throws OrganizationNotFoundException If the client with the given ID is not found
+     * @throws ClientNotFoundException If the client with the given ID is not found
      * @throws ClientDeleteException If the client could not be deleted in Keycloak
      */
     void deleteClient(@Nonnull String id) throws ClientNotFoundException, ClientDeleteException
@@ -162,7 +184,6 @@ public class ClientService
         clientRepresentation.setClientId(client.getClientId());
         clientRepresentation.setName(client.getName());
         clientRepresentation.setRedirectUris(client.getRedirectUris());
-        clientRepresentation.setEnabled(client.isEnabled());
 
         try (var response = realmResource.clients().create(clientRepresentation))
         {
@@ -173,11 +194,11 @@ public class ClientService
             log.debug("Created client in Keycloak successfully: ID [{}]", createdClientRepresentation.getId());
             return createdClientRepresentation;
         }
-        catch (OrganizationCreateException e) { throw e; }
+        catch (ClientCreateException e) { throw e; }
         catch (Exception e) { throw new ClientCreateException(client, e); }
     }
 
-    private void updateClientRepresentation(final ClientRepresentation clientRepresentation)
+    private void updateClientRepresentation(final ClientRepresentation clientRepresentation) throws ClientUpdateException
     {
         try
         {
