@@ -27,9 +27,9 @@ class ClientServiceIT
     private ClientService clientService;
 
     @DynamicPropertySource
-    static void keycloakProperties(DynamicPropertyRegistry registry)
+    static void containerProperties(DynamicPropertyRegistry registry)
     {
-        registry.add("keycloak.url", TestcontainersConfiguration.keycloak::getAuthServerUrl);
+        TestcontainersConfiguration.updateContainerProperties(registry);
     }
 
     @Test
@@ -128,6 +128,40 @@ class ClientServiceIT
         assertThatThrownBy(() -> clientService.createClient(clientToCreate2))
                 .isInstanceOf(ClientCreateException.class)
                 .hasMessageContaining("Client with client-id \"" + clientToCreate2.getClientId() + "\" already exists");
+    }
+
+    @Test
+    void shouldUpdateClient()
+    {
+        var clientToCreate = Client.builder()
+                .clientId("should-update-client")
+                .name("shouldUpdateClient")
+                .redirectUris(List.of("https://rize-os.dev"))
+                .build();
+        var createdClient = clientService.createClient(clientToCreate);
+
+        createdClient.setRedirectUris(List.of("https://rize-os-updated.dev"));
+        createdClient.setName("shouldUpdateClient - updated");
+        clientService.updateClient(createdClient);
+
+        var updatedClient = clientService.findById(createdClient.getId());
+        assertThat(updatedClient).isNotEmpty();
+        assertThat(updatedClient.get()).isEqualTo(createdClient);
+    }
+
+    @Test
+    void shouldFailToUpdateNonExistingClient()
+    {
+        var clientToUpdate = Client.builder()
+                .id(UUID.randomUUID().toString())
+                .clientId("should-fail-to-update-non-existing-client")
+                .name("shouldFailToUpdateNonExistingClient")
+                .redirectUris(List.of("https://rize-os.dev"))
+                .build();
+
+        assertThatThrownBy(() -> clientService.updateClient(clientToUpdate))
+                .isInstanceOf(ClientNotFoundException.class)
+                .hasMessage("Client not found with id: " + clientToUpdate.getId());
     }
 
     @Test
