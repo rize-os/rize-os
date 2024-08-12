@@ -41,9 +41,6 @@ public class Client
     @Builder.Default
     private List<String> redirectUris = new ArrayList<>();
 
-    @Builder.Default
-    private boolean enabled = true;
-
 
     /**
      * Validates the values of the client object. If the returned list of violations is empty, the values for the client are valid.
@@ -61,8 +58,7 @@ public class Client
         return "Client{" + "id='" + id + '\'' +
                 ", clientId='" + clientId + '\'' +
                 ", name='" + name + '\'' +
-                ", organizationId='" + organizationId + '\'' +
-                ", enabled=" + enabled + '}';
+                ", organizationId='" + organizationId + '\'' + '}';
     }
 
     @Override
@@ -72,8 +68,7 @@ public class Client
         if (o == null || getClass() != o.getClass()) return false;
 
         Client client = (Client) o;
-        return enabled == client.enabled &&
-                Objects.equals(id, client.id) &&
+        return Objects.equals(id, client.id) &&
                 Objects.equals(clientId, client.clientId) &&
                 Objects.equals(name, client.name) &&
                 Objects.equals(organizationId, client.organizationId) &&
@@ -88,7 +83,6 @@ public class Client
         result = 31 * result + Objects.hashCode(name);
         result = 31 * result + Objects.hashCode(organizationId);
         result = 31 * result + Objects.hashCode(redirectUris);
-        result = 31 * result + Boolean.hashCode(enabled);
         return result;
     }
 }
