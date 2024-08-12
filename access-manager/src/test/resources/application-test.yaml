@@ -1,13 +1,5 @@
 keycloak:
   realm: rize-os
-  admin:
-    username: _keycloak-admin
-    password: secret
----
-datasource:
-  url: jdbc:postgresql://localhost:5432/access_manager
-  username: _postgres-admin
-  password: secret
 ---
 logging:
   level:
