@@ -1,3 +1,8 @@
+access-manager:
+  clients:
+    application-gateway:
+      redirect-uri-pattern: 'https://%{alias}%.rize-os.dev'
+---
 keycloak:
   url: http://localhost:8080
   realm: rize-os
