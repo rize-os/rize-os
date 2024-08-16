@@ -36,5 +36,5 @@ spring:
   docker:
     compose:
       enabled: true
-      file: access-manager/docker-compose.yaml
+      file: docker-compose.yaml
       lifecycle-management: start_only
