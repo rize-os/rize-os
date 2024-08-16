@@ -1,10 +1,10 @@
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
-    container_name: ros-am-keycloak
+    container_name: ros-keycloak
     environment:
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://ros-am-postgres:5432/keycloak
+      KC_DB_URL: jdbc:postgresql://ros-keycloak-postgres:5432/keycloak
       KC_DB_USERNAME: ${POSTGRES_USERNAME}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KC_HOSTNAME: localhost
@@ -26,7 +26,7 @@ services:
 
   keycloak-db:
     image: postgres:${POSTGRES_VERSION}
-    container_name: ros-am-postgres
+    container_name: ros-keycloak-postgres
     environment:
       POSTGRES_MULTIPLE_DATABASES: keycloak,access_manager
       POSTGRES_USER: ${POSTGRES_USERNAME}
