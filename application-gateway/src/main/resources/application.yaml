@@ -1,0 +1,32 @@
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: ${application-gateway.security.oauth2.issuer-uri:http://localhost:8080/realms/rize-os}
+        registration:
+          keycloak:
+            client-id: ${application-gateway.security.oauth2.client-id:-}
+            client-secret: ${application-gateway.security.oauth2.client-secret:-}
+            authorization-grant-type:  ${application-gateway.security.oauth2.authorization-grant-type:authorization_code}
+            redirect-uri: ${application-gateway.security.oauth2.redirect-uri:{baseUrl}/login/oauth2/code/{registrationId}}
+            scope: ${application-gateway.security.oauth2.scope:openid}
+---
+spring:
+  webflux:
+    base-path: ${application-gateway.server.base-path:/}
+server:
+  port: ${application-gateway.server.port:8090}
+---
+spring:
+  cloud:
+    refresh:
+      enabled: false  # Required for AOT compilation
+---
+spring:
+  docker:
+    compose:
+      enabled: true
+      file: docker-compose.yaml
+      lifecycle-management: start_only
