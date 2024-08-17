@@ -8,7 +8,10 @@ import org.keycloak.admin.client.resource.OrganizationResource;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.springframework.stereotype.Service;
 import rize.os.access.manager.organization.exceptions.OrganizationNotFoundException;
+import rize.os.access.manager.usersession.UserSession;
+import rize.os.access.manager.usersession.UserSessionService;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -17,6 +20,7 @@ import java.util.List;
 public class UserService
 {
     private final RealmResource realmResource;
+    private final UserSessionService userSessionService;
     private final UserMapper userMapper;
 
     /**
@@ -100,8 +104,24 @@ public class UserService
         }
     }
 
+    private void addSessionInformationToUsers(List<User> users)
+    {
+        users.forEach(this::addSessionInformationToUser);
+    }
+
+    private void addSessionInformationToUser(User user)
+    {
+        var sessions = userSessionService.findByUser(user.getId());
+        user.setIsOnline(!sessions.isEmpty());
+        user.setOnlineSince(sessions.stream()
+                .map(UserSession::getStartedAt)
+                .min(Comparator.naturalOrder())
+                .orElse(null));
+    }
+
     private List<User> loggedUsers(List<User> users)
     {
+        addSessionInformationToUsers(users);
         log.debug("Found {} users", users.size());
         if (log.isTraceEnabled()) users.forEach(user -> log.trace("- {}", user));
         return users;

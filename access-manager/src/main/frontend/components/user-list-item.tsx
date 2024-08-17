@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, MenuBar, MenuBarItemSelectedEvent } from '@vaadin/react-components';
+import React from 'react';
+import { Avatar, MenuBar } from '@vaadin/react-components';
 import type User from "Frontend/generated/rize/os/access/manager/user/User";
 import { Edit, MoreVert, AccountCircle } from "@mui/icons-material";
 
@@ -27,7 +27,11 @@ const UserListItem: React.FC<UserListItemProps> = ({ user }) => {
     return (
         <div>
             <div className={"flex flex-row gap-3.5 justify-center py-2 items-center cursor-default"}>
-                <Avatar name={`${user.firstName} ${user.lastName}`} className={"cursor-default"}/>
+                <div className={"grid ml-2"}>
+                    <Avatar className={"cursor-default col-start-1 row-start-1 w-10 h-10"} style={{margin: "-1px"}} name={`${user.firstName} ${user.lastName}`}/>
+                    <div className={"col-start-1 row-start-1 h-2.5 w-2.5 self-end justify-self-end rounded-full " + (user.isOnline ? "bg-green-700" : "bg-red-700")}/>
+                </div>
+
                 <div className={"flex-grow flex flex-col"}>
                     <span className={"text-m text-gray-700 font-bold leading-5"}>{`${user.firstName} ${user.lastName}`}</span>
                     <span className={"text-xs text-gray-400 leading-4"}>{username()}</span>
