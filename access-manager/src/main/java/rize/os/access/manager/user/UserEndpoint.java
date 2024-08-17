@@ -4,7 +4,6 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.Endpoint;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNullApi;
 
 import java.util.List;
 
