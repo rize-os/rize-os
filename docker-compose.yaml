@@ -35,3 +35,10 @@ services:
       - ./dev/postgres:/docker-entrypoint-initdb.d
     ports:
       - 5432:5432
+
+  rabbitmq:
+    image: rabbitmq:${RABBITMQ_VERSION}
+    container_name: ros-rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
