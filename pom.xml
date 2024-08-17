@@ -29,6 +29,7 @@
 
     <modules>
         <module>access-manager</module>
+        <module>application-gateway</module>
     </modules>
 
     <dependencyManagement>
