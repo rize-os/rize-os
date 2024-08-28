@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 21
-          distribution: 'graalvm'
+          distribution: 'corretto'
 
       - name: Build Native Image with Maven
         run: mvn --projects platform $MAVEN_CLI_OPTS -Dmaven.skip.test=true -Pproduction -Pnative spring-boot:build-image
