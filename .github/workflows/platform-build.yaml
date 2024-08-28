@@ -1,0 +1,28 @@
+name: platform-build
+
+on:
+  push:
+    tags:
+      - '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      MAVEN_CLI_OPTS: --batch-mode --errors --fail-at-end
+      DOCKER_IO_USERNAME: ${{ secrets.DOCKER_IO_USERNAME }}
+      DOCKER_IO_PASSWORD: ${{ secrets.DOCKER_IO_PASSWORD }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: 'graalvm'
+
+      - name: Build Native Image with Maven
+        run: mvn --projects platform $MAVEN_CLI_OPTS -Dmaven.skip.test=true -Pproduction -Pnative spring-boot:build-image
