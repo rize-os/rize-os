@@ -1,0 +1,41 @@
+name: platform-test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'platform/src/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'platform/src/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      MAVEN_CLI_OPTS: --batch-mode --errors --fail-at-end
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: 'corretto'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Run Maven tests
+        run: mvn --projects platform $MAVEN_CLI_OPTS test
