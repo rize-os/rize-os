@@ -1,8 +1,8 @@
 package rize.os.platform;
 
-import org.springframework.boot.test.context.TestConfiguration;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-@TestConfiguration(proxyBeanMethods = false)
+@Testcontainers
 class TestcontainersConfiguration
 {
 
