@@ -7,12 +7,16 @@ on:
     paths:
       - '.github/workflows/platform-test.yaml'
       - 'platform/src/**'
+      - 'platform/pom.xml'
+      - 'pom.xml'
   push:
     branches:
       - main
     paths:
       - '.github/workflows/platform-test.yaml'
       - 'platform/src/**'
+      - 'platform/pom.xml'
+      - 'pom.xml'
 
 jobs:
   test:
