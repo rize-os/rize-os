@@ -1,0 +1,6 @@
+services:
+  platform:
+    image: rizeos/platform:${PLATFORM_VERSION}
+    container_name: rizeos-platform
+    ports:
+      - 8080:8080
