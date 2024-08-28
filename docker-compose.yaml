@@ -1,14 +1,14 @@
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
-    container_name: ros-keycloak
+    container_name: rizeos-keycloak
     environment:
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://ros-keycloak-postgres:5432/keycloak
+      KC_DB_URL: jdbc:postgresql://rizeos-keycloak-postgres:5432/keycloak
       KC_DB_USERNAME: ${POSTGRES_USERNAME}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KC_HOSTNAME: localhost
-      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_PORT: 8088
       KC_HOSTNAME_STRICT: false
       KC_HOSTNAME_STRICT_HTTPS: false
       KC_LOG_LEVEL: debug
@@ -22,23 +22,24 @@ services:
     depends_on:
       - keycloak-db
     ports:
-      - 8080:8080
+      - 8088:8080
 
   keycloak-db:
     image: postgres:${POSTGRES_VERSION}
-    container_name: ros-keycloak-postgres
+    container_name: rizeos-keycloak-postgres
     environment:
-      POSTGRES_MULTIPLE_DATABASES: keycloak,access_manager
+      POSTGRES_DB: keycloak
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - ./dev/postgres:/docker-entrypoint-initdb.d
     ports:
       - 5432:5432
 
   rabbitmq:
     image: rabbitmq:${RABBITMQ_VERSION}
-    container_name: ros-rabbitmq
+    container_name: rizeos-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     ports:
       - 5672:5672
       - 15672:15672
