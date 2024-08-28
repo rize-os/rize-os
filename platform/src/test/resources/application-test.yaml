@@ -1,0 +1,6 @@
+keycloak:
+  realm: rize-os
+---
+logging:
+  level:
+    rize.os: DEBUG

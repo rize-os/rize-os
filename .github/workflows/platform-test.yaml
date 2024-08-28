@@ -7,12 +7,16 @@ on:
     paths:
       - '.github/workflows/platform-test.yaml'
       - 'platform/src/**'
+      - 'platform/pom.xml'
+      - 'pom.xml'
   push:
     branches:
       - main
     paths:
       - '.github/workflows/platform-test.yaml'
       - 'platform/src/**'
+      - 'platform/pom.xml'
+      - 'pom.xml'
 
 jobs:
   test:
@@ -32,4 +36,4 @@ jobs:
           distribution: 'corretto'
 
       - name: Run Maven tests
-        run: mvn --projects platform $MAVEN_CLI_OPTS test
+        run: mvn $MAVEN_CLI_OPTS -Dtest=* -pl platform -am verify
