@@ -5,11 +5,13 @@ on:
     branches:
       - main
     paths:
+      - '.github/workflows/platform-test.yaml'
       - 'platform/src/**'
   push:
     branches:
       - main
     paths:
+      - '.github/workflows/platform-test.yaml'
       - 'platform/src/**'
 
 jobs:
