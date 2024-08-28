@@ -1,0 +1,7 @@
+       _)
+   __|  | _  /   _ \      _ \    __|
+  |     |   /    __/     (   | \__ \
+ _|    _| ___| \___| _) \___/  ____/
+
+platform ${application.version}
+Running with Spring Boot ${spring-boot.version}
