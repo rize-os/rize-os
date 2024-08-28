@@ -59,12 +59,30 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <image>
+                        <builder>paketobuildpacks/builder-jammy-tiny:latest</builder>
+                        <runImage>paketobuildpacks/run-jammy-tiny:latest</runImage>
+                        <name>rizeos/platform:${project.version}</name>
+                        <pullPolicy>IF_NOT_PRESENT</pullPolicy>
+                        <publish>true</publish>
+                    </image>
+                    <docker>
+                        <publishRegistry>
+                            <username>${env.DOCKER_IO_USERNAME}</username>
+                            <password>${env.DOCKER_IO_PASSWORD}</password>
+                        </publishRegistry>
+                    </docker>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
