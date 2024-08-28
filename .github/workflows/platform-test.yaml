@@ -13,7 +13,7 @@ on:
       - 'platform/src/**'
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     env:
@@ -28,14 +28,6 @@ jobs:
         with:
           java-version: 21
           distribution: 'corretto'
-
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
 
       - name: Run Maven tests
         run: mvn --projects platform $MAVEN_CLI_OPTS test
