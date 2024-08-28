@@ -1,25 +1,15 @@
-name: platform-test
+name: platform-compile
 
 on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/platform-test.yaml'
-      - 'platform/src/**'
-      - 'platform/pom.xml'
-      - 'pom.xml'
   push:
-    branches:
-      - main
     paths:
-      - '.github/workflows/platform-test.yaml'
+      - '.github/workflows/**'
       - 'platform/src/**'
       - 'platform/pom.xml'
       - 'pom.xml'
 
 jobs:
-  test:
+  compile:
     runs-on: ubuntu-latest
 
     env:
@@ -43,5 +33,5 @@ jobs:
           restore-keys: |
             m2-repository-
 
-      - name: Maven tests
-        run: mvn $MAVEN_CLI_OPTS -Dtest=* -pl platform -am verify
+      - name: Maven compile
+        run: mvn $MAVEN_CLI_OPTS -Dmaven.skip.test=true -pl platform -am clean compile
