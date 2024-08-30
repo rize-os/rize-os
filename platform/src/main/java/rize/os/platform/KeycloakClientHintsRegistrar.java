@@ -1,5 +1,6 @@
 package rize.os.platform;
 
+import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
 import org.keycloak.admin.client.spi.ResteasyClientClassicProvider;
 import org.springframework.aot.hint.ExecutableMode;
 import org.springframework.aot.hint.RuntimeHints;
@@ -14,6 +15,7 @@ public class KeycloakClientHintsRegistrar implements RuntimeHintsRegistrar
     public void registerHints(@NonNull RuntimeHints hints, ClassLoader classLoader)
     {
         registerClass(ResteasyClientClassicProvider.class, hints);
+        registerClass(ResteasyClientBuilderImpl.class, hints);
     }
 
     private void registerClass(Class<?> clazz, RuntimeHints hints)
