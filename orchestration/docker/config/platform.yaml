@@ -1,0 +1,4 @@
+keycloak:
+  realm: 'rize-os'
+  admin:
+    password: 'secret'
