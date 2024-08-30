@@ -18,7 +18,7 @@ public class KeycloakClientHintsRegistrar implements RuntimeHintsRegistrar
 
     private void registerClass(Class<?> clazz, RuntimeHints hints)
     {
-        hints.reflection().registerType(clazz);
+        Arrays.stream(clazz.getConstructors()).toList().forEach(constructor -> hints.reflection().registerConstructor(constructor, ExecutableMode.INVOKE));
         Arrays.stream(clazz.getMethods()).toList().forEach(method -> hints.reflection().registerMethod(method, ExecutableMode.INVOKE));
     }
 }
