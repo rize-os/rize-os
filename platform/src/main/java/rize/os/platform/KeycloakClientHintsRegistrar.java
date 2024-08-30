@@ -1,6 +1,8 @@
 package rize.os.platform;
 
+import org.jboss.resteasy.client.jaxrs.i18n.Messages;
 import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
+import org.jboss.resteasy.resteasy_jaxrs.i18n.Messages_$bundle;
 import org.keycloak.admin.client.spi.ResteasyClientClassicProvider;
 import org.springframework.aot.hint.ExecutableMode;
 import org.springframework.aot.hint.RuntimeHints;
@@ -16,6 +18,7 @@ public class KeycloakClientHintsRegistrar implements RuntimeHintsRegistrar
     {
         registerClass(ResteasyClientClassicProvider.class, hints);
         registerClass(ResteasyClientBuilderImpl.class, hints);
+        registerClass(Messages_$bundle.class, hints);
     }
 
     private void registerClass(Class<?> clazz, RuntimeHints hints)
