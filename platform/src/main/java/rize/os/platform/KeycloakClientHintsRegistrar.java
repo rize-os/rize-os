@@ -1,6 +1,5 @@
 package rize.os.platform;
 
-import org.jboss.resteasy.client.jaxrs.i18n.Messages;
 import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
 import org.jboss.resteasy.resteasy_jaxrs.i18n.Messages_$bundle;
 import org.keycloak.admin.client.spi.ResteasyClientClassicProvider;
