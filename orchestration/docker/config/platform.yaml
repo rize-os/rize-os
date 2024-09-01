@@ -1,0 +1,6 @@
+keycloak:
+  url: 'http://rize-os-keycloak:8080'
+  realm: 'rize-os'
+  admin:
+    username: 'admin'
+    password: 'secret'

@@ -1,0 +1,1 @@
+docker-compose -p "rize-os-orchestration" up -d

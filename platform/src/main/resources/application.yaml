@@ -12,7 +12,7 @@ keycloak:
 logging:
   level:
     org.springframework: WARN
-    org.atmosphere: WARN
+    org.atmosphere: ERROR
     org.apache: WARN
     com.vaadin: WARN
 ---

@@ -1,6 +1,47 @@
 services:
   platform:
     image: rizeos/platform:${PLATFORM_VERSION}
-    container_name: rizeos-platform
+    container_name: ${PLATFORM_CONTAINER_NAME}
+    environment:
+      - SPRING_CONFIG_IMPORT=file:///var/config/application.yaml
     ports:
       - 8080:8080
+    volumes:
+      - type: bind
+        source: ./config/platform.yaml
+        target: /var/config/application.yaml
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
+    container_name: ${KEYCLOAK_CONTAINER_NAME}
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://${KEYCLOAK_DATABASE_CONTAINER_NAME}:5432/keycloak
+      KC_DB_USERNAME: ${POSTGRES_USERNAME}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8088
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_LOG_LEVEL: debug
+      KC_METRICS_ENABLED: true
+      KC_HEALTH_ENABLED: true
+      KEYCLOAK_ADMIN: ${KEYCLOAK_USERNAME}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+    command: start-dev --features organization --import-realm
+    volumes:
+      - ./config/keycloak/import:/opt/keycloak/data/import
+    depends_on:
+      - keycloak-db
+    ports:
+      - 8088:8080
+
+  keycloak-db:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: ${KEYCLOAK_DATABASE_CONTAINER_NAME}
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432
