@@ -36,7 +36,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:${RABBITMQ_VERSION}
-    container_name: &{RABBITMQ_CONTAINER_NAME}
+    container_name: ${RABBITMQ_CONTAINER_NAME}
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
