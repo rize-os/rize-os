@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ImportRuntimeHints;
 
 @Theme("rize-os")
 @SpringBootApplication
-@ImportRuntimeHints({ PlatformHintsRegistrar.class, KeycloakClientHintsRegistrar.class, HillaHintsRegistrar.class })
+@ImportRuntimeHints({ PlatformHintsRegistrar.class, HillaHintsRegistrar.class })
 public class Platform implements AppShellConfigurator
 {
     public static void main(String[] args)
