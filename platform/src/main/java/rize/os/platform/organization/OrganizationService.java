@@ -7,6 +7,7 @@ import org.keycloak.representations.idm.OrganizationDomainRepresentation;
 import org.keycloak.representations.idm.OrganizationRepresentation;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -17,6 +18,18 @@ public class OrganizationService
     private final OrganizationMapper organizationMapper;
     private final RealmResource realmResource;
 
+
+    /**
+     * Returns a list of all organizations from Keycloak.
+     * @return List of all organizations
+     */
+    List<Organization> findAll()
+    {
+        log.debug("Loading all organizations from Keycloak");
+        var orgRepresentations = realmResource.organizations().getAll();
+        var organizations = orgRepresentations.stream().map(organizationMapper::toOrganization).toList();
+        return loggedOrganizations(organizations);
+    }
 
     /**
      * Searches for an existing organization in Keycloak with the given name.
@@ -147,6 +160,13 @@ public class OrganizationService
         var organizationWithSameName = findOrganizationRepresentationByName(organization.getName());
         if (organizationWithSameName.isPresent() && !organizationWithSameName.get().getId().equals(organization.getId()))
             throw new OrganizationAlreadyExistsException(organization);
+    }
+
+    private List<Organization> loggedOrganizations(List<Organization> organizations)
+    {
+        log.debug("Found {} organizations", organizations.size());
+        if (log.isTraceEnabled()) organizations.forEach(organization -> log.trace("- {}", organization));
+        return organizations;
     }
 
     private Optional<Organization> loggedOrganization(Organization organization)

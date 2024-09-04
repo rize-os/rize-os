@@ -28,6 +28,17 @@ class OrganizationServiceIT
 
 
     @Test
+    void shouldFindAllOrganizations()
+    {
+        var org1 = organizationService.createOrganization(Organization.builder().name("should-find-all-organizations-1").displayName("shouldFindAllOrganizations1").region("de").build());
+        var org2 = organizationService.createOrganization(Organization.builder().name("should-find-all-organizations-2").displayName("shouldFindAllOrganizations2").region("de").build());
+
+        var organizations = organizationService.findAll();
+        assertThat(organizations).isNotEmpty();
+        assertThat(organizations).contains(org1, org2);
+    }
+
+    @Test
     void shouldFindOrganizationByName()
     {
         var organizationToFind = Organization.builder()
