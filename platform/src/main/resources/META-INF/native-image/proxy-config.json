@@ -39,6 +39,12 @@
     "interfaces":["org.jboss.resteasy.spi.ResteasyConfiguration"]
   },
   {
+    "interfaces":["org.keycloak.admin.client.resource.OrganizationResource","org.jboss.resteasy.client.jaxrs.internal.proxy.ResteasyClientProxy"]
+  },
+  {
+    "interfaces":["org.keycloak.admin.client.resource.OrganizationsResource","org.jboss.resteasy.client.jaxrs.internal.proxy.ResteasyClientProxy"]
+  },
+  {
     "interfaces":["org.keycloak.admin.client.resource.RealmResource","org.jboss.resteasy.client.jaxrs.internal.proxy.ResteasyClientProxy"]
   },
   {

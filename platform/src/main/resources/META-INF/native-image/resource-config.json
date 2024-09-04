@@ -9,8 +9,6 @@
   }, {
     "pattern":"\\QMETA-INF/VAADIN/webapp/VAADIN/static/push/vaadinPush.js\\E"
   }, {
-    "pattern":"\\QMETA-INF/VAADIN/webapp/favicon.ico\\E"
-  }, {
     "pattern":"\\QMETA-INF/build-info.properties\\E"
   }, {
     "pattern":"\\QMETA-INF/frontend/buttonFunctions.js\\E"
@@ -54,8 +52,6 @@
     "pattern":"\\QMETA-INF/maven/com.vaadin/vaadin-core/pom.properties\\E"
   }, {
     "pattern":"\\QMETA-INF/resources/VAADIN/push\\E"
-  }, {
-    "pattern":"\\QMETA-INF/resources/favicon.ico\\E"
   }, {
     "pattern":"\\QMETA-INF/resources/frontend/buttonFunctions.js\\E"
   }, {
@@ -184,6 +180,14 @@
     "pattern":"\\QMETA-INF/validation.xml\\E"
   }, {
     "pattern":"\\Q\\E"
+  }, {
+    "pattern":"\\Qapplication-aot-config.properties\\E"
+  }, {
+    "pattern":"\\Qapplication-aot-config.xml\\E"
+  }, {
+    "pattern":"\\Qapplication-aot-config.yaml\\E"
+  }, {
+    "pattern":"\\Qapplication-aot-config.yml\\E"
   }, {
     "pattern":"\\Qapplication-dev.properties\\E"
   }, {
@@ -622,6 +626,8 @@
     "pattern":"\\Qcom/vaadin/base/devserver/DevToolsInterface.class\\E"
   }, {
     "pattern":"\\Qcom/vaadin/base/devserver/\\E"
+  }, {
+    "pattern":"\\Qcom/vaadin/base/devserver/dev-mode-not-ready.html\\E"
   }, {
     "pattern":"\\Qcom/vaadin/copilot/copilot.properties\\E"
   }, {
@@ -1257,6 +1263,8 @@
   }, {
     "pattern":"\\Qcom/vaadin/flow/server/auth/AccessPathChecker.class\\E"
   }, {
+    "pattern":"\\Qcom/vaadin/flow/server/auth/AnonymousAllowed.class\\E"
+  }, {
     "pattern":"\\Qcom/vaadin/flow/server/auth/MenuAccessControl.class\\E"
   }, {
     "pattern":"\\Qcom/vaadin/flow/server/auth/NavigationAccessChecker.class\\E"
@@ -1387,6 +1395,8 @@
   }, {
     "pattern":"\\Qcom/vaadin/hilla/ApplicationContextProvider.class\\E"
   }, {
+    "pattern":"\\Qcom/vaadin/hilla/Endpoint.class\\E"
+  }, {
     "pattern":"\\Qcom/vaadin/hilla/EndpointController.class\\E"
   }, {
     "pattern":"\\Qcom/vaadin/hilla/EndpointControllerConfiguration.class\\E"
@@ -1414,6 +1424,14 @@
     "pattern":"\\Qcom/vaadin/hilla/startup/EndpointRegistryInitializer.class\\E"
   }, {
     "pattern":"\\Qcom/vaadin/hilla/startup/RouteUnifyingServiceInitListener.class\\E"
+  }, {
+    "pattern":"\\Qconfig/application-aot-config.properties\\E"
+  }, {
+    "pattern":"\\Qconfig/application-aot-config.xml\\E"
+  }, {
+    "pattern":"\\Qconfig/application-aot-config.yaml\\E"
+  }, {
+    "pattern":"\\Qconfig/application-aot-config.yml\\E"
   }, {
     "pattern":"\\Qconfig/application-dev.properties\\E"
   }, {
@@ -4471,6 +4489,8 @@
   }, {
     "pattern":"\\Qorg/springframework/context/annotation/ImportRuntimeHints.class\\E"
   }, {
+    "pattern":"\\Qorg/springframework/context/annotation/Profile.class\\E"
+  }, {
     "pattern":"\\Qorg/springframework/context/support/ApplicationObjectSupport.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/core/Ordered.class\\E"
@@ -4628,8 +4648,6 @@
     "pattern":"\\Qplugins/theme-loader/theme-loader.js\\E"
   }, {
     "pattern":"\\Qpublic/VAADIN/push\\E"
-  }, {
-    "pattern":"\\Qpublic/favicon.ico\\E"
   }, {
     "pattern":"\\Qpublic/index.html\\E"
   }, {
@@ -5247,8 +5265,6 @@
   }, {
     "pattern":"\\Qresources/VAADIN/push\\E"
   }, {
-    "pattern":"\\Qresources/favicon.ico\\E"
-  }, {
     "pattern":"\\Qresources/index.html\\E"
   }, {
     "pattern":"\\Qrize/os/platform/\\E"
@@ -5259,11 +5275,17 @@
   }, {
     "pattern":"\\Qrize/os/platform/keycloak/KeycloakProperties.class\\E"
   }, {
+    "pattern":"\\Qrize/os/platform/organization/OrganizationAotConfiguration.class\\E"
+  }, {
+    "pattern":"\\Qrize/os/platform/organization/OrganizationEndpoint.class\\E"
+  }, {
+    "pattern":"\\Qrize/os/platform/organization/OrganizationMapper.class\\E"
+  }, {
+    "pattern":"\\Qrize/os/platform/organization/OrganizationService.class\\E"
+  }, {
     "pattern":"\\Qspring.properties\\E"
   }, {
     "pattern":"\\Qstatic/VAADIN/push\\E"
-  }, {
-    "pattern":"\\Qstatic/favicon.ico\\E"
   }, {
     "pattern":"\\Qstatic/index.html\\E"
   }, {
