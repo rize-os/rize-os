@@ -36,4 +36,4 @@ jobs:
           distribution: 'corretto'
 
       - name: Run Maven tests
-        run: mvn $MAVEN_CLI_OPTS -Dtest=* -pl platform -am verify
+        run: mvn $MAVEN_CLI_OPTS -Dtest=* -pl platform verify
