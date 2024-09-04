@@ -1,5 +1,6 @@
 package rize.os.platform.organization;
 
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +9,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import rize.os.platform.TestcontainersConfiguration;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -131,5 +134,93 @@ class OrganizationServiceIT
                 .build();
         assertThatThrownBy(() -> organizationService.createOrganization(organizationWithSameName))
                 .isInstanceOf(OrganizationAlreadyExistsException.class);
+    }
+
+    @Test
+    void shouldUpdateOrganization()
+    {
+        var organizationToCreate = Organization.builder()
+                .name("should-update-organization")
+                .displayName("shouldUpdateOrganization")
+                .region("de")
+                .enabled(true)
+                .build();
+        var createdOrganization = organizationService.createOrganization(organizationToCreate);
+
+        var organizationToUpdate = Organization.builder()
+                .id(createdOrganization.getId())
+                .name("should-update-organization-updated")
+                .displayName("shouldUpdateOrganizationUpdated")
+                .region("de-1")
+                .enabled(false)
+                .build();
+        var updatedOrganization = organizationService.updateOrganization(organizationToUpdate);
+
+        assertThat(updatedOrganization).isNotNull();
+        assertThat(updatedOrganization.getId()).isEqualTo(createdOrganization.getId());
+        assertThat(updatedOrganization.getName()).isEqualTo(organizationToUpdate.getName());
+        assertThat(updatedOrganization.getDisplayName()).isEqualTo(organizationToUpdate.getDisplayName());
+        assertThat(updatedOrganization.getRegion()).isEqualTo(organizationToUpdate.getRegion());
+        assertThat(updatedOrganization.isEnabled()).isEqualTo(organizationToUpdate.isEnabled());
+
+        var foundOrganization = organizationService.findOrganizationByName(organizationToUpdate.getName()).orElseThrow();
+        assertThat(foundOrganization).isEqualTo(updatedOrganization);
+    }
+
+    @Test
+    void shouldFailToUpdateNonExistingOrganization()
+    {
+        var organizationToUpdate = Organization.builder()
+                .id(UUID.randomUUID().toString())
+                .name("should-fail-to-update-non-existing-organization")
+                .displayName("shouldFailToUpdateNonExistingOrganization")
+                .region("de")
+                .build();
+
+        assertThatThrownBy(() -> organizationService.updateOrganization(organizationToUpdate))
+                .isInstanceOf(OrganizationNotFoundException.class);
+    }
+
+    @Test
+    void shouldFailToUpdateOrganizationToExistingName()
+    {
+        var organizationToCreate1 = Organization.builder()
+                .name("should-fail-to-update-organization-to-existing-name-1")
+                .displayName("shouldFailToUpdateOrganizationToExistingName")
+                .region("de")
+                .build();
+        organizationService.createOrganization(organizationToCreate1);
+
+        var organizationToCreate2 = Organization.builder()
+                .name("should-fail-to-update-organization-to-existing-name-2")
+                .displayName("shouldFailToUpdateOrganizationToExistingName")
+                .region("de")
+                .build();
+        var organizationToUpdate = organizationService.createOrganization(organizationToCreate2);
+
+        organizationToUpdate.setName(organizationToCreate1.getName());
+        assertThatThrownBy(() -> organizationService.updateOrganization(organizationToUpdate))
+                .isInstanceOf(OrganizationAlreadyExistsException.class);
+    }
+
+    @Test
+    void shouldFailToUpdateOrganizationWithInvalidValues()
+    {
+        var organizationToCreate = Organization.builder()
+                .name("should-fail-to-update-organization-with-invalid-values")
+                .displayName("shouldFailToUpdateOrganizationWithInvalidValues")
+                .region("de")
+                .enabled(true)
+                .build();
+        var organizationToUpdate = organizationService.createOrganization(organizationToCreate);
+
+        organizationToUpdate.setName("shouldFailToUpdateOrganizationWithInvalidValues");
+        organizationToUpdate.setDisplayName("");
+        organizationToUpdate.setRegion("");
+
+        assertThatThrownBy(() -> organizationService.updateOrganization(organizationToUpdate))
+                .isInstanceOf(OrganizationConstraintException.class)
+                .extracting("violations", InstanceOfAssertFactories.ITERABLE)
+                .hasSize(3);
     }
 }
