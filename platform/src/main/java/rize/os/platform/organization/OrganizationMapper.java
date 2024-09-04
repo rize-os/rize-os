@@ -2,6 +2,7 @@ package rize.os.platform.organization;
 
 import org.keycloak.representations.idm.OrganizationRepresentation;
 import org.springframework.stereotype.Service;
+import rize.os.commons.organization.OrganizationDto;
 
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,38 @@ public class OrganizationMapper
                 .displayName(displayName)
                 .region(region)
                 .enabled(representation.isEnabled())
+                .build();
+    }
+
+    /**
+     * Maps an organization object to an organization DTO
+     * @param organization Organization object
+     * @return Organization DTO
+     */
+    OrganizationDto toOrganizationDto(Organization organization)
+    {
+        return OrganizationDto.builder()
+                .id(organization.getId())
+                .name(organization.getName())
+                .displayName(organization.getDisplayName())
+                .region(organization.getRegion())
+                .enabled(organization.isEnabled())
+                .build();
+    }
+
+    /**
+     * Maps an organization DTO to an organization object
+     * @param organizationDto Organization DTO
+     * @return Organization object
+     */
+    Organization toOrganization(OrganizationDto organizationDto)
+    {
+        return Organization.builder()
+                .id(organizationDto.getId())
+                .name(organizationDto.getName())
+                .displayName(organizationDto.getDisplayName())
+                .region(organizationDto.getRegion())
+                .enabled(organizationDto.isEnabled())
                 .build();
     }
 
