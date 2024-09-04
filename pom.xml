@@ -28,6 +28,7 @@
     </scm>
 
     <modules>
+        <module>commons</module>
         <module>access-manager</module>
         <module>application-gateway</module>
         <module>platform</module>
