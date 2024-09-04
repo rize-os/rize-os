@@ -1,5 +1,7 @@
 package rize.os.platform.organization;
 
+import jakarta.annotation.Nullable;
+import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -78,6 +80,34 @@ public class OrganizationService
     }
 
     /**
+     * Updates the given organization in Keycloak.
+     * @param organization The organization to update with new values
+     * @return The updated organization
+     * @throws OrganizationNotFoundException If the organization with the given ID could not be found in Keycloak
+     * @throws OrganizationConstraintException If the new values of the organization are invalid
+     * @throws OrganizationAlreadyExistsException If the new name of the organization already exists
+     * @throws OrganizationUpdateException If the organization could not be updated in Keycloak
+     */
+    Organization updateOrganization(Organization organization)
+            throws OrganizationNotFoundException, OrganizationConstraintException, OrganizationAlreadyExistsException, OrganizationUpdateException
+    {
+        log.info("Updating organization with ID [{}] in Keycloak to: {}", organization.getId(), organization);
+        var orgRepresentationToUpdate = findOrganizationRepresentationById(organization.getId())
+                .orElseThrow(() -> new OrganizationNotFoundException("id=" + organization.getId()));
+        validateOrganization(organization);
+
+        orgRepresentationToUpdate.setName(organization.getName());
+        orgRepresentationToUpdate.setDescription(organization.getDescription());
+        orgRepresentationToUpdate.setEnabled(organization.isEnabled());
+        orgRepresentationToUpdate.setAttributes(organizationMapper.toRepresentationAttributes(organization));
+        updateOrganizationRepresentation(orgRepresentationToUpdate);
+
+        var updatedOrganization = organizationMapper.toOrganization(orgRepresentationToUpdate);
+        log.info("Updated organization successfully: {}", updatedOrganization);
+        return updatedOrganization;
+    }
+
+    /**
      * Creates the given Organization in Keycloak. The creation in Keycloak will only set the name and description of the organization.
      * @param organization The organization to create
      * @return The representation of the created organization in Keycloak
@@ -126,14 +156,33 @@ public class OrganizationService
     }
 
     /**
+     * Searches for an existing organization in Keycloak with the given ID.
+     * @param id The ID of the organization to search for
+     * @return The representation of the organization if found, otherwise empty
+     */
+    private Optional<OrganizationRepresentation> findOrganizationRepresentationById(String id)
+    {
+        try
+        {
+            log.debug("Searching for organization in Keycloak with ID [{}]", id);
+            return Optional.of(realmResource.organizations().get(id).toRepresentation());
+        }
+        catch (NotFoundException e)
+        {
+            log.warn("Organization with id [{}] not found in Keycloak", id);
+            return Optional.empty();
+        }
+    }
+
+    /**
      * Searches for an existing organization in Keycloak with the given name.
      * @param name The name of the organization to search for
      * @return The representation of the organization if found, otherwise empty
      */
-    private Optional<OrganizationRepresentation> findOrganizationRepresentationByName(String name)
+    private Optional<OrganizationRepresentation> findOrganizationRepresentationByName(@Nullable String name)
     {
         log.debug("Searching for organization with name '{}' in Keycloak", name);
-        var organizations = realmResource.organizations().search(name, true, 0, 1);
+        var organizations = realmResource.organizations().search(name == null ? "" : name, true, 0, 1);
 
         if (organizations.isEmpty())
         {
