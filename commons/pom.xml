@@ -36,7 +36,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/rize-os/commons</url>
+            <url>https://maven.pkg.github.com/rize-os/rize-os</url>
         </repository>
     </distributionManagement>
 </project>
