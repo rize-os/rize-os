@@ -34,6 +34,21 @@ public class OrganizationService
     }
 
     /**
+     * Searches for an existing organization in Keycloak with the given ID.
+     * @param id The ID of the organization to search for
+     * @return Object of the organization if found, otherwise empty
+     */
+    Optional<Organization> findOrganizationById(String id)
+    {
+        var orgRepresentation = findOrganizationRepresentationById(id);
+        if (orgRepresentation.isEmpty())
+            return Optional.empty();
+
+        var organization = organizationMapper.toOrganization(orgRepresentation.get());
+        return loggedOrganization(organization);
+    }
+
+    /**
      * Searches for an existing organization in Keycloak with the given name.
      * @param name The name of the organization to search for
      * @return Object of the organization if found, otherwise empty

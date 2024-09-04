@@ -42,6 +42,28 @@ class OrganizationServiceIT
     }
 
     @Test
+    void shouldFindOrganizationById()
+    {
+        var organizationToFind = Organization.builder()
+                .name("should-find-organization-by-id")
+                .displayName("shouldFindOrganizationById")
+                .region("de")
+                .enabled(true)
+                .build();
+        var createdOrganization = organizationService.createOrganization(organizationToFind);
+
+        var foundOrganization = organizationService.findOrganizationById(createdOrganization.getId()).orElseThrow();
+        assertThat(foundOrganization).isEqualTo(createdOrganization);
+    }
+
+    @Test
+    void shouldNotFindOrganizationById()
+    {
+        var foundOrganization = organizationService.findOrganizationById(UUID.randomUUID().toString());
+        assertThat(foundOrganization).isEmpty();
+    }
+
+    @Test
     void shouldFindOrganizationByName()
     {
         var organizationToFind = Organization.builder()
