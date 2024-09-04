@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>commons</artifactId>
-    <version>0.0.1-SNAPSHOT1</version>
+    <version>0.1.0-SNAPSHOT</version>
     <name>rize.commons</name>
 
     <properties>
@@ -31,12 +31,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/rize-os/rize-os</url>
-        </repository>
-    </distributionManagement>
 </project>
