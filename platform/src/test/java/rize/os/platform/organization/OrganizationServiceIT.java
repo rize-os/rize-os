@@ -245,4 +245,38 @@ class OrganizationServiceIT
                 .extracting("violations", InstanceOfAssertFactories.ITERABLE)
                 .hasSize(3);
     }
+
+    @Test
+    void shouldDeleteOrganization()
+    {
+        var organizationToCreate = Organization.builder()
+                .name("should-delete-organization")
+                .displayName("shouldDeleteOrganization")
+                .region("de")
+                .enabled(true)
+                .build();
+        var createdOrganization = organizationService.createOrganization(organizationToCreate);
+
+        organizationService.deleteOrganization(createdOrganization.getId());
+
+        var foundOrganization = organizationService.findOrganizationById(createdOrganization.getId());
+        assertThat(foundOrganization).isEmpty();
+    }
+
+    @Test
+    void shouldFailToDeleteNonExistingOrganization()
+    {
+        assertThatThrownBy(() -> organizationService.deleteOrganization(UUID.randomUUID().toString()))
+                .isInstanceOf(OrganizationNotFoundException.class);
+
+        var organizationToDelete = Organization.builder()
+                .id(UUID.randomUUID().toString())
+                .name("should-fail-to-delete-non-existing-organization")
+                .displayName("shouldFailToDeleteNonExistingOrganization")
+                .region("de")
+                .build();
+
+        assertThatThrownBy(() -> organizationService.deleteOrganization(organizationToDelete))
+                .isInstanceOf(OrganizationNotFoundException.class);
+    }
 }

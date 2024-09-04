@@ -82,7 +82,8 @@ public class OrganizationService
         try { updateOrganizationRepresentation(orgRepresentation); }
         catch (OrganizationUpdateException e)
         {
-            // TODO: Delete organization if update fails
+            try { deleteOrganization(orgRepresentation.getId()); }
+            catch (Exception ignore) {}
 
             if (e.hasResponse())
                 throw new OrganizationCreateException(organization, e.getResponse());
@@ -120,6 +121,41 @@ public class OrganizationService
         var updatedOrganization = organizationMapper.toOrganization(orgRepresentationToUpdate);
         log.info("Updated organization successfully: {}", updatedOrganization);
         return updatedOrganization;
+    }
+
+    /**
+     * Deletes the organization with the given ID from Keycloak.
+     * @param id The ID of the organization to delete
+     * @throws OrganizationNotFoundException If the organization with the given ID could not be found in Keycloak
+     * @throws OrganizationDeleteException If the organization could not be deleted in Keycloak
+     */
+    void deleteOrganization(String id) throws OrganizationNotFoundException, OrganizationDeleteException
+    {
+        var organization = findOrganizationById(id).orElseThrow(() -> new OrganizationNotFoundException("id=" + id));
+        deleteOrganization(organization);
+    }
+
+    /**
+     * Deletes the given organization from Keycloak.
+     * @param organization The organization to delete
+     * @throws OrganizationNotFoundException If the organization with the given ID could not be found in Keycloak
+     * @throws OrganizationDeleteException If the organization could not be deleted in Keycloak
+     */
+    void deleteOrganization(Organization organization) throws OrganizationNotFoundException, OrganizationDeleteException
+    {
+        log.info("Deleting organization '{}' from Keycloak", organization.getName());
+
+        try (var response = realmResource.organizations().get(organization.getId()).delete())
+        {
+            if (response.getStatus() == 404)
+                throw new OrganizationNotFoundException("id=" + organization.getId());
+            if (response.getStatus() != 204)
+                throw new OrganizationDeleteException(organization, response);
+        }
+        catch (OrganizationNotFoundException | OrganizationDeleteException e) { throw e; }
+        catch (Exception e) { throw new OrganizationDeleteException(organization, e); }
+
+        log.info("Deleted organization successfully: {}", organization);
     }
 
     /**
