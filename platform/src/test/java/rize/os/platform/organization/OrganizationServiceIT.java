@@ -28,6 +28,34 @@ class OrganizationServiceIT
 
 
     @Test
+    void shouldFindOrganizationByName()
+    {
+        var organizationToFind = Organization.builder()
+                .name("should-find-organization-by-name")
+                .displayName("shouldFindOrganizationByName")
+                .region("de")
+                .enabled(true)
+                .build();
+        organizationService.createOrganization(organizationToFind);
+
+        var foundOrganization = organizationService.findOrganizationByName(organizationToFind.getName());
+
+        assertThat(foundOrganization).isPresent();
+        assertThat(foundOrganization.get().getName()).isEqualTo(organizationToFind.getName());
+        assertThat(foundOrganization.get().getDisplayName()).isEqualTo(organizationToFind.getDisplayName());
+        assertThat(foundOrganization.get().getRegion()).isEqualTo(organizationToFind.getRegion());
+        assertThat(foundOrganization.get().isEnabled()).isEqualTo(organizationToFind.isEnabled());
+    }
+
+    @Test
+    void shouldNotFindOrganizationByName()
+    {
+        var foundOrganization = organizationService.findOrganizationByName("should-not-find-organization-by-name");
+
+        assertThat(foundOrganization).isEmpty();
+    }
+
+    @Test
     void shouldCreateOrganization()
     {
         var organizationToCreate = Organization.builder()

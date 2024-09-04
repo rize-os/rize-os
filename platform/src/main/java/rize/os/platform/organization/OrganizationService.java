@@ -19,6 +19,21 @@ public class OrganizationService
 
 
     /**
+     * Searches for an existing organization in Keycloak with the given name.
+     * @param name The name of the organization to search for
+     * @return Object of the organization if found, otherwise empty
+     */
+    Optional<Organization> findOrganizationByName(String name)
+    {
+        var orgRepresentation = findOrganizationRepresentationByName(name);
+        if (orgRepresentation.isEmpty())
+            return Optional.empty();
+
+        var organization = organizationMapper.toOrganization(orgRepresentation.get());
+        return loggedOrganization(organization);
+    }
+
+    /**
      * Creates a new organization in Keycloak.
      * @param organization Object of the organization to create
      * @return Object of the created organization with an ID
@@ -132,5 +147,11 @@ public class OrganizationService
         var organizationWithSameName = findOrganizationRepresentationByName(organization.getName());
         if (organizationWithSameName.isPresent() && !organizationWithSameName.get().getId().equals(organization.getId()))
             throw new OrganizationAlreadyExistsException(organization);
+    }
+
+    private Optional<Organization> loggedOrganization(Organization organization)
+    {
+        log.debug("Found organization: {}", organization);
+        return Optional.of(organization);
     }
 }
