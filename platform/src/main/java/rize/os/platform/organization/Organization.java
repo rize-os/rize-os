@@ -42,6 +42,15 @@ public class Organization
 
 
     /**
+     * Returns a description of the organization object containing name, display name and region.
+     * @return Description of the organization object
+     */
+    String getDescription()
+    {
+        return name + " - " + displayName + " [" + region + "]";
+    }
+
+    /**
      * Validates the values of the organization object. If the returned list of violations is empty, the values for the organization are valid.
      * @return Violations of invalid values in the organization object
      */
