@@ -17,6 +17,11 @@ logging:
     com.vaadin: WARN
 ---
 spring:
+  threads:
+    virtual:
+      enabled: true
+---
+spring:
   docker:
     compose:
       enabled: true
