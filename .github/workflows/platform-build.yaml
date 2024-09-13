@@ -24,9 +24,6 @@ jobs:
           java-version: 21
           distribution: 'corretto'
 
-      - name: Install commons package
-        run: mvn --projects commons $MAVEN_CLI_OPTS -Dmaven.skip.test=true install
-
       - name: Build Native Image with Maven
-        run: mvn --projects platform $MAVEN_CLI_OPTS -Dmaven.skip.test=true -Pproduction -Pnative spring-boot:build-image
+        run: mvn  $MAVEN_CLI_OPTS -Dmaven.skip.test=true -pl platform -am -Pproduction -Pnative spring-boot:build-image
 
