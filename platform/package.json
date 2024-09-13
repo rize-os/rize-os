@@ -46,10 +46,13 @@
     "@vaadin/hilla-generator-utils": "24.4.7",
     "@vitejs/plugin-react": "4.3.1",
     "async": "3.2.6",
+    "autoprefixer": "^10.4.20",
     "glob": "10.4.5",
+    "postcss": "^8.4.45",
     "rollup-plugin-brotli": "3.1.0",
     "rollup-plugin-visualizer": "5.12.0",
     "strip-css-comments": "5.0.0",
+    "tailwindcss": "^3.4.10",
     "transform-ast": "2.4.4",
     "typescript": "5.4.5",
     "vite": "5.4.2",
@@ -115,7 +118,7 @@
       "workbox-core": "7.1.0",
       "workbox-precaching": "7.1.0"
     },
-    "hash": "48bbed1bb39666d47ff66cacdd6dc6731cc4861c9ba3d6b09477ecbf8d79d924"
+    "hash": "19e9ab2d70812cd24db7a3ebc66eb5317f96223ac2261987fb8dae15fac90d18"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
