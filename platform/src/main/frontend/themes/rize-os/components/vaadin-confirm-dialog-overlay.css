@@ -1,0 +1,10 @@
+[part="header"] {
+    padding-top: var(--lumo-space-l);
+    padding-left: var(--lumo-space-l);
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+[part="content"] {
+    font-size: 1.1rem;
+}

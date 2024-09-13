@@ -1,6 +1,6 @@
-
 [part="input-field"] {
-  box-shadow: inset 0 0 0 1px var(--lumo-contrast-30pct);
+  border-radius: 0.5rem;
+  box-shadow: none;
   background-color: var(--lumo-base-color);
 }
 

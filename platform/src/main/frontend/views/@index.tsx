@@ -1,23 +1,12 @@
-import {useEffect, useState} from "react";
-import OrganizationListItem from "Frontend/components/organization/organization-list-item";
-import OrganizationDto from "Frontend/generated/rize/os/commons/organization/OrganizationDto";
-import { OrganizationEndpoint } from "Frontend/generated/endpoints";
-
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
 
 export default function HomeView() {
 
-    const [organizations, setOrganizations] = useState<OrganizationDto[]>([]);
-
+    const navigate = useNavigate();
     useEffect(() => {
-        OrganizationEndpoint.findAll().then(setOrganizations);
+        navigate("/organizations");
     }, []);
-
-    return (
-        <div className={"box-border p-1"}>
-            {organizations.map((organization) => (
-                <OrganizationListItem organization={organization} key={organization.id} onEdit={() => console.log(organization)}/>
-            ))}
-        </div>
-    );
+    return (<></>);
 }
 

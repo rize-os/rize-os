@@ -28,7 +28,7 @@ public class OrganizationService
     List<Organization> findAll()
     {
         log.debug("Loading all organizations from Keycloak");
-        var orgRepresentations = realmResource.organizations().getAll();
+        var orgRepresentations = realmResource.organizations().search("", false, 0, Integer.MAX_VALUE);
         var organizations = orgRepresentations.stream().map(organizationMapper::toOrganization).toList();
         return loggedOrganizations(organizations);
     }
