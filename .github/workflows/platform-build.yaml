@@ -14,6 +14,10 @@ jobs:
       DOCKER_IO_USERNAME: ${{ secrets.DOCKER_IO_USERNAME }}
       DOCKER_IO_PASSWORD: ${{ secrets.DOCKER_IO_PASSWORD }}
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,7 +29,7 @@ jobs:
           distribution: 'corretto'
 
       - name: Build Native Image with Maven
-        run: |
-            mvn --projects commons $MAVEN_CLI_OPTS install
-            mvn --projects platform $MAVEN_CLI_OPTS -Dmaven.skip.test=true -Pproduction -Pnative spring-boot:build-image
+        run: mvn --projects platform $MAVEN_CLI_OPTS -Dmaven.skip.test=true -Pproduction -Pnative spring-boot:build-image
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
