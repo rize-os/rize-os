@@ -1,0 +1,11 @@
+[part='label'], [part='prefix'], [part='suffix'] {
+    line-height: 1;
+}
+
+[part='prefix'], [part='suffix'] {
+    line-height: 0;
+}
+
+:host([theme~='primary'][focus-ring]) {
+    box-shadow: 0 0 0 1px var(--lumo-base-color), 0 0 0 2px var(--lumo-primary-color-50pct);
+}

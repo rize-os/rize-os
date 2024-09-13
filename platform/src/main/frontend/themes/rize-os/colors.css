@@ -1,0 +1,41 @@
+html {
+    --lumo-base-color: #F8FAFC;
+    --lumo-primary-color: #0098fa;
+    --lumo-primary-color-10pct: #0098fa1A;
+    --lumo-primary-color-50pct: #0098fa80;
+    --lumo-primary-text-color: #0183d7;
+
+    --lumo-error-color: #EF4444;
+    --lumo-error-color-10pct: #EF44441A;
+    --lumo-error-color-50pct: #EF444480;
+    --lumo-error-text-color: #EA3E3E;
+
+    --textfield-color: #334155;
+    --textfield-placeholder-color: #64748B;
+    --textfield-background: rgba(203, 213, 225, 0.05);
+    --textfield-background-hover: rgba(203, 213, 225, 0.1);
+    --textield-border-color: #CBD5E1;
+
+    --menu-bar-color: #334155;
+    --menu-bar-background: #FFF;
+}
+
+.dark {
+    --textfield-color: #F9FAFB;
+    --textfield-background: rgba(203, 213, 225, 0.1);
+    --textfield-background-hover: rgba(203, 213, 225, 0.18);
+    --textield-border-color: #334155;
+
+    --menu-bar-color: #F9FAFB;
+    --menu-bar-background: #1E293b;
+
+    --lumo-primary-color: #0098fa;
+    --lumo-primary-color-10pct: #0098fa33;
+    --lumo-primary-color-50pct: #0098fa80;
+    --lumo-primary-text-color: #0183d7;
+
+    --lumo-error-color: #F87171;
+    --lumo-error-color-10pct: #F8717133;
+    --lumo-error-color-50pct: #F8717180;
+    --lumo-error-text-color: #F87171;
+}

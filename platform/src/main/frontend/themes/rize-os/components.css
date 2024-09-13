@@ -1,0 +1,17 @@
+@import 'components/loading-ring.css';
+
+html {
+    --vaadin-component-radius: 0.5rem;
+}
+
+vaadin-button {
+    border-radius: var(--vaadin-component-radius);
+}
+
+vaadin-menu-bar-item {
+    cursor: pointer;
+}
+
+.v-loading-indicator {
+    visibility: hidden;
+}
