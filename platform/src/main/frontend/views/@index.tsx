@@ -13,9 +13,9 @@ export default function HomeView() {
     }, []);
 
     return (
-        <div>
+        <div className={"box-border p-1"}>
             {organizations.map((organization) => (
-                <OrganizationListItem organization={organization} key={organization.id}/>
+                <OrganizationListItem organization={organization} key={organization.id} onEdit={() => console.log(organization)}/>
             ))}
         </div>
     );
