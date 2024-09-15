@@ -94,12 +94,6 @@
             </dependency>
 
             <dependency>
-                <groupId>rize.os</groupId>
-                <artifactId>commons</artifactId>
-                <version>${rize-os.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>com.github.dasniko</groupId>
                 <artifactId>testcontainers-keycloak</artifactId>
                 <version>${testcontainers-keycloak.version}</version>

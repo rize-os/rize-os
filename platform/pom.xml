@@ -38,6 +38,7 @@
         <dependency>
             <groupId>rize.os</groupId>
             <artifactId>commons</artifactId>
+            <version>${rize-os.version}</version>
         </dependency>
 
         <dependency>
