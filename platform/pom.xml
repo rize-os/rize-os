@@ -12,7 +12,7 @@
 
     <name>rize.platform</name>
     <artifactId>platform</artifactId>
-    <version>0.1.0-dev.001</version>
+    <version>0.1.0-dev.002</version>
 
     <properties>
 
