@@ -40,6 +40,7 @@
             <id>github</id>
             <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/rize-os/rize-os</url>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
     </repositories>
 
@@ -48,6 +49,7 @@
             <id>github</id>
             <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/rize-os/rize-os</url>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
     </distributionManagement>
 
