@@ -27,6 +27,8 @@ jobs:
           distribution: 'corretto'
 
       - name: Publish to GitHub Packages
-        run: mvn --projects commons $MAVEN_CLI_OPTS deploy
+        run: |
+          mvn $MAVEN_CLI_OPTS -N deploy
+          mvn --projects commons $MAVEN_CLI_OPTS deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
