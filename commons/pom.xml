@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>commons</artifactId>
-    <version>0.1.0-dev.002</version>
+    <version>0.1.0-dev.003</version>
     <name>rize.commons</name>
 
     <properties>
