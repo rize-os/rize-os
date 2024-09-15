@@ -39,7 +39,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://public:&#103;hp_oX3CCt5yhkDy0AkGGAcmRli9Foj6GF0Xzygh@maven.pkg.github.com/rize-os/rize-os</url>
+            <url>https://public:&#103;hp_oX3CCt5yhkDy0AkGGAcmRli9Foj6GF0Xzygh@maven.pkg.github.com/rize-os/*</url>
             <releases><enabled>true</enabled></releases>
             <snapshots><enabled>true</enabled></snapshots>
         </repository>
