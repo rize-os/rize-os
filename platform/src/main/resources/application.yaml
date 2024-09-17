@@ -9,12 +9,21 @@ keycloak:
     username: 'admin'
     password: ''
 ---
+spring:
+  datasource:
+    driver-class-name: 'org.postgresql.Driver'
+    url: ${database.url}
+    username: ${database.username}
+    password: ${database.password}
+
+---
 logging:
   level:
     org.springframework: WARN
     org.atmosphere: ERROR
     org.apache: WARN
     com.vaadin: WARN
+    com.zaxxer: WARN
 ---
 spring:
   threads:

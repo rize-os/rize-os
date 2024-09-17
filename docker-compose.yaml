@@ -34,6 +34,16 @@ services:
     ports:
       - 5432:5432
 
+  platform-db:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: ${PLATFORM_DATABASE_CONTAINER_NAME}
+    environment:
+      POSTGRES_DB: platform
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - 5433:5432
+
   rabbitmq:
     image: rabbitmq:${RABBITMQ_VERSION}
     container_name: ${RABBITMQ_CONTAINER_NAME}
