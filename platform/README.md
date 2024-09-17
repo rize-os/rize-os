@@ -14,3 +14,10 @@ The configuration for the platform can be provided as .yaml or .properties file.
 | `keycloak.admin.client-secret` | Client-Secret for authentication to Keycloak. Is only required when `keycloak.admin.grant-type` is set to `client_credentials`                 | String    | -                       |
 | `keycloak.admin.username`      | Username for authentication to Keycloak. Is only required when `keycloak.admin.grant-type` is set to `password`                                | String    | `admin`                 |
 | `keycloak.admin.password`      | Password for authentication to Keycloak. Is only required when `keycloak.admin.grant-type` is set to `password`                                | String    | -                       |
+
+### Database Configuration
+| Parameter           | Description                                        | Data Type | Default Value |
+|---------------------|----------------------------------------------------|-----------|---------------|
+| `database.url`      | URL of the database server                         | String    | -             |
+| `database.username` | Username for authentication to the database server | String    | -             |
+| `database.password` | Password for authentication to the database server | String    | -             |

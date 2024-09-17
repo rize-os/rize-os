@@ -3,6 +3,11 @@ keycloak:
   admin:
     password: 'secret'
 ---
+database:
+  url: 'jdbc:postgresql://localhost:5433/platform'
+  username: 'admin'
+  password: 'secret'
+---
 logging:
   level:
     rize.os: DEBUG
