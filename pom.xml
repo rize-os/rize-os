@@ -11,14 +11,14 @@
     <name>rize.os</name>
     <groupId>rize.os</groupId>
     <artifactId>rize-os</artifactId>
-    <version>${rize-os.version}</version>
+    <version>0.1.0-dev.003</version>
     <packaging>pom</packaging>
 
     <properties>
-        <rize-os.version>0.1.0-dev.003</rize-os.version>
         <java.version>21</java.version>
         <spring-cloud.version>2023.0.3</spring-cloud.version>
         <spring-modulith.version>1.2.3</spring-modulith.version>
+        <rize-os.version>0.1.0-dev.003</rize-os.version>
         <vaadin.version>24.4.11</vaadin.version>
         <keycloak.version>25.0.5</keycloak.version>
         <testcontainers-keycloak.version>3.4.0</testcontainers-keycloak.version> <!-- https://mvnrepository.com/artifact/com.github.dasniko/testcontainers-keycloak -->
