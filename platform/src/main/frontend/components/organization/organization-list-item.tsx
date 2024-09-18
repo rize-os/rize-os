@@ -4,6 +4,7 @@ import OrganizationDto from "Frontend/generated/rize/os/commons/organization/Org
 
 interface OrganizationListItemProps {
     organization: OrganizationDto,
+    regionsEnabled: boolean,
     onClick?: () => void,
     onEdit?: () => void,
     onDelete?: () => void
@@ -43,7 +44,7 @@ const createMenuBarItem = (icon: string, text: string, key: string, color?: stri
 }
 
 
-const OrganizationListItem: React.FC<OrganizationListItemProps> = ({ organization, onClick, onEdit, onDelete }) => {
+const OrganizationListItem: React.FC<OrganizationListItemProps> = ({ organization, onClick, onEdit, onDelete, regionsEnabled }) => {
 
     const [menuBarItems, setMenuBarItems] = React.useState<any>(null);
     const [menuBarEnabled, setMenuBarEnabled] = React.useState<boolean>(false);
@@ -80,9 +81,11 @@ const OrganizationListItem: React.FC<OrganizationListItemProps> = ({ organizatio
             </section>
 
             <section className={"flex flex-row-reverse gap-1"}>
-                <span {...{theme: 'badge'}} className={"badge hidden sm:block"} id={"organization-region-" + organization.id}>
-                    {organization.region}
-                </span>
+                { regionsEnabled &&
+                    <span {...{theme: 'badge'}} className={"badge hidden sm:block"} id={"organization-region-" + organization.id}>
+                        {organization.region}
+                    </span>
+                }
 
                 { !organization.enabled &&
                     <span {...{theme: 'badge error'}} className={"badge"}>

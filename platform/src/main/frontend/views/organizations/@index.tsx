@@ -6,18 +6,25 @@ import {Button, ConfirmDialog, Notification, TextField} from "@vaadin/react-comp
 import { EndpointError } from "@vaadin/hilla-frontend";
 import OrganizationDto from "Frontend/generated/rize/os/commons/organization/OrganizationDto";
 import { OrganizationEndpoint } from "Frontend/generated/endpoints";
-
-
+import { RegionConfigurationEndpoint }  from "Frontend/generated/endpoints";
 
 export default function OrganizationsView() {
 
     const navigate = useNavigate();
 
+    const [regionsEnabled, setRegionsEnabled] = useState<boolean>(false);
     const [organizations, setOrganizations] = useState<OrganizationDto[]>([]);
     const [organizationToDelete, setOrganizationToDelete] = useState<OrganizationDto | undefined>(undefined);
+
     const [fetchError, setFetchError] = useState<EndpointError | undefined>(undefined);
     const [deleteError, setDeleteError] = useState<EndpointError | undefined>(undefined);
     const [initialLoading, setInitialLoading] = useState<boolean>(true);
+
+    const fetchRegionsEnabled = async () => {
+        RegionConfigurationEndpoint.isRegionFeatureEnabled()
+            .then(setRegionsEnabled)
+            .catch((error: EndpointError) => { console.log(error); });
+    }
 
     const fetchOrganizations = async () => {
         setOrganizations([]);
@@ -48,6 +55,7 @@ export default function OrganizationsView() {
     }
 
     useEffect(() => {
+        fetchRegionsEnabled().then();
         fetchOrganizations().then();
     }, []);
 
@@ -90,6 +98,7 @@ export default function OrganizationsView() {
 
                     { organizations.map((organization) => (
                         <OrganizationListItem organization={organization}
+                                              regionsEnabled={regionsEnabled}
                                               key={organization.id}
                                               onClick={() => navigate('/organizations/' + organization.id)}
                                               onEdit={() => navigate('/organizations/edit/' + organization.id)}
