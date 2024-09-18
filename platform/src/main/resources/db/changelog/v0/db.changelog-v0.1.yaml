@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: v0.1-001
+      author: dennis-schaefer
+      changes:
+        - createTable:
+            tableName: region_configuration_parameter
+            columns:
+              - column:
+                  name: name
+                  type: varchar(64)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: value
+                  type: varchar(1024)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                    nullable: true
