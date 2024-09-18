@@ -1,6 +1,11 @@
 keycloak:
   realm: rize-os
 ---
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 2 # Fixes issue "org.postgresql.util.PSQLException: FATAL: sorry, too many clients already" when running tests
+---
 logging:
   level:
     rize.os: DEBUG
