@@ -22,4 +22,34 @@ databaseChangeLog:
                   name: version
                   type: bigint
                   constraints:
-                    nullable: true
+                    nullable: false
+
+  - changeSet:
+      id: v0.1-002
+      author: dennis-schaefer
+      changes:
+        - createTable:
+            tableName: region
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: display_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                    nullable: false
