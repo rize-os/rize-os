@@ -5,6 +5,7 @@ import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.lang.NonNull;
 import rize.os.platform.organization.OrganizationEndpoint;
+import rize.os.platform.region.config.RegionConfigurationEndpoint;
 
 import java.util.Arrays;
 
@@ -19,6 +20,7 @@ public class PlatformHintsRegistrar implements RuntimeHintsRegistrar
     private void registerEndpoints(RuntimeHints hints)
     {
         registerEndpoint(hints, OrganizationEndpoint.class);
+        registerEndpoint(hints, RegionConfigurationEndpoint.class);
     }
 
     private void registerEndpoint(RuntimeHints hints, Class<?> endpointClass)
