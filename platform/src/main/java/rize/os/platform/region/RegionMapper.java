@@ -1,7 +1,9 @@
 package rize.os.platform.region;
 
+import org.springframework.stereotype.Service;
 import rize.os.commons.region.RegionDto;
 
+@Service
 public class RegionMapper
 {
     /**
