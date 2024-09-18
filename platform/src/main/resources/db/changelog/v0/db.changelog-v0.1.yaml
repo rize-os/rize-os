@@ -22,7 +22,7 @@ databaseChangeLog:
                   name: version
                   type: bigint
                   constraints:
-                    nullable: true
+                    nullable: false
 
   - changeSet:
       id: v0.1-002
@@ -52,4 +52,4 @@ databaseChangeLog:
                   name: version
                   type: bigint
                   constraints:
-                    nullable: true
+                    nullable: false
