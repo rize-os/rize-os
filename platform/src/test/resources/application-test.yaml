@@ -1,6 +1,10 @@
 keycloak:
   realm: rize-os
 ---
+spring:
+  datasource:
+    type: 'org.springframework.jdbc.datasource.SimpleDriverDataSource' # Fixes issue "org.postgresql.util.PSQLException: FATAL: sorry, too many clients already" when running tests
+---
 logging:
   level:
     rize.os: DEBUG

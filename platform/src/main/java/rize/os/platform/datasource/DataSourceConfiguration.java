@@ -23,7 +23,7 @@ public class DataSourceConfiguration
                 .initializeDataSourceBuilder()
                 .build();
 
-        log.info("Initialized data source connection to: '{}'", dataSource.getConnection().getMetaData().getURL());
+        log.info("Initialized data source connection to: '{}'", dataSourceProperties.getUrl());
         return dataSource;
     }
 
