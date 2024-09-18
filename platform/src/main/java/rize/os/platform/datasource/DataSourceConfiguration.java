@@ -1,5 +1,6 @@
 package rize.os.platform.datasource;
 
+import liquibase.integration.spring.SpringLiquibase;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -24,5 +25,14 @@ public class DataSourceConfiguration
 
         log.info("Initialized data source connection to: '{}'", dataSource.getConnection().getMetaData().getURL());
         return dataSource;
+    }
+
+    @Bean
+    SpringLiquibase liquibase(DataSource dataSource)
+    {
+        var liquibase = new SpringLiquibase();
+        liquibase.setDataSource(dataSource);
+        liquibase.setChangeLog("classpath:db/changelog/db.changelog-master.yaml");
+        return liquibase;
     }
 }
