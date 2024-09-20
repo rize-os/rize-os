@@ -1,3 +1,7 @@
+vaadin-button {
+    border-radius: var(--vaadin-component-radius);
+}
+
 [part='label'], [part='prefix'], [part='suffix'] {
     line-height: 1;
 }

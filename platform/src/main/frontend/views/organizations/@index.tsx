@@ -23,7 +23,7 @@ export default function OrganizationsView() {
     const fetchRegionsEnabled = async () => {
         RegionConfigurationEndpoint.isRegionFeatureEnabled()
             .then(setRegionsEnabled)
-            .catch((error: EndpointError) => { console.log(error); });
+            .catch((error: EndpointError) => console.log(error));
     }
 
     const fetchOrganizations = async () => {
@@ -33,7 +33,7 @@ export default function OrganizationsView() {
 
         OrganizationEndpoint.findAll()
             .then(setOrganizations)
-            .catch((error: EndpointError) => { setFetchError(error); console.log(error); })
+            .catch((error: EndpointError) => setFetchError(error))
             .finally(() => setInitialLoading(false));
     }
 
