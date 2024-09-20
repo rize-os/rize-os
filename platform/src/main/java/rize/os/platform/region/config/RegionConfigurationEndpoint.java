@@ -2,6 +2,7 @@ package rize.os.platform.region.config;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.Endpoint;
+import com.vaadin.hilla.exception.EndpointException;
 import lombok.RequiredArgsConstructor;
 
 @Endpoint
@@ -13,11 +14,21 @@ public class RegionConfigurationEndpoint
 
     public boolean isRegionFeatureEnabled()
     {
-        return regionConfigurationService.isRegionFeatureEnabled();
+        try {
+            return regionConfigurationService.isRegionFeatureEnabled();
+        }
+        catch (Exception e) {
+            throw new EndpointException(e.getMessage(), e, e);
+        }
     }
 
     public void setRegionFeatureEnabled(boolean enabled)
     {
-        regionConfigurationService.setRegionFeatureEnabled(enabled);
+        try {
+            regionConfigurationService.setRegionFeatureEnabled(enabled);
+        }
+        catch (Exception e) {
+            throw new EndpointException(e.getMessage(), e, e);
+        }
     }
 }
