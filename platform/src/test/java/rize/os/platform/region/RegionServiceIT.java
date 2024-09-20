@@ -38,6 +38,27 @@ class RegionServiceIT
 
 
     @Test
+    void shouldFindAllRegions()
+    {
+        var region1 = Region.builder()
+                .name("should-find-all-regions-1")
+                .displayName("shouldFindAllRegions1")
+                .build();
+
+        var region2 = Region.builder()
+                .name("should-find-all-regions-2")
+                .displayName("shouldFindAllRegions2")
+                .build();
+
+        regionService.createRegion(region1);
+        regionService.createRegion(region2);
+
+        var regions = regionService.findAll();
+        assertThat(regions).hasSize(2);
+        assertThat(regions).contains(region1, region2);
+    }
+
+    @Test
     void shouldCreateRegion()
     {
         var regionToCreate = Region.builder()
