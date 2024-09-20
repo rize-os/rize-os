@@ -6,6 +6,8 @@ import com.vaadin.hilla.exception.EndpointException;
 import lombok.RequiredArgsConstructor;
 import rize.os.commons.region.RegionDto;
 
+import java.util.List;
+
 @Endpoint
 @AnonymousAllowed
 @RequiredArgsConstructor
@@ -13,6 +15,22 @@ public class RegionEndpoint
 {
     private final RegionService regionService;
     private final RegionMapper regionMapper;
+
+    /**
+     * Returns a list of all regions.
+     * @return List of regions
+     */
+    public List<RegionDto> findAll()
+    {
+        try
+        {
+            var regions = regionService.findAll();
+            return regions.stream().map(regionMapper::toRegionDto).toList();
+        }
+        catch (Exception e) {
+            throw new EndpointException(e.getMessage(), e, e);
+        }
+    }
 
     /**
      * Creates a new region.

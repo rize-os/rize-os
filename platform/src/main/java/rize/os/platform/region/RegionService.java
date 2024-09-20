@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -12,6 +13,18 @@ import java.util.UUID;
 public class RegionService
 {
     private final RegionRepository regionRepository;
+
+
+    /**
+     * Returns a list of all regions.
+     * @return List of all regions
+     */
+    List<Region> findAll()
+    {
+        log.debug("Loading all regions from database");
+        var regions = regionRepository.findAll();
+        return loggedRegions(regions);
+    }
 
     /**
      * Creates a new region. The region must have a unique name.
@@ -46,5 +59,12 @@ public class RegionService
         var regionWithSameName = regionRepository.findByName(region.getName());
         if (regionWithSameName.isPresent() && !regionWithSameName.get().getId().equals(region.getId()))
             throw new RegionAlreadyExistsException(region);
+    }
+
+    private List<Region> loggedRegions(List<Region> regions)
+    {
+        log.debug("Found {} regions", regions.size());
+        if (log.isTraceEnabled()) regions.forEach(region -> log.trace("- {}", region));
+        return regions;
     }
 }

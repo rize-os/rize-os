@@ -11,6 +11,8 @@ import org.springframework.test.context.DynamicPropertySource;
 import rize.os.commons.region.RegionDto;
 import rize.os.platform.TestcontainersConfiguration;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -36,6 +38,29 @@ class RegionEndpointIT
         regionRepository.deleteAll();
     }
 
+
+    @Test
+    void shouldFindAllRegions()
+    {
+        var region1 = Region.builder()
+                .id(UUID.randomUUID())
+                .name("should-find-all-regions-1")
+                .displayName("shouldFindAllRegions1")
+                .build();
+
+        var region2 = Region.builder()
+                .id(UUID.randomUUID())
+                .name("should-find-all-regions-2")
+                .displayName("shouldFindAllRegions2")
+                .build();
+
+        regionRepository.save(region1);
+        regionRepository.save(region2);
+
+        var regions = regionEndpoint.findAll();
+        assertThat(regions).hasSize(2);
+        assertThat(regions).extracting(RegionDto::getName).contains(region1.getName(), region2.getName());
+    }
 
     @Test
     void shouldCreateRegion()
