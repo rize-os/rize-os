@@ -22,6 +22,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Region
 {
+    static final String DEFAULT_REGION_NAME = "default";
+    static final String DEFAULT_REGION_DISPLAY_NAME = "Default";
     static final String NAME_PATTERN = "^[a-z0-9][a-z0-9-]{0,62}[a-z0-9]$";
 
     private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
