@@ -59,6 +59,28 @@ class RegionServiceIT
     }
 
     @Test
+    void shouldFindRegionByName()
+    {
+        var regionToFind = Region.builder()
+                .name("should-find-region-by-name")
+                .displayName("shouldFindRegionByName")
+                .build();
+
+        regionService.createRegion(regionToFind);
+
+        var foundRegion = regionService.findByName(regionToFind.getName());
+        assertThat(foundRegion).isPresent();
+        assertThat(foundRegion.get()).isEqualTo(regionToFind);
+    }
+
+    @Test
+    void shouldNotFindRegionByName()
+    {
+        var foundRegion = regionService.findByName("should-not-find-region-by-name");
+        assertThat(foundRegion).isEmpty();
+    }
+
+    @Test
     void shouldCreateRegion()
     {
         var regionToCreate = Region.builder()

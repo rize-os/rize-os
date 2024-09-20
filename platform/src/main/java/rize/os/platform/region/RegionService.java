@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -24,6 +25,26 @@ public class RegionService
         log.debug("Loading all regions from database");
         var regions = regionRepository.findAll();
         return loggedRegions(regions);
+    }
+
+    /**
+     * Returns a region by its name.
+     * @param name Name of the region
+     * @return Object of the region with the given name or empty if not found
+     */
+    Optional<Region> findByName(String name)
+    {
+        log.debug("Loading region by name: \"{}\"", name);
+        var region = regionRepository.findByName(name);
+
+        if (region.isEmpty())
+        {
+            log.debug("Region with name \"{}\" not found", name);
+            return Optional.empty();
+        }
+
+        log.debug("Found region: {}", region.get());
+        return region;
     }
 
     /**
