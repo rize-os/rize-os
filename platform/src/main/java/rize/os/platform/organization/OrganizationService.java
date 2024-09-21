@@ -34,6 +34,19 @@ public class OrganizationService
     }
 
     /**
+     * Returns a list of all organizations from Keycloak in the given region.
+     * @param region The name of region to search for
+     * @return List of all organizations in the given region
+     */
+    List<Organization> findOrganizationsByRegion(String region)
+    {
+        log.debug("Loading all organizations from Keycloak in region '{}'", region);
+        var orgRepresentations = findByAttribute(Organization.REGION_ATTRIBUTE, region);
+        var organizations = orgRepresentations.stream().map(organizationMapper::toOrganization).toList();
+        return loggedOrganizations(organizations);
+    }
+
+    /**
      * Searches for an existing organization in Keycloak with the given ID.
      * @param id The ID of the organization to search for
      * @return Object of the organization if found, otherwise empty
@@ -243,6 +256,18 @@ public class OrganizationService
 
         log.debug("Found organization with name '{}' in Keycloak: ID [{}]", name, organizations.getFirst().getId());
         return Optional.of(organizations.getFirst());
+    }
+
+    /**
+     * Searches for organizations in Keycloak with the given attribute and value.
+     * @param attribute The attribute to search for
+     * @param value The value of the attribute to search for
+     * @return List of representations of organizations with the given attribute and value
+     */
+    private List<OrganizationRepresentation> findByAttribute(String attribute, String value)
+    {
+        log.debug("Searching for organizations in Keycloak with attribute '{}' = '{}'", attribute, value);
+        return realmResource.organizations().searchByAttribute(attribute + ":" + value);
     }
 
     /**

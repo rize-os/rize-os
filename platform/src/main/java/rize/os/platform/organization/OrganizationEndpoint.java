@@ -33,6 +33,23 @@ public class OrganizationEndpoint
     }
 
     /**
+     * Returns a list of organizations in the given region.
+     * @param region Name of the region
+     * @return List of organizations in the region
+     */
+    public List<OrganizationDto> findByRegion(String region)
+    {
+        try
+        {
+            var organizations = organizationService.findOrganizationsByRegion(region);
+            return organizations.stream().map(organizationMapper::toOrganizationDto).toList();
+        }
+        catch (Exception e) {
+            throw new EndpointException(e.getMessage(), e, e);
+        }
+    }
+
+    /**
      * Creates a new organization.
      * @param organizationDto Organization to create
      * @return The created organization
