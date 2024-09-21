@@ -75,7 +75,7 @@ export default function RegionsView() {
                                 </TextField>
 
                                 <Button theme={"primary"} onClick={() => navigate('/regions/new')}>
-                                <span className={"material-icons text-xl max-w-6 dark:text-slate-50"}
+                                    <span className={"material-icons text-xl max-w-6 dark:text-slate-50"}
                                       slot={"prefix"}>add</span>
                                     <span className={"leading-1"}>Create</span>
                                 </Button>
@@ -93,11 +93,12 @@ export default function RegionsView() {
                     </div>
                 }
 
-                <section className={"flex flex-col px-3 mb-2"}>
+                <section className={"flex flex-col px-3 mb-4"}>
                     { initialRegionsEnabledLoading && <LoadingRing className={"text-5xl border-slate-300 place-self-center my-3"}/> }
 
                     { !initialRegionsEnabledLoading && !fetchError &&
-                        <Checkbox label="Enabled"
+                        <Checkbox className={"w-min"}
+                                  label="Enabled"
                                   checked={regionsEnabled}
                                   onChange={handleRegionEnabledChange}/>
                     }
