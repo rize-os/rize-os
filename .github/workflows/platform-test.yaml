@@ -25,7 +25,7 @@ jobs:
           java-version: 21
           distribution: 'corretto'
 
-      - name: Cache - Restore Maven dependencies
+      - name: Cache Maven dependencies
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
@@ -35,11 +35,3 @@ jobs:
 
       - name: Run Maven tests
         run: mvn $MAVEN_CLI_OPTS -Dtest=* -pl platform -am verify
-
-      - name: Cache - Update Maven dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('pom.xml', '**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
