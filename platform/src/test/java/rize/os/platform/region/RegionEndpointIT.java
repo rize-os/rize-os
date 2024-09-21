@@ -63,6 +63,23 @@ class RegionEndpointIT
     }
 
     @Test
+    void shouldFindRegionById()
+    {
+        var regionToFind = Region.builder()
+                .id(UUID.randomUUID())
+                .name("should-find-region-by-id")
+                .displayName("shouldFindRegionById")
+                .build();
+        regionRepository.save(regionToFind);
+
+        var foundRegion = regionEndpoint.findById(regionToFind.getId());
+        assertThat(foundRegion).isNotNull();
+        assertThat(foundRegion.getId()).isEqualTo(regionToFind.getId());
+        assertThat(foundRegion.getName()).isEqualTo(regionToFind.getName());
+        assertThat(foundRegion.getDisplayName()).isEqualTo(regionToFind.getDisplayName());
+    }
+
+    @Test
     void shouldCreateRegion()
     {
         var regionToCreate = RegionDto.builder().name("region-endpoint-create").displayName("shouldCreateRegion").build();

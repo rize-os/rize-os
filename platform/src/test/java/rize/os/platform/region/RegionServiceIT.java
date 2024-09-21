@@ -10,6 +10,8 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import rize.os.platform.TestcontainersConfiguration;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -56,6 +58,28 @@ class RegionServiceIT
         var regions = regionService.findAll();
         assertThat(regions).hasSize(2);
         assertThat(regions).contains(region1, region2);
+    }
+
+    @Test
+    void shouldFindRegionById()
+    {
+        var regionToFind = Region.builder()
+                .name("should-find-region-by-id")
+                .displayName("shouldFindRegionById")
+                .build();
+
+        var createdRegion = regionService.createRegion(regionToFind);
+
+        var foundRegion = regionService.findById(createdRegion.getId());
+        assertThat(foundRegion).isPresent();
+        assertThat(foundRegion.get()).isEqualTo(regionToFind);
+    }
+
+    @Test
+    void shouldNotFindRegionById()
+    {
+        var foundRegion = regionService.findById(UUID.randomUUID());
+        assertThat(foundRegion).isEmpty();
     }
 
     @Test

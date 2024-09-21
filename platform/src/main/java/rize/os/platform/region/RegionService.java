@@ -28,6 +28,25 @@ public class RegionService
     }
 
     /**
+     * Returns a region by its id.
+     * @param id ID of the region
+     * @return Object of the region with the given ID or empty if not found
+     */
+    Optional<Region> findById(UUID id)
+    {
+        log.debug("Loading region by id: {}", id);
+        var region = regionRepository.findById(id);
+
+        if (region.isEmpty())
+        {
+            log.debug("Region with id '{}' not found", id);
+            return Optional.empty();
+        }
+
+        return loggedRegion(region.get());
+    }
+
+    /**
      * Returns a region by its name.
      * @param name Name of the region
      * @return Object of the region with the given name or empty if not found
@@ -87,5 +106,11 @@ public class RegionService
         log.debug("Found {} regions", regions.size());
         if (log.isTraceEnabled()) regions.forEach(region -> log.trace("- {}", region));
         return regions;
+    }
+
+    private Optional<Region> loggedRegion(Region region)
+    {
+        log.debug("Found region: {}", region);
+        return Optional.of(region);
     }
 }

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import rize.os.commons.region.RegionDto;
 
 import java.util.List;
+import java.util.UUID;
 
 @Endpoint
 @AnonymousAllowed
@@ -26,6 +27,23 @@ public class RegionEndpoint
         {
             var regions = regionService.findAll();
             return regions.stream().map(regionMapper::toRegionDto).toList();
+        }
+        catch (Exception e) {
+            throw new EndpointException(e.getMessage(), e, e);
+        }
+    }
+
+    /**
+     * Returns a region by its id.
+     * @param id ID of the region
+     * @return Region with the given ID
+     */
+    public RegionDto findById(UUID id)
+    {
+        try
+        {
+            var region = regionService.findById(id);
+            return region.map(regionMapper::toRegionDto).orElseThrow(() -> new RegionNotFoundException(id.toString()));
         }
         catch (Exception e) {
             throw new EndpointException(e.getMessage(), e, e);
