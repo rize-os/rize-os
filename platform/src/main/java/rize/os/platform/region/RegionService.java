@@ -85,6 +85,30 @@ public class RegionService
     }
 
     /**
+     * Updates an existing region. The region name cannot be changed.
+     * @param region Object of the region to update
+     * @return Object of the updated region
+     */
+    Region updateRegion(Region region)
+    {
+        log.debug("Updating region: {}", region);
+
+        var existingRegion = regionRepository.findById(region.getId());
+        if (existingRegion.isEmpty())
+            throw new RegionNotFoundException(region.getId().toString());
+
+        if (!existingRegion.get().getName().equals(region.getName()))
+            throw new RegionUpdateException("Region name cannot be changed");
+
+        region.setVersion(existingRegion.get().getVersion());
+        validateRegion(region);
+
+        var updatedRegion = regionRepository.save(region);
+        log.info("Updated region: {}", updatedRegion);
+        return updatedRegion;
+    }
+
+    /**
      * Validates the values of the given region and checks if a region with the same name already exists.
      * @param region The region to validate
      * @throws RegionConstraintException If the region has invalid values

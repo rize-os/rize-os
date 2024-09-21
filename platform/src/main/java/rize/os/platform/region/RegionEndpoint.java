@@ -67,4 +67,22 @@ public class RegionEndpoint
             throw new EndpointException(e.getMessage(), e, e);
         }
     }
+
+    /**
+     * Updates a region.
+     * @param regionDto Region to update
+     * @return The updated region
+     */
+    public RegionDto update(RegionDto regionDto)
+    {
+        try
+        {
+            var region = regionMapper.toRegion(regionDto);
+            var updatedRegion = regionService.updateRegion(region);
+            return regionMapper.toRegionDto(updatedRegion);
+        }
+        catch (Exception e) {
+            throw new EndpointException(e.getMessage(), e, e);
+        }
+    }
 }

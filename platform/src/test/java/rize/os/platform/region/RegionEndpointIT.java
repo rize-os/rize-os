@@ -84,9 +84,32 @@ class RegionEndpointIT
     {
         var regionToCreate = RegionDto.builder().name("region-endpoint-create").displayName("shouldCreateRegion").build();
         var createdRegion = regionEndpoint.create(regionToCreate);
+
         assertThat(createdRegion).isNotNull();
         assertThat(createdRegion.getId()).isNotNull();
         assertThat(createdRegion.getName()).isEqualTo(regionToCreate.getName());
         assertThat(createdRegion.getDisplayName()).isEqualTo(regionToCreate.getDisplayName());
+    }
+
+    @Test
+    void shouldUpdateRegion()
+    {
+        var regionToUpdate = Region.builder()
+                .id(UUID.randomUUID())
+                .name("should-update-region")
+                .displayName("shouldUpdateRegion")
+                .build();
+        regionRepository.save(regionToUpdate);
+
+        var updatedRegion = regionEndpoint.update(RegionDto.builder()
+                .id(regionToUpdate.getId())
+                .name("should-update-region")
+                .displayName("shouldUpdateRegionUpdated")
+                .build());
+
+        assertThat(updatedRegion).isNotNull();
+        assertThat(updatedRegion.getId()).isEqualTo(regionToUpdate.getId());
+        assertThat(updatedRegion.getName()).isEqualTo(regionToUpdate.getName());
+        assertThat(updatedRegion.getDisplayName()).isEqualTo("shouldUpdateRegionUpdated");
     }
 }

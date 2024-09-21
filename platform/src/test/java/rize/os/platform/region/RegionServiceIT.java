@@ -156,4 +156,60 @@ class RegionServiceIT
         assertThatThrownBy(() -> regionService.createRegion(regionWithSameName))
                 .isInstanceOf(RegionAlreadyExistsException.class);
     }
+
+    @Test
+    void shouldUpdateRegion()
+    {
+        var regionToUpdate = Region.builder()
+                .name("should-update-region")
+                .displayName("shouldUpdateRegion")
+                .build();
+
+        var createdRegion = regionService.createRegion(regionToUpdate);
+
+        var updatedRegion = Region.builder()
+                .id(createdRegion.getId())
+                .name("should-update-region")
+                .displayName("shouldUpdateRegionUpdated")
+                .build();
+
+        var result = regionService.updateRegion(updatedRegion);
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(createdRegion.getId());
+        assertThat(result.getName()).isEqualTo(createdRegion.getName());
+        assertThat(result.getDisplayName()).isEqualTo(updatedRegion.getDisplayName());
+    }
+
+    @Test
+    void shouldFailToUpdateRegionName()
+    {
+        var regionToUpdate = Region.builder()
+                .name("should-fail-to-update-region-name")
+                .displayName("shouldFailToUpdateRegionName")
+                .build();
+
+        var createdRegion = regionService.createRegion(regionToUpdate);
+
+        var updatedRegion = Region.builder()
+                .id(createdRegion.getId())
+                .name("should-fail-to-update-region-name-updated")
+                .displayName("shouldFailToUpdateRegionNameUpdated")
+                .build();
+
+        assertThatThrownBy(() -> regionService.updateRegion(updatedRegion))
+                .isInstanceOf(RegionUpdateException.class);
+    }
+
+    @Test
+    void shouldFailToUpdateNonExistingRegion()
+    {
+        var regionToUpdate = Region.builder()
+                .id(UUID.randomUUID())
+                .name("should-fail-to-update-non-existing-region")
+                .displayName("shouldFailToUpdateNonExistingRegion")
+                .build();
+
+        assertThatThrownBy(() -> regionService.updateRegion(regionToUpdate))
+                .isInstanceOf(RegionNotFoundException.class);
+    }
 }
