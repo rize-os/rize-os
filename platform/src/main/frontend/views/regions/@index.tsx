@@ -93,11 +93,12 @@ export default function RegionsView() {
                     </div>
                 }
 
-                <section className={"flex flex-col px-3 mb-2"}>
+                <section className={"flex flex-col px-3 mb-4"}>
                     { initialRegionsEnabledLoading && <LoadingRing className={"text-5xl border-slate-300 place-self-center my-3"}/> }
 
                     { !initialRegionsEnabledLoading && !fetchError &&
-                        <Checkbox label="Enabled"
+                        <Checkbox className={"w-min"}
+                                  label="Enabled"
                                   checked={regionsEnabled}
                                   onChange={handleRegionEnabledChange}/>
                     }

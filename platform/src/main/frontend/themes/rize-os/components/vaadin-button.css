@@ -1,4 +1,5 @@
 vaadin-button {
+    min-width: 1rem !important;
     border-radius: var(--vaadin-component-radius);
 }
 

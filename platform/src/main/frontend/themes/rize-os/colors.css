@@ -1,4 +1,6 @@
 html {
+    --lumo-body-text-color: #334155;
+
     --lumo-base-color: #F8FAFC;
     --lumo-primary-color: #0098fa;
     --lumo-primary-color-10pct: #0098fa1A;
@@ -21,6 +23,8 @@ html {
 }
 
 .dark {
+    --lumo-body-text-color: #F9FAFB;
+
     --textfield-color: #F9FAFB;
     --textfield-background: rgba(203, 213, 225, 0.1);
     --textfield-background-hover: rgba(203, 213, 225, 0.18);
