@@ -267,7 +267,7 @@ public class OrganizationService
     private List<OrganizationRepresentation> findByAttribute(String attribute, String value)
     {
         log.debug("Searching for organizations in Keycloak with attribute '{}' = '{}'", attribute, value);
-        return realmResource.organizations().searchByAttribute(attribute + ":" + value);
+        return realmResource.organizations().searchByAttribute(attribute + ":" + value, 0, Integer.MAX_VALUE);
     }
 
     /**
