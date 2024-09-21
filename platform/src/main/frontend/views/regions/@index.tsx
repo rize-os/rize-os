@@ -75,7 +75,7 @@ export default function RegionsView() {
                                 </TextField>
 
                                 <Button theme={"primary"} onClick={() => navigate('/regions/new')}>
-                                <span className={"material-icons text-xl max-w-6 dark:text-slate-50"}
+                                    <span className={"material-icons text-xl max-w-6 dark:text-slate-50"}
                                       slot={"prefix"}>add</span>
                                     <span className={"leading-1"}>Create</span>
                                 </Button>
