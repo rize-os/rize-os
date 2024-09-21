@@ -42,6 +42,19 @@ class OrganizationServiceIT
     }
 
     @Test
+    void shouldFindOrganizationsByRegion()
+    {
+        var org1 = organizationService.createOrganization(Organization.builder().name("should-find-organizations-by-region-1").displayName("shouldFindOrganizationsByRegion1").region("de").build());
+        var org2 = organizationService.createOrganization(Organization.builder().name("should-find-organizations-by-region-2").displayName("shouldFindOrganizationsByRegion2").region("de").build());
+        var org3 = organizationService.createOrganization(Organization.builder().name("should-find-organizations-by-region-3").displayName("shouldFindOrganizationsByRegion3").region("en").build());
+
+        var organizations = organizationService.findOrganizationsByRegion("de");
+        assertThat(organizations).isNotEmpty();
+        assertThat(organizations).contains(org1, org2);
+        assertThat(organizations).doesNotContain(org3);
+    }
+
+    @Test
     void shouldFindOrganizationById()
     {
         var organizationToFind = Organization.builder()

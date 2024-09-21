@@ -43,6 +43,17 @@ class OrganizationEndpointIT
     }
 
     @Test
+    void shouldFindOrganizationsByRegion()
+    {
+        var organizationToCreate = Organization.builder().name("organization-endpoint-find-by-region").displayName("shouldFindOrganizationsByRegion").region("de").build();
+        organizationService.createOrganization(organizationToCreate);
+
+        var organizations = organizationEndpoint.findByRegion("de");
+        assertThat(organizations).isNotEmpty();
+        assertThat(organizations).extracting(OrganizationDto::getName).contains(organizationToCreate.getName());
+    }
+
+    @Test
     void shouldCreateOrganization()
     {
         var organizationToCreate = OrganizationDto.builder().name("organization-endpoint-create").displayName("shouldCreateOrganization").region("de").build();
