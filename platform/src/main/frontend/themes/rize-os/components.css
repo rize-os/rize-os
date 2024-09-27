@@ -1,6 +1,7 @@
 @import 'components/loading-ring.css';
 @import "components/vaadin-button.css";
 @import "components/vaadin-menu-bar-item.css";
+@import "components/vaadin-text-field.css";
 
 html {
     --vaadin-component-radius: 0.5rem;

@@ -32,6 +32,7 @@ public class Region
     @NotNull
     private UUID id;
 
+    @NotBlank
     @Pattern(regexp = NAME_PATTERN)
     private String name;
 
