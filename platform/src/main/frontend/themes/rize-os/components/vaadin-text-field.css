@@ -1,3 +1,6 @@
+vaadin-text-field {
+  padding: 0.25rem 0 0 0;
+}
 
 [part="input-field"] {
   border-radius: 0.5rem;

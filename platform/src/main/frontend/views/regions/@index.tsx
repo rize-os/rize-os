@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegionListItem from "Frontend/components/region/region-list-item";
 import RegionDto from "Frontend/generated/rize/os/commons/region/RegionDto";
-import {RegionConfigurationEndpoint, RegionEndpoint} from "Frontend/generated/endpoints";
-import {Button, Checkbox, TextField} from "@vaadin/react-components";
-import {EndpointError} from "@vaadin/hilla-frontend";
+import { RegionConfigurationEndpoint, RegionEndpoint } from "Frontend/generated/endpoints";
+import { Button, Checkbox, TextField } from "@vaadin/react-components";
+import { EndpointError } from "@vaadin/hilla-frontend";
 import LoadingRing from "Frontend/components/core/loading-ring";
 
 
@@ -74,9 +74,12 @@ export default function RegionsView() {
                                     slot={"prefix"}>search</span>
                                 </TextField>
 
-                                <Button theme={"primary"} onClick={() => navigate('/regions/new')}>
+                                <Button theme={"primary"} onClick={() => navigate('/regions/create')}>
                                     <span className={"material-icons text-xl max-w-6 dark:text-slate-50"}
-                                      slot={"prefix"}>add</span>
+                                          slot={"prefix"}
+                                    >
+                                        add
+                                    </span>
                                     <span className={"leading-1"}>Create</span>
                                 </Button>
                             </>

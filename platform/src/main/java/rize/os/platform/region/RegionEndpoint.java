@@ -63,8 +63,11 @@ public class RegionEndpoint
             var createdRegion = regionService.createRegion(region);
             return regionMapper.toRegionDto(createdRegion);
         }
+        catch (RegionConstraintException e) {
+            throw new EndpointException(e.getMessage(), e, e.getViolations().stream().map(v -> v.getPropertyPath() + " " + v.getMessage()).toList());
+        }
         catch (Exception e) {
-            throw new EndpointException(e.getMessage(), e, e);
+            throw new EndpointException(e.getMessage(), e);
         }
     }
 
