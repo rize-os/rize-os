@@ -12,6 +12,11 @@ vaadin-text-field {
   font-weight: 400;
 }
 
+:host([disabled]) [part="input-field"] {
+  color: var(--textfield-color-disabled) !important;
+  background: var(--textfield-background-disabled);
+}
+
 :host([has-value]) [part="input-field"] {
   color: var(--textfield-color);
 }
@@ -32,4 +37,13 @@ vaadin-text-field {
 :host([invalid]) [part="input-field"] {
   outline: 1px solid var(--lumo-error-color-50pct);
   box-shadow: inset 0 0 0 1px var(--lumo-error-color-10pct);
+}
+
+[part="label"] {
+  color: var(--vaadin-input-field-label-color);
+}
+
+:host([disabled]) [part='label'], :host([disabled]) [part='input-field'] ::slotted(*) {
+  color: var(--vaadin-input-field-label-color);
+  -webkit-text-fill-color: var(--vaadin-input-field-label-color);
 }

@@ -7,6 +7,7 @@ import { Button, Checkbox, TextField } from "@vaadin/react-components";
 import { EndpointError } from "@vaadin/hilla-frontend";
 import LoadingRing from "Frontend/components/core/loading-ring";
 
+const searchTextFieldId = "regions-search-text-field";
 
 export default function RegionsView() {
 
@@ -18,6 +19,12 @@ export default function RegionsView() {
     const [fetchError, setFetchError] = useState<EndpointError | undefined>(undefined);
     const [initialRegionsEnabledLoading, setInitialRegionsEnabledLoading] = useState<boolean>(true);
     const [initialRegionsLoading, setInitialRegionsLoading] = useState<boolean>(false);
+
+    const focusTextField = (id: string) => {
+        setTimeout(() => {
+            document.getElementById(id)?.focus();
+        }, 50);
+    }
 
     const fetchRegionsEnabled = async () => {
         setInitialRegionsEnabledLoading(true);
@@ -53,6 +60,7 @@ export default function RegionsView() {
 
     useEffect(() => {
         fetchRegionsEnabled().then();
+        focusTextField(searchTextFieldId);
     }, []);
 
     useEffect(() => {
@@ -63,23 +71,19 @@ export default function RegionsView() {
     return (
         <div className={"flex w-full justify-center sm:p-6"}>
             <main className={"max-w-6xl w-full bg-white dark:bg-slate-900 sm:rounded-lg shadow pb-2"}>
-                <header className={"flex flex-col sm:flex-row p-4 pb-2 sm:rounded-lg backdrop-blur bg-white/70 dark:bg-slate-900/80 sticky top-0 z-10"}>
-                    <h1 className={"flex-grow text-xl lg:text-2xl h-12 leading-10 font-medium dark:text-slate-100 content-center"}>Regions</h1>
+                <header className={"flex flex-col sm:flex-row p-4 sm:rounded-lg backdrop-blur bg-white/70 dark:bg-slate-900/80 sticky top-0 z-10"}>
+                    <h1 className={"flex-grow text-xl lg:text-3xl h-12 leading-10 font-medium dark:text-slate-100 content-center"}>Regions</h1>
                     <div className={"flex flex-row gap-2"}>
                         { regionsEnabled &&
                             <>
-                                <TextField className={"grow"} placeholder={"Search..."} clearButtonVisible>
+                                <TextField id={searchTextFieldId} className={"grow"} placeholder={"Search..."} clearButtonVisible>
                                 <span
                                     className={"material-icons text-xl max-w-6 mr-1 mt-0.5 text-slate-700 dark:text-slate-50"}
                                     slot={"prefix"}>search</span>
                                 </TextField>
 
                                 <Button theme={"primary"} onClick={() => navigate('/regions/create')}>
-                                    <span className={"material-icons text-xl max-w-6 dark:text-slate-50"}
-                                          slot={"prefix"}
-                                    >
-                                        add
-                                    </span>
+                                    <span className={"material-icons text-xl max-w-6 dark:text-slate-50"} slot={"prefix"}>add</span>
                                     <span className={"leading-1"}>Create</span>
                                 </Button>
                             </>
@@ -118,7 +122,8 @@ export default function RegionsView() {
                             </div>
                         }
 
-                        {regions.map((region) => (
+                        {regions.sort((a, b) => (a.displayName || "").localeCompare(b.displayName || ""))
+                            .map((region) => (
                             <RegionListItem region={region}
                                             key={region.id}
                                             onClick={() => navigate(`/regions/${region.id}`)}
