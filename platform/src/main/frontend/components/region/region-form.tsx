@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Button, TextField, TextFieldValueChangedEvent } from "@vaadin/react-components";
 import RegionDto from "Frontend/generated/rize/os/commons/region/RegionDto";
 import { EndpointError } from "@vaadin/hilla-frontend";
+import {useDebouncedCallback} from "use-debounce";
 
 interface RegionFormProps {
     region?: RegionDto,
     onConfirm: (region: RegionDto) => Promise<void>,
-    onCancel?: () => void
+    onCancel: () => void
 }
 
 const nameTextFieldId = "region-form-name-text-field";
@@ -74,9 +75,15 @@ const RegionForm: React.FC<RegionFormProps> = ({ region, onConfirm, onCancel }) 
     }, []);
 
     useEffect(() => {
-        if (region)
+        if (region) {
             setRegionToConfirm(region);
+            focusTextField(displayNameTextFieldId);
+        }
     }, [region]);
+
+    useEffect(() => {
+        console.log(regionToConfirm);
+    }, [regionToConfirm]);
 
     useEffect(() => {
         if (nameError)
@@ -92,28 +99,24 @@ const RegionForm: React.FC<RegionFormProps> = ({ region, onConfirm, onCancel }) 
         <div className={"flex flex-col gap-2"}>
             <section>
                 <TextField id={nameTextFieldId}
+                           value={regionToConfirm.name}
                            className={"w-full"}
                            label={"Name"}
-                           onValueChanged={handleNameChanged}
+                           onValueChanged={useDebouncedCallback(handleNameChanged, 50)}
                            disabled={region !== undefined}
                            allowedCharPattern={"[a-z0-9-]"}
                            errorMessage={nameError}
-                           invalid={!!nameError}
-                >
-                    {region?.name}
-                </TextField>
+                           invalid={!!nameError}/>
             </section>
 
             <section>
                 <TextField id={displayNameTextFieldId}
+                           value={regionToConfirm.displayName}
                            className={"w-full"}
                            label={"Display Name"}
-                           onValueChanged={handleDisplayNameChanged}
+                           onValueChanged={useDebouncedCallback(handleDisplayNameChanged, 50)}
                            errorMessage={displayNameError}
-                           invalid={!!displayNameError}
-                >
-                    {region?.displayName}
-                </TextField>
+                           invalid={!!displayNameError}/>
             </section>
 
             <section className={"flex flex-row-reverse gap-2 mt-2"}>

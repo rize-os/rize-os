@@ -13,8 +13,10 @@ html {
     --lumo-error-text-color: #EA3E3E;
 
     --textfield-color: #334155;
+    --textfield-color-disabled: #697b96;
     --textfield-placeholder-color: #64748B;
-    --textfield-background: rgba(203, 213, 225, 0.05);
+    --textfield-background: rgba(203, 213, 225, 0.03);
+    --textfield-background-disabled: rgba(203, 213, 225, 0.24);
     --textfield-background-hover: rgba(203, 213, 225, 0.1);
     --textield-border-color: #CBD5E1;
 
@@ -26,7 +28,9 @@ html {
     --lumo-body-text-color: #F9FAFB;
 
     --textfield-color: #F9FAFB;
+    --textfield-color-disabled: #B1B9C4;
     --textfield-background: rgba(203, 213, 225, 0.1);
+    --textfield-background-disabled: rgba(203, 213, 225, 0.22);
     --textfield-background-hover: rgba(203, 213, 225, 0.18);
     --textield-border-color: #334155;
 

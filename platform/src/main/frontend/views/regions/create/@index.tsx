@@ -22,7 +22,7 @@ export default function RegionCreateView() {
         <div className={"flex w-full justify-center sm:p-6"}>
             <main className={"max-w-md w-full bg-white dark:bg-slate-900 sm:rounded-lg shadow p-6"}>
                 <header className={"flex flex-col sm:flex-row mb-4 sm:rounded-lg backdrop-blur bg-white/75 dark:bg-slate-900/80 sticky top-0 z-10"}>
-                    <h1 className={"flex-grow text-xl lg:text-2xl leading-10 font-medium dark:text-slate-100 content-center"}>Create new region</h1>
+                    <h1 className={"flex-grow text-xl lg:text-3xl leading-10 font-medium dark:text-slate-100 content-center"}>Create new region</h1>
                 </header>
                 <RegionForm onConfirm={handleConfirm} onCancel={navigateToRegions}/>
             </main>
