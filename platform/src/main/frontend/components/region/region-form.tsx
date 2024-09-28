@@ -82,10 +82,6 @@ const RegionForm: React.FC<RegionFormProps> = ({ region, onConfirm, onCancel }) 
     }, [region]);
 
     useEffect(() => {
-        console.log(regionToConfirm);
-    }, [regionToConfirm]);
-
-    useEffect(() => {
         if (nameError)
             focusTextField(nameTextFieldId);
     }, [nameError]);
