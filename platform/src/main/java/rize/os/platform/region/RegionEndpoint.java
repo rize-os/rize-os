@@ -29,7 +29,7 @@ public class RegionEndpoint
             return regions.stream().map(regionMapper::toRegionDto).toList();
         }
         catch (Exception e) {
-            throw new EndpointException(e.getMessage(), e, e);
+            throw new EndpointException(e.getMessage(), e);
         }
     }
 
@@ -46,7 +46,7 @@ public class RegionEndpoint
             return region.map(regionMapper::toRegionDto).orElseThrow(() -> new RegionNotFoundException(id.toString()));
         }
         catch (Exception e) {
-            throw new EndpointException(e.getMessage(), e, e);
+            throw new EndpointException(e.getMessage(), e);
         }
     }
 
@@ -84,8 +84,11 @@ public class RegionEndpoint
             var updatedRegion = regionService.updateRegion(region);
             return regionMapper.toRegionDto(updatedRegion);
         }
+        catch (RegionConstraintException e) {
+            throw new EndpointException(e.getMessage(), e, e.getViolations().stream().map(v -> v.getPropertyPath() + " " + v.getMessage()).toList());
+        }
         catch (Exception e) {
-            throw new EndpointException(e.getMessage(), e, e);
+            throw new EndpointException(e.getMessage(), e);
         }
     }
 }
