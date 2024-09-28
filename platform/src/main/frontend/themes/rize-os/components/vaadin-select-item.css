@@ -1,0 +1,5 @@
+vaadin-select-item {
+    cursor: pointer;
+    border-radius: var(--vaadin-component-radius);
+    font-weight: normal;
+}

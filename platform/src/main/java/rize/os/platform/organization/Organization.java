@@ -28,6 +28,7 @@ public class Organization
 
     private String id;
 
+    @NotBlank
     @Pattern(regexp = NAME_PATTERN)
     private String name;
 

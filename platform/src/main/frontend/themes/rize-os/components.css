@@ -2,6 +2,9 @@
 @import "components/vaadin-button.css";
 @import "components/vaadin-menu-bar-item.css";
 @import "components/vaadin-text-field.css";
+@import "components/vaadin-select.css";
+@import "components/vaadin-select-item.css";
+@import "components/vaadin-tooltip-overlay.css";
 
 html {
     --vaadin-component-radius: 0.5rem;

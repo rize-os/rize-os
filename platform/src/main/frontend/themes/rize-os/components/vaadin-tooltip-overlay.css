@@ -1,0 +1,10 @@
+vaadin-tooltip-overlay::part(overlay) {
+    border: 1px solid transparent;
+    background-color: var(--tooltip-background);
+    border-radius: var(--vaadin-component-radius);
+}
+vaadin-tooltip-overlay::part(content) {
+    padding: 0.5rem 0.75rem;
+    background-color: var(--tooltip-background);
+    border-radius: var(--vaadin-component-radius);
+}

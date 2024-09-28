@@ -28,7 +28,7 @@ public class OrganizationEndpoint
             return organizations.stream().map(organizationMapper::toOrganizationDto).toList();
         }
         catch (Exception e) {
-            throw new EndpointException(e.getMessage(), e, e);
+            throw new EndpointException(e.getMessage(), e);
         }
     }
 
@@ -45,7 +45,7 @@ public class OrganizationEndpoint
             return organizations.stream().map(organizationMapper::toOrganizationDto).toList();
         }
         catch (Exception e) {
-            throw new EndpointException(e.getMessage(), e, e);
+            throw new EndpointException(e.getMessage(), e);
         }
     }
 
@@ -62,8 +62,11 @@ public class OrganizationEndpoint
             var createdOrganization = organizationService.createOrganization(organization);
             return organizationMapper.toOrganizationDto(createdOrganization);
         }
+        catch (OrganizationConstraintException e) {
+            throw new EndpointException(e.getMessage(), e, e.getViolations().stream().map(v -> v.getPropertyPath() + " " + v.getMessage()).toList());
+        }
         catch (Exception e) {
-            throw new EndpointException(e.getMessage(), e, e);
+            throw new EndpointException(e.getMessage(), e);
         }
     }
 
@@ -80,8 +83,11 @@ public class OrganizationEndpoint
             var updatedOrganization = organizationService.updateOrganization(organization);
             return organizationMapper.toOrganizationDto(updatedOrganization);
         }
+        catch (OrganizationConstraintException e) {
+            throw new EndpointException(e.getMessage(), e, e.getViolations().stream().map(v -> v.getPropertyPath() + " " + v.getMessage()).toList());
+        }
         catch (Exception e) {
-            throw new EndpointException(e.getMessage(), e, e);
+            throw new EndpointException(e.getMessage(), e);
         }
     }
 
@@ -95,7 +101,7 @@ public class OrganizationEndpoint
             organizationService.deleteOrganization(id);
         }
         catch (Exception e) {
-            throw new EndpointException(e.getMessage(), e, e);
+            throw new EndpointException(e.getMessage(), e);
         }
     }
 }
