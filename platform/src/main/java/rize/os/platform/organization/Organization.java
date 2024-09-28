@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Organization
+public class Organization implements Serializable
 {
     static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
     static final String REGION_ATTRIBUTE = "region";
