@@ -15,15 +15,13 @@ spring:
     url: ${database.url}
     username: ${database.username}
     password: ${database.password}
-
 ---
-logging:
-  level:
-    org.springframework: WARN
-    org.atmosphere: ERROR
-    org.apache: WARN
-    com.vaadin: WARN
-    com.zaxxer: WARN
+spring:
+  modulith:
+    events:
+      jdbc:
+        schema-initialization:
+          enabled: true
 ---
 spring:
   threads:
@@ -36,3 +34,11 @@ spring:
       enabled: true
       file: docker-compose.yaml
       lifecycle-management: start_only
+---
+logging:
+  level:
+    org.springframework: WARN
+    org.atmosphere: ERROR
+    org.apache: WARN
+    com.vaadin: WARN
+    com.zaxxer: WARN

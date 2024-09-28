@@ -7,7 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.OrganizationDomainRepresentation;
 import org.keycloak.representations.idm.OrganizationRepresentation;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,7 @@ public class OrganizationService
 {
     private final OrganizationMapper organizationMapper;
     private final RealmResource realmResource;
+    private final ApplicationEventPublisher eventPublisher;
 
 
     /**
@@ -84,6 +87,7 @@ public class OrganizationService
      * @throws OrganizationAlreadyExistsException If an organization with the same name already exists
      * @throws OrganizationCreateException If the organization could not be created in Keycloak
      */
+    @Transactional
     Organization createOrganization(Organization organization) throws OrganizationConstraintException, OrganizationAlreadyExistsException, OrganizationCreateException
     {
         log.info("Creating new organization in Keycloak: {}", organization);
@@ -105,6 +109,7 @@ public class OrganizationService
 
         var createdOrganization = organizationMapper.toOrganization(orgRepresentation);
         log.info("Created organization successfully: {}", createdOrganization);
+        eventPublisher.publishEvent(new OrganizationCreatedEvent(createdOrganization));
         return createdOrganization;
     }
 
@@ -117,6 +122,7 @@ public class OrganizationService
      * @throws OrganizationAlreadyExistsException If the new name of the organization already exists
      * @throws OrganizationUpdateException If the organization could not be updated in Keycloak
      */
+    @Transactional
     Organization updateOrganization(Organization organization)
             throws OrganizationNotFoundException, OrganizationConstraintException, OrganizationAlreadyExistsException, OrganizationUpdateException
     {
@@ -124,6 +130,7 @@ public class OrganizationService
         var orgRepresentationToUpdate = findOrganizationRepresentationById(organization.getId())
                 .orElseThrow(() -> new OrganizationNotFoundException("id=" + organization.getId()));
         validateOrganization(organization);
+        var organizationBefore = organizationMapper.toOrganization(orgRepresentationToUpdate);
 
         orgRepresentationToUpdate.setName(organization.getName());
         orgRepresentationToUpdate.setDescription(organization.getDescription());
@@ -133,6 +140,7 @@ public class OrganizationService
 
         var updatedOrganization = organizationMapper.toOrganization(orgRepresentationToUpdate);
         log.info("Updated organization successfully: {}", updatedOrganization);
+        eventPublisher.publishEvent(new OrganizationUpdatedEvent(organizationBefore, updatedOrganization));
         return updatedOrganization;
     }
 
@@ -142,6 +150,7 @@ public class OrganizationService
      * @throws OrganizationNotFoundException If the organization with the given ID could not be found in Keycloak
      * @throws OrganizationDeleteException If the organization could not be deleted in Keycloak
      */
+    @Transactional
     void deleteOrganization(String id) throws OrganizationNotFoundException, OrganizationDeleteException
     {
         var organization = findOrganizationById(id).orElseThrow(() -> new OrganizationNotFoundException("id=" + id));
@@ -154,6 +163,7 @@ public class OrganizationService
      * @throws OrganizationNotFoundException If the organization with the given ID could not be found in Keycloak
      * @throws OrganizationDeleteException If the organization could not be deleted in Keycloak
      */
+    @Transactional
     void deleteOrganization(Organization organization) throws OrganizationNotFoundException, OrganizationDeleteException
     {
         log.info("Deleting organization '{}' from Keycloak", organization.getName());
@@ -169,6 +179,7 @@ public class OrganizationService
         catch (Exception e) { throw new OrganizationDeleteException(organization, e); }
 
         log.info("Deleted organization successfully: {}", organization);
+        eventPublisher.publishEvent(new OrganizationDeletedEvent(organization));
     }
 
     /**

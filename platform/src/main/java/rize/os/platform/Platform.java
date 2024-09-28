@@ -6,7 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import org.springframework.context.annotation.ImportRuntimeHints;
+import org.springframework.scheduling.annotation.EnableAsync;
 
+@EnableAsync
 @Theme("rize-os")
 @SpringBootApplication
 @ImportRuntimeHints({ PlatformHintsRegistrar.class, HillaHintsRegistrar.class })
