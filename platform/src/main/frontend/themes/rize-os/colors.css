@@ -20,6 +20,8 @@ html {
     --textfield-background-hover: rgba(203, 213, 225, 0.1);
     --textield-border-color: #CBD5E1;
 
+    --tooltip-background: #F8FAFC;
+
     --menu-bar-color: #334155;
     --menu-bar-background: #FFF;
 }
@@ -33,6 +35,10 @@ html {
     --textfield-background-disabled: rgba(203, 213, 225, 0.22);
     --textfield-background-hover: rgba(203, 213, 225, 0.18);
     --textield-border-color: #334155;
+
+    --select-toggle-button-color: #CBD5E1;
+
+    --tooltip-background: #334155;
 
     --menu-bar-color: #F9FAFB;
     --menu-bar-background: #1E293b;

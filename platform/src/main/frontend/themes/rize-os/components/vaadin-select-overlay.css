@@ -1,0 +1,28 @@
+[part="overlay"] {
+    border: 1px solid transparent;
+    background-color: var(--menu-bar-background);
+    border-radius: var(--vaadin-component-radius);
+}
+
+[part="content"] {
+    color: var(--menu-bar-color);
+    background-color: var(--menu-bar-background);
+    border-radius: var(--vaadin-component-radius);
+    mask-image: none;
+}
+
+@media (max-width: 420px), (max-height: 420px) {
+    [part='backdrop'] {
+        background-color: var(--lumo-shade-40pct);
+    }
+
+    [part="overlay"] {
+        border: none;
+        border-radius: 0;
+    }
+
+    [part="content"] {
+        border-radius: 0;
+        padding: 1rem;
+    }
+}

@@ -182,6 +182,7 @@ public class OrganizationService
         log.debug("Creating organization with name '{}' in Keycloak", organization.getName());
         var orgRepresentation = new OrganizationRepresentation();
         orgRepresentation.setName(organization.getName());
+        orgRepresentation.setEnabled(organization.isEnabled());
         orgRepresentation.setDescription(organization.getDescription());
         orgRepresentation.addDomain(new OrganizationDomainRepresentation(organization.getName()));
 

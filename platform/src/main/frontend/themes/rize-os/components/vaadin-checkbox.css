@@ -1,4 +1,7 @@
-[part='label']
-{
+[part='label'] {
     color: var(--lumo-body-text-color);
+}
+
+[part='checkbox'] {
+    margin-left: 0;
 }

@@ -62,14 +62,18 @@ export default function OrganizationsView() {
     return (
         <div className={"flex w-full justify-center sm:p-6"}>
             <main className={"max-w-6xl w-full bg-white dark:bg-slate-900 sm:rounded-lg shadow pb-2"}>
-                <header className={"flex flex-col sm:flex-row p-4 sm:rounded-lg backdrop-blur bg-white/70 dark:bg-slate-900/80 sticky top-0 z-10"}>
-                    <h1 className={"flex-grow text-xl lg:text-2xl leading-10 font-medium dark:text-slate-100 content-center"}>Organizations</h1>
+                <header className={"flex flex-col sm:flex-row p-6 sm:rounded-lg backdrop-blur bg-white/70 dark:bg-slate-900/80 sticky top-0 z-10"}>
+                    <div className={"flex-grow flex flex-row gap-1 sm:gap-2 pb-1 sm:pb-0"}>
+                        <span className={"material-icons text-4xl sm:text-5xl"}>apartment</span>
+                        <h1 className={"text-2xl lg:text-3xl font-medium content-center"}>Organizations</h1>
+                    </div>
+
                     <div className={"flex flex-row gap-2"}>
                         <TextField className={"grow"} placeholder={"Search..."} clearButtonVisible>
-                            <span className={"material-icons text-xl max-w-6 mr-1 mt-0.5 text-slate-700 dark:text-slate-50"} slot={"prefix"}>search</span>
+                        <span className={"material-icons text-xl max-w-6 mr-1 mt-0.5 text-slate-700 dark:text-slate-50"} slot={"prefix"}>search</span>
                         </TextField>
 
-                        <Button theme={"primary"} onClick={() => navigate('/organizations/new')}>
+                        <Button theme={"primary"} onClick={() => navigate('/organizations/create')}>
                             <span className={"material-icons text-xl max-w-6 dark:text-slate-50"} slot={"prefix"}>add</span>
                             <span className={"leading-1"}>Create</span>
                         </Button>
