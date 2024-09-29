@@ -50,6 +50,23 @@ public class OrganizationEndpoint
     }
 
     /**
+     * Returns a list of organizations by the given search term that is part of the name or display name.
+     * @param searchTerm Search term
+     * @return List of organizations
+     */
+    public List<OrganizationDto> findBySearchTerm(String searchTerm)
+    {
+        try
+        {
+            var organizations = organizationService.findOrganizationBySearchTerm(searchTerm);
+            return organizations.stream().map(organizationMapper::toOrganizationDto).toList();
+        }
+        catch (Exception e) {
+            throw new EndpointException(e.getMessage(), e);
+        }
+    }
+
+    /**
      * Creates a new organization.
      * @param organizationDto Organization to create
      * @return The created organization

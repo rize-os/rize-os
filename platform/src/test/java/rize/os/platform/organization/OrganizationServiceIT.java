@@ -105,6 +105,26 @@ class OrganizationServiceIT
     }
 
     @Test
+    void shouldFindOrganizationsBySearchTerm()
+    {
+        var org1 = organizationService.createOrganization(Organization.builder().name("should-find-organizations-by-search-term-1").displayName("shouldFindOrganizationsBySearchTerm1").region("de").build());
+        var org2 = organizationService.createOrganization(Organization.builder().name("should-find-organizations-by-search-term-2").displayName("shouldFindOrganizationsBySearchTerm2").region("de").build());
+        var org3 = organizationService.createOrganization(Organization.builder().name("should-find-organizations-by-search-term-3").displayName("shouldFindOrganizationsBySearchTerm3").region("en").build());
+
+        var organizations = organizationService.findOrganizationBySearchTerm("find-organizations-by-search-term");
+        assertThat(organizations).hasSize(3);
+        assertThat(organizations).contains(org1, org2, org3);
+
+        organizations = organizationService.findOrganizationBySearchTerm("FindOrganizationsBySearchTerm");
+        assertThat(organizations).hasSize(3);
+        assertThat(organizations).contains(org1, org2, org3);
+
+        organizations = organizationService.findOrganizationBySearchTerm("2");
+        assertThat(organizations).isNotEmpty();
+        assertThat(organizations).contains(org2);
+    }
+
+    @Test
     void shouldCreateOrganization()
     {
         var organizationToCreate = Organization.builder()
