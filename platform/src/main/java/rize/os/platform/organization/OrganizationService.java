@@ -80,6 +80,26 @@ public class OrganizationService
     }
 
     /**
+     * Searches for orgnizations in Keycloak that match the given search term in name or display name.
+     * @param searchTerm Term to search for
+     * @return List of organizations that match the search term
+     */
+    List<Organization> findOrganizationBySearchTerm(String searchTerm)
+    {
+        log.debug("Searching for organizations in Keycloak with search term '{}'", searchTerm);
+        var orgRepresentations = realmResource.organizations().search("", false, 0, Integer.MAX_VALUE);
+        var organizations = orgRepresentations.stream().map(organizationMapper::toOrganization).toList();
+
+        var filteredOrganizations = organizations.stream()
+                .filter(organization ->
+                            organization.getName().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                            organization.getDisplayName().toLowerCase().contains(searchTerm.toLowerCase()))
+                .toList();
+
+        return loggedOrganizations(filteredOrganizations);
+    }
+
+    /**
      * Creates a new organization in Keycloak.
      * @param organization Object of the organization to create
      * @return Object of the created organization with an ID

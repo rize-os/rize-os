@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import OrganizationListItem from "Frontend/components/organization/organization-list-item";
 import LoadingRing from "Frontend/components/core/loading-ring";
-import {Button, ConfirmDialog, Notification, TextField} from "@vaadin/react-components";
+import {Button, ConfirmDialog, Notification, TextField, TextFieldValueChangedEvent} from "@vaadin/react-components";
 import { EndpointError } from "@vaadin/hilla-frontend";
 import OrganizationDto from "Frontend/generated/rize/os/commons/organization/OrganizationDto";
 import { OrganizationEndpoint } from "Frontend/generated/endpoints";
 import { RegionConfigurationEndpoint }  from "Frontend/generated/endpoints";
+import {useDebouncedCallback} from "use-debounce";
 
 export default function OrganizationsView() {
 
@@ -16,6 +17,7 @@ export default function OrganizationsView() {
     const [organizations, setOrganizations] = useState<OrganizationDto[]>([]);
     const [organizationToDelete, setOrganizationToDelete] = useState<OrganizationDto | undefined>(undefined);
 
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const [fetchError, setFetchError] = useState<EndpointError | undefined>(undefined);
     const [deleteError, setDeleteError] = useState<EndpointError | undefined>(undefined);
     const [initialLoading, setInitialLoading] = useState<boolean>(true);
@@ -31,10 +33,22 @@ export default function OrganizationsView() {
         setInitialLoading(true);
         setFetchError(undefined);
 
-        OrganizationEndpoint.findAll()
+        if (searchTerm.length === 0) {
+            OrganizationEndpoint.findAll()
+                .then(setOrganizations)
+                .catch((error: EndpointError) => setFetchError(error))
+                .finally(() => setInitialLoading(false));
+            return;
+        }
+
+        OrganizationEndpoint.findBySearchTerm(searchTerm)
             .then(setOrganizations)
             .catch((error: EndpointError) => setFetchError(error))
             .finally(() => setInitialLoading(false));
+    }
+
+    const handleSearchTermChange = (e: TextFieldValueChangedEvent) => {
+        setSearchTerm(e.detail.value);
     }
 
     const confirmDeleteOrganization = async () => {
@@ -59,6 +73,10 @@ export default function OrganizationsView() {
         fetchOrganizations().then();
     }, []);
 
+    useEffect(() => {
+        fetchOrganizations().then();
+    }, [searchTerm]);
+
     return (
         <div className={"flex w-full justify-center sm:p-6"}>
             <main className={"max-w-6xl w-full bg-white dark:bg-slate-900 sm:rounded-lg shadow pb-2"}>
@@ -69,8 +87,12 @@ export default function OrganizationsView() {
                     </div>
 
                     <div className={"flex flex-row gap-2"}>
-                        <TextField className={"grow"} placeholder={"Search..."} clearButtonVisible>
-                        <span className={"material-icons text-xl max-w-6 mr-1 mt-0.5 text-slate-700 dark:text-slate-50"} slot={"prefix"}>search</span>
+                        <TextField className={"grow"}
+                                   placeholder={"Search..."}
+                                   onValueChanged={useDebouncedCallback(handleSearchTermChange, 500)}
+                                   clearButtonVisible
+                        >
+                            <span className={"material-icons text-xl max-w-6 mr-1 mt-0.5 text-slate-700 dark:text-slate-50"} slot={"prefix"}>search</span>
                         </TextField>
 
                         <Button theme={"primary"} onClick={() => navigate('/organizations/create')}>

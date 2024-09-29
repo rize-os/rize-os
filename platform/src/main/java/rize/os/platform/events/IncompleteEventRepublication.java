@@ -18,7 +18,7 @@ public class IncompleteEventRepublication
     @Scheduled(fixedDelay = 5000, initialDelay = 5000)
     public void republishIncompleteEvents()
     {
-        log.info("Republishing incomplete events");
+        log.trace("Republishing incomplete events");
         incompleteEvents.resubmitIncompletePublicationsOlderThan(Duration.ofSeconds(5));
     }
 }
