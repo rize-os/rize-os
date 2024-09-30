@@ -27,7 +27,7 @@ public class TestcontainersConfiguration
                 .withAdminPassword(KEYCLOAK_ADMIN_PASSWORD);
         keycloak.start();
 
-        postgresql = new PostgreSQLContainer("postgres:16.3")
+        postgresql = new PostgreSQLContainer("postgres:17.0")
                 .withDatabaseName(POSTGRES_DATABASE_NAME)
                 .withUsername(POSTGRES_USERNAME)
                 .withPassword(POSTGRES_PASSWORD);
