@@ -19,7 +19,7 @@
         <spring-cloud.version>2023.0.3</spring-cloud.version>
         <spring-modulith.version>1.2.3</spring-modulith.version>
         <rize-os.version>0.1.0-dev.003</rize-os.version>
-        <vaadin.version>24.4.12</vaadin.version>
+        <vaadin.version>24.5.0</vaadin.version>
         <keycloak.version>25.0.6</keycloak.version>
         <testcontainers-keycloak.version>3.4.0</testcontainers-keycloak.version> <!-- https://mvnrepository.com/artifact/com.github.dasniko/testcontainers-keycloak -->
     </properties>
