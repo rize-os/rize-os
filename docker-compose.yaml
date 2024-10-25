@@ -44,12 +44,23 @@ services:
     ports:
       - 5433:5432
 
-  rabbitmq:
-    image: rabbitmq:${RABBITMQ_VERSION}
-    container_name: ${RABBITMQ_CONTAINER_NAME}
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+  pulsar-standalone:
+    image: apachepulsar/pulsar:${PULSAR_VERSION}
+    container_name: ${PULSAR_CONTAINER_NAME}
+    command: 'bin/pulsar standalone'
+    volumes:
+      - ./dev/pulsar/data:/pulsar/data
     ports:
-      - 5672:5672
-      - 15672:15672
+      - '18080:8080'
+      - '6650:6650'
+    tty: true
+    stdin_open: true
+
+  pulsar-manager:
+    image: apachepulsar/pulsar-manager:${PULSAR_MANAGER_VERSION}
+    container_name: ${PULSAR_MANAGER_CONTAINER_NAME}
+    environment:
+      - SPRING_CONFIGURATION_FILE=/pulsar-manager/pulsar-manager/application.properties
+    ports:
+      - "9527:9527"
+      - "7750:7750"
