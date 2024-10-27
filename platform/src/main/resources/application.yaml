@@ -9,34 +9,28 @@ keycloak:
     username: 'admin'
     password: ''
 ---
-spring:
-  datasource:
+spring.datasource:
     driver-class-name: 'org.postgresql.Driver'
     url: ${database.url}
     username: ${database.username}
     password: ${database.password}
 ---
-spring:
-  modulith:
-    events:
-      jdbc:
-        schema-initialization:
-          enabled: true
+spring.pulsar:
+  client:
+    service-url: pulsar://localhost:6650
+  admin:
+    service-url: http://localhost:18080
 ---
-spring:
-  threads:
-    virtual:
-      enabled: true
+spring.application.name: rize-platform
+spring.threads.virtual.enabled: true
+spring.modulith.events.jdbc.schema-initialization.enabled: true
 ---
-spring:
-  docker:
-    compose:
-      enabled: true
-      file: docker-compose.yaml
-      lifecycle-management: start_only
+spring.docker.compose:
+  enabled: true
+  file: docker-compose.yaml
+  lifecycle-management: start_only
 ---
-logging:
-  level:
+logging.level:
     org.springframework: WARN
     org.atmosphere: ERROR
     org.apache: WARN
