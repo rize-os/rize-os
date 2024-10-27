@@ -1,5 +1,6 @@
 package rize.os.commons.organization;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.apache.avro.Schema;
 import org.apache.avro.specific.SpecificRecord;
@@ -38,6 +39,7 @@ public class OrganizationState extends SpecificRecordBase implements Serializabl
         setPayload(new Payload(before, after));
     }
 
+    @JsonIgnore
     public OffsetDateTime getOffsetTimestamp()
     {
         return OffsetDateTime.parse(timestamp, DateTimeFormatter.ISO_DATE_TIME);
@@ -77,6 +79,7 @@ public class OrganizationState extends SpecificRecordBase implements Serializabl
     }
 
     @Override
+    @JsonIgnore
     public Schema getSchema()
     {
         return SCHEMA;
