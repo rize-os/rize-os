@@ -22,6 +22,7 @@
         <vaadin.version>24.5.0</vaadin.version>
         <keycloak.version>25.0.6</keycloak.version>
         <testcontainers-keycloak.version>3.4.0</testcontainers-keycloak.version> <!-- https://mvnrepository.com/artifact/com.github.dasniko/testcontainers-keycloak -->
+        <avro.version>1.12.0</avro.version>
     </properties>
 
     <scm>
@@ -81,9 +82,9 @@
             </dependency>
 
             <dependency>
-                <groupId>rize.os</groupId>
-                <artifactId>commons</artifactId>
-                <version>${rize-os.version}</version>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro</artifactId>
+                <version>${avro.version}</version>
             </dependency>
 
             <dependency>
