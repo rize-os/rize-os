@@ -1,18 +1,19 @@
 package rize.os.commons.organization;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.apache.avro.Schema;
+import org.apache.avro.specific.SpecificRecord;
+import org.apache.avro.specific.SpecificRecordBase;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 @Data
 @Builder
+@ToString
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrganizationDto implements Serializable
+public class OrganizationDto extends SpecificRecordBase implements Serializable, SpecificRecord
 {
     private String id;
     private String name;
@@ -21,31 +22,51 @@ public class OrganizationDto implements Serializable
     private boolean enabled;
 
     @Override
-    public boolean equals(Object o)
+    public void put(int field, Object value)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        OrganizationDto that = (OrganizationDto) o;
-        return Objects.equals(name, that.name) && Objects.equals(displayName, that.displayName) && Objects.equals(region, that.region);
+        switch (field)
+        {
+            case 0: id = (String) value; break;
+            case 1: name = (String) value; break;
+            case 2: displayName = (String) value; break;
+            case 3: region = (String) value; break;
+            case 4: enabled = (boolean) value; break;
+            default: throw new IndexOutOfBoundsException("Invalid index: " + field);
+        }
     }
 
     @Override
-    public int hashCode()
+    public Object get(int field)
     {
-        int result = Objects.hashCode(name);
-        result = 31 * result + Objects.hashCode(displayName);
-        result = 31 * result + Objects.hashCode(region);
-        return result;
+        return switch (field)
+        {
+            case 0 -> id;
+            case 1 -> name;
+            case 2 -> displayName;
+            case 3 -> region;
+            case 4 -> enabled;
+            default -> throw new IndexOutOfBoundsException("Invalid index: " + field);
+        };
     }
 
     @Override
-    public String toString()
+    public Schema getSchema()
     {
-        return "OrganizationDto{" + "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", displayName='" + displayName + '\'' +
-                ", region='" + region + '\'' +
-                ", enabled=" + enabled + '}';
+        return SCHEMA;
     }
+
+    public static final Schema SCHEMA = new Schema.Parser().parse("""
+        {
+          "type": "record",
+          "name": "OrganizationDto",
+          "namespace": "rize.os.commons.organization",
+          "fields": [
+            { "name": "id", "type": "string" },
+            { "name": "name", "type": "string" },
+            { "name": "displayName", "type": "string" },
+            { "name": "region", "type": "string" },
+            { "name": "enabled", "type": "boolean" }
+          ]
+        }
+    """);
 }
