@@ -22,7 +22,7 @@ services:
     depends_on:
       - keycloak-db
     ports:
-      - 8088:8080
+      - "8088:8080"
 
   keycloak-db:
     image: postgres:${POSTGRES_VERSION}
@@ -32,7 +32,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - 5432:5432
+      - "5432:5432"
 
   platform-db:
     image: postgres:${POSTGRES_VERSION}
@@ -42,14 +42,31 @@ services:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - 5433:5432
+      - "5433:5432"
 
-  rabbitmq:
-    image: rabbitmq:${RABBITMQ_VERSION}
-    container_name: ${RABBITMQ_CONTAINER_NAME}
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+  pulsar-standalone:
+    image: apachepulsar/pulsar:${PULSAR_VERSION}
+    container_name: ${PULSAR_CONTAINER_NAME}
+    command: bin/pulsar standalone
+    user: root
+    volumes:
+      - pulsar-data:/pulsar/data
+      - pulsar-config:/pulsar/conf
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "18080:8080"
+      - "6650:6650"
+
+  pulsar-manager:
+    image: apachepulsar/pulsar-manager:${PULSAR_MANAGER_VERSION}
+    container_name: ${PULSAR_MANAGER_CONTAINER_NAME}
+    environment:
+      - SPRING_CONFIGURATION_FILE=/pulsar-manager/pulsar-manager/application.properties
+    ports:
+      - "9527:9527"
+      - "7750:7750"
+
+volumes:
+  pulsar-data:
+    name: pulsar-data
+  pulsar-config:
+    name: pulsar-config

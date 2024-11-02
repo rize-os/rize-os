@@ -1,5 +1,6 @@
 package rize.os.commons.organization;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.apache.avro.Schema;
 import org.apache.avro.specific.SpecificRecord;
@@ -7,6 +8,7 @@ import org.apache.avro.specific.SpecificRecordBase;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Data
@@ -15,25 +17,37 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrganizationEvent extends SpecificRecordBase implements Serializable, SpecificRecord
+public class OrganizationState extends SpecificRecordBase implements Serializable, SpecificRecord
 {
     @Builder.Default
     private UUID id = UUID.randomUUID();
 
-    @Builder.Default
-    private OffsetDateTime timestamp = OffsetDateTime.now();
+    private EventType eventType;
 
-    private Type type;
+    @Builder.Default
+    private String timestamp = OffsetDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+
     private String source;
     private Payload payload;
 
-    public OrganizationEvent(OrganizationDto before, OrganizationDto after, Type type, String source)
+    public OrganizationState(OrganizationDto before, OrganizationDto after, EventType type, String source)
     {
         setId(UUID.randomUUID());
-        setTimestamp(OffsetDateTime.now());
-        setPayload(new Payload(before, after));
-        setType(type);
+        setEventType(type);
+        setOffsetTimestamp(OffsetDateTime.now());
         setSource(source);
+        setPayload(new Payload(before, after));
+    }
+
+    @JsonIgnore
+    public OffsetDateTime getOffsetTimestamp()
+    {
+        return OffsetDateTime.parse(timestamp, DateTimeFormatter.ISO_DATE_TIME);
+    }
+
+    public void setOffsetTimestamp(OffsetDateTime timestamp)
+    {
+        this.timestamp = timestamp.format(DateTimeFormatter.ISO_DATE_TIME);
     }
 
     @Override
@@ -42,8 +56,8 @@ public class OrganizationEvent extends SpecificRecordBase implements Serializabl
         switch (field)
         {
             case 0 -> id = (UUID) value;
-            case 1 -> timestamp = (OffsetDateTime) value;
-            case 2 -> type = Type.valueOf((String) value);
+            case 1 -> eventType = EventType.valueOf((String) value);
+            case 2 -> timestamp = (String) value;
             case 3 -> source = (String) value;
             case 4 -> payload = (Payload) value;
             default -> throw new IndexOutOfBoundsException("Invalid index: " + field);
@@ -56,8 +70,8 @@ public class OrganizationEvent extends SpecificRecordBase implements Serializabl
         return switch (field)
         {
             case 0 -> id;
-            case 1 -> timestamp;
-            case 2 -> type;
+            case 1 -> eventType;
+            case 2 -> timestamp;
             case 3 -> source;
             case 4 -> payload;
             default -> throw new IndexOutOfBoundsException("Invalid index: " + field);
@@ -65,26 +79,34 @@ public class OrganizationEvent extends SpecificRecordBase implements Serializabl
     }
 
     @Override
+    @JsonIgnore
     public Schema getSchema()
     {
         return SCHEMA;
     }
 
-    public enum Type
+    public enum EventType
     {
         CREATED,
         UPDATED,
         DELETED
     }
 
-    public record Payload(OrganizationDto before, OrganizationDto after)
+    @Data
+    @ToString
+    @EqualsAndHashCode
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Payload implements Serializable
     {
+        private OrganizationDto before;
+        private OrganizationDto after;
     }
 
     public static final Schema SCHEMA = new Schema.Parser().parse("""
         {
           "type": "record",
-          "name": "OrganizationEvent",
+          "name": "OrganizationState",
           "namespace": "rize.os.commons.organization",
           "fields": [
             {
@@ -96,19 +118,16 @@ public class OrganizationEvent extends SpecificRecordBase implements Serializabl
               "default": ""
             },
             {
-              "name": "timestamp",
+              "name": "eventType",
               "type": {
-                "type": "long",
-                "logicalType": "timestamp-millis"
+                "type": "enum",
+                "name": "EventType",
+                "symbols": ["CREATED", "UPDATED", "DELETED"]
               }
             },
             {
-              "name": "type",
-              "type": {
-                "type": "enum",
-                "name": "Type",
-                "symbols": ["CREATED", "UPDATED", "DELETED"]
-              }
+              "name": "timestamp",
+              "type": "string"
             },
             {
               "name": "source",
