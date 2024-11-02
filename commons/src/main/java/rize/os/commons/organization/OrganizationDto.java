@@ -1,5 +1,6 @@
 package rize.os.commons.organization;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.apache.avro.Schema;
 import org.apache.avro.specific.SpecificRecord;
@@ -50,6 +51,7 @@ public class OrganizationDto extends SpecificRecordBase implements Serializable,
     }
 
     @Override
+    @JsonIgnore
     public Schema getSchema()
     {
         return SCHEMA;
