@@ -22,7 +22,7 @@ services:
     depends_on:
       - keycloak-db
     ports:
-      - 8088:8080
+      - "8088:8080"
 
   keycloak-db:
     image: postgres:${POSTGRES_VERSION}
@@ -32,7 +32,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - 5432:5432
+      - "5432:5432"
 
   platform-db:
     image: postgres:${POSTGRES_VERSION}
@@ -42,19 +42,19 @@ services:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - 5433:5432
+      - "5433:5432"
 
   pulsar-standalone:
     image: apachepulsar/pulsar:${PULSAR_VERSION}
     container_name: ${PULSAR_CONTAINER_NAME}
-    command: 'bin/pulsar standalone'
+    command: bin/pulsar standalone
+    user: root
     volumes:
-      - ./dev/pulsar/data:/pulsar/data
+      - pulsar-data:/pulsar/data
+      - pulsar-config:/pulsar/conf
     ports:
-      - '18080:8080'
-      - '6650:6650'
-    tty: true
-    stdin_open: true
+      - "18080:8080"
+      - "6650:6650"
 
   pulsar-manager:
     image: apachepulsar/pulsar-manager:${PULSAR_MANAGER_VERSION}
@@ -64,3 +64,9 @@ services:
     ports:
       - "9527:9527"
       - "7750:7750"
+
+volumes:
+  pulsar-data:
+    name: pulsar-data
+  pulsar-config:
+    name: pulsar-config
