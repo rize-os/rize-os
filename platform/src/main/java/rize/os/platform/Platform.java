@@ -7,7 +7,9 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.scheduling.annotation.EnableAsync;
+import rize.os.commons.EnableRizeOS;
 
+@EnableRizeOS
 @EnableAsync
 @Theme("rize-os")
 @SpringBootApplication
