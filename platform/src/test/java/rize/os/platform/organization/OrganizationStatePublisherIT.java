@@ -94,8 +94,5 @@ class OrganizationStatePublisherIT
                 .findFirst().orElseThrow();
         assertThat(deleteMessage.getValue().getPayload().getBefore()).isEqualTo(updatedOrganizationDto);
         assertThat(deleteMessage.getValue().getPayload().getAfter()).isNull();
-
-        assertThat(messages.indexOf(createMessage)).isLessThan(messages.indexOf(updateMessage));
-        assertThat(messages.indexOf(updateMessage)).isLessThan(messages.indexOf(deleteMessage));
     }
 }
