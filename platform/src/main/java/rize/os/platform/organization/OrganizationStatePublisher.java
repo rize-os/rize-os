@@ -44,11 +44,11 @@ public class OrganizationStatePublisher
     {
         var dtoBefore = before != null ? organizationMapper.toOrganizationDto(before) : null;
         var dtoAfter = after != null ? organizationMapper.toOrganizationDto(after) : null;
-        var organizationEvent = new OrganizationState(dtoBefore, dtoAfter, type, applicationName);
-        log.debug("Publishing organization event: {}", organizationEvent);
+        var organizationState = new OrganizationState(dtoBefore, dtoAfter, type, applicationName);
+        log.debug("Publishing new organization state: {}", organizationState);
 
         pulsarTemplate
-                .newMessage(organizationEvent)
+                .newMessage(organizationState)
                 .withTopic(PulsarMessagingConfiguration.ORGANIZATION_STATE_TOPIC)
                 .withSchema(AvroSchema.of(OrganizationState.class))
                 .withMessageCustomizer(mc -> mc.key(organizationId))

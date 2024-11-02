@@ -55,9 +55,6 @@ public class TestcontainersConfiguration
         registry.add("database.username", () -> POSTGRES_USERNAME);
         registry.add("database.password", () -> POSTGRES_PASSWORD);
 
-        System.out.println("Pulsar URL: " + TestcontainersConfiguration.pulsar.getPulsarBrokerUrl());
-        System.out.println("Pulsar HTTP URL: " + TestcontainersConfiguration.pulsar.getHttpServiceUrl());
-
         registry.add("spring.pulsar.client.service-url", TestcontainersConfiguration.pulsar::getPulsarBrokerUrl);
         registry.add("spring.pulsar.admin.service-url", TestcontainersConfiguration.pulsar::getHttpServiceUrl);
     }
