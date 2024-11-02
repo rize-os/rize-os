@@ -55,8 +55,18 @@ public class PulsarMessagingConfiguration
     public TenantInfo createTenant(String tenant, TenantInfo tenantInfo) throws PulsarAdminException
     {
         log.debug("Creating tenant \"{}\" in Pulsar", tenant);
-        pulsarAdmin.tenants().createTenant(RIZE_TENANT, tenantInfo);
+        pulsarAdmin.tenants().createTenant(tenant, tenantInfo);
         return tenantInfo;
+    }
+
+    /**
+     * Deletes a tenant in Pulsar
+     * @param tenant Name of the tenant
+     * @throws PulsarAdminException If an error occurs while deleting the tenant
+     */
+    public void deleteTenant(String tenant) throws PulsarAdminException
+    {
+        pulsarAdmin.tenants().deleteTenant(tenant);
     }
 
     /**
@@ -65,10 +75,10 @@ public class PulsarMessagingConfiguration
      * @param policies Policies for the namespace
      * @throws PulsarAdminException If an error occurs while creating the namespace
      */
-    public void createNamespace(String namespace, Policies policies) throws PulsarAdminException
+    public void createNamespace(String tenant, String namespace, Policies policies) throws PulsarAdminException
     {
         log.debug("Setting up namespace \"{}\" in Pulsar", namespace);
-        if (pulsarAdmin.namespaces().getNamespaces(RIZE_TENANT).contains(namespace))
+        if (pulsarAdmin.namespaces().getNamespaces(tenant).contains(namespace))
         {
             log.debug("Namespace \"{}\" already exists", namespace);
             return;
@@ -107,7 +117,7 @@ public class PulsarMessagingConfiguration
         if (rizeTenant == null)
             rizeTenant = createTenant(RIZE_TENANT);
 
-        createNamespace(RIZE_PLATFORM_NAMESPACE, platformNamespacePolicies());
+        createNamespace(RIZE_TENANT, RIZE_PLATFORM_NAMESPACE, platformNamespacePolicies());
 
         return rizeTenant;
     }
