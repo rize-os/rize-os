@@ -1,0 +1,35 @@
+services:
+  rize-dev-keycloak-server:
+    image: keycloak/keycloak:26.3.2
+    container_name: rize-dev-keycloak-server
+    depends_on:
+      - rize-dev-keycloak-db
+    command: start-dev
+    ports:
+      - "3000:8080"
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://rize-dev-keycloak-db:5432/keycloak
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: secret
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 3000
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: secret
+
+  rize-dev-keycloak-db:
+    image: postgres:17.5
+    container_name: rize-dev-keycloak-db
+    ports:
+      - "3001:5432"
+    volumes:
+      - rize-dev-keycloak-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+
+volumes:
+  rize-dev-keycloak-db:
