@@ -1,0 +1,2 @@
+rize.cockpit:
+  security.oauth2.client-secret: ${RIZE_COCKPIT_CLIENT_SECRET}
