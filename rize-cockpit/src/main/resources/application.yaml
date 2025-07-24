@@ -1,1 +1,12 @@
 spring.application.name: rize-cockpit
+---
+spring.security.oauth2.client:
+  registration.keycloak:
+    client-id: ${rize.cockpit.security.oauth2.client-id:rize-cockpit}
+    client-secret: ${rize.cockpit.security.oauth2.client-secret}
+    scope: ${rize.cockpit.security.oauth2.scope:openid,profile,email,roles}
+    authorization-grant-type: ${rize.cockpit.security.oauth2.authorization-grant-type:authorization_code}
+    redirect-uri: ${rize.cockpit.security.oauth2.redirect-uri:{baseUrl}/login/oauth2/code/keycloak}
+    provider: keycloak
+  provider.keycloak:
+    issuer-uri: ${rize.cockpit.security.oauth2.issuer-uri:http://localhost:3000/realms/administration}
