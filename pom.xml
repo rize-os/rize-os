@@ -60,6 +60,7 @@
 
     <modules>
         <module>rize-commons</module>
+        <module>rize-user-commons</module>
         <module>rize-cockpit</module>
     </modules>
 </project>
