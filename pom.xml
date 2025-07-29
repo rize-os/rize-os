@@ -50,12 +50,12 @@
             </dependency>
             <dependency>
                 <groupId>rize.os</groupId>
-                <artifactId>rize-user-commons</artifactId>
+                <artifactId>rize-security-commons</artifactId>
                 <version>${rize.os.version}</version>
             </dependency>
             <dependency>
                 <groupId>rize.os</groupId>
-                <artifactId>rize-security</artifactId>
+                <artifactId>rize-security-oauth2-client</artifactId>
                 <version>${rize.os.version}</version>
             </dependency>
         </dependencies>
@@ -70,8 +70,8 @@
 
     <modules>
         <module>rize-commons</module>
-        <module>rize-user-commons</module>
-        <module>rize-security</module>
+        <module>rize-security-commons</module>
+        <module>rize-security-oauth2-client</module>
         <module>rize-cockpit</module>
     </modules>
 </project>
