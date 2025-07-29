@@ -48,6 +48,16 @@
                 <artifactId>rize-commons</artifactId>
                 <version>${rize.os.version}</version>
             </dependency>
+            <dependency>
+                <groupId>rize.os</groupId>
+                <artifactId>rize-user-commons</artifactId>
+                <version>${rize.os.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>rize.os</groupId>
+                <artifactId>rize-security</artifactId>
+                <version>${rize.os.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -61,6 +71,7 @@
     <modules>
         <module>rize-commons</module>
         <module>rize-user-commons</module>
+        <module>rize-security</module>
         <module>rize-cockpit</module>
     </modules>
 </project>
