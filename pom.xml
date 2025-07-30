@@ -20,6 +20,7 @@
 
         <spring-modulith.version>1.4.1</spring-modulith.version>
         <vaadin.version>24.8.4</vaadin.version>
+        <testcontainers-keycloak.version>3.8.0</testcontainers-keycloak.version> <!-- https://mvnrepository.com/artifact/com.github.dasniko/testcontainers-keycloak -->
     </properties>
 
     <dependencyManagement>
@@ -40,6 +41,13 @@
                 <version>${vaadin.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- Keycloak -->
+            <dependency>
+                <groupId>com.github.dasniko</groupId>
+                <artifactId>testcontainers-keycloak</artifactId>
+                <version>${testcontainers-keycloak.version}</version>
             </dependency>
 
             <!-- rize.os -->
