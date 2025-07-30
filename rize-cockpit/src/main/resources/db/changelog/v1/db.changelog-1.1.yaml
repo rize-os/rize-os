@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.1.0
+      author: dennis-schaefer
+      changes:
+        - sql:
+            comment: "Enable pgcrypto extension to use cryptographic functions"
+            sql: "CREATE EXTENSION IF NOT EXISTS pgcrypto;"

@@ -1,4 +1,16 @@
 services:
+  rize-dev-cockpit-db:
+    image: postgres:17.5
+    container_name: rize-dev-cockpit-db
+    ports:
+      - "5431:5432"
+    volumes:
+      - rize-dev-cockpit-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: cockpit
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+
   rize-dev-keycloak-server:
     image: keycloak/keycloak:26.3.2
     container_name: rize-dev-keycloak-server
@@ -34,4 +46,5 @@ services:
       POSTGRES_PASSWORD: secret
 
 volumes:
+  rize-dev-cockpit-db:
   rize-dev-keycloak-db:
