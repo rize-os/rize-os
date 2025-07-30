@@ -10,3 +10,9 @@ spring.security.oauth2.client:
     provider: keycloak
   provider.keycloak:
     issuer-uri: ${rize.cockpit.security.oauth2.issuer-uri:http://localhost:3000/realms/administration}
+---
+spring.datasource:
+  driver-class-name: org.postgresql.Driver
+  url: ${rize.cockpit.datasource.url:jdbc:postgresql://localhost:5431/cockpit}
+  username: ${rize.cockpit.datasource.username:admin}
+  password: ${rize.cockpit.datasource.password:secret}
