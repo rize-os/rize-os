@@ -53,5 +53,7 @@ jobs:
       - name: Build and push rize.cockpit Docker image
         uses: docker/build-push-action@v6
         with:
+          context: ./rize-cockpit
           push: true
           tags: ${{ env.RIZE_COCKPIT_IMAGE }}:${{ env.RIZE_VERSION }}
+
