@@ -18,7 +18,7 @@ import rize.os.security.oauth2.client.AuthenticatedUserOidcService;
 public class SecurityConfiguration
 {
     @Bean
-    JwtDecoder jwtDecoder(@Value("${spring.security.oauth2.client.provider.keycloak.issuer-uri}") String issuerUri)
+    JwtDecoder jwtDecoder(@Value("${rize.cockpit.security.oauth2.issuer-uri:http://localhost:3000/realms/administration}") String issuerUri)
     {
         return JwtDecoders.fromIssuerLocation(issuerUri);
     }

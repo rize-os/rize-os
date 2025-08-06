@@ -1,13 +1,10 @@
-name: Maven Tests
+name: rize.os tests
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  create:
-    tags:
-      - '*'
   workflow_dispatch:
 
 jobs:
